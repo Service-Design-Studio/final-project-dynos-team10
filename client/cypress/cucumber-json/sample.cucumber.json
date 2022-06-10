@@ -1,0 +1,43 @@
+[
+  {
+    "description": "    I want to view the main page",
+    "keyword": "Feature",
+    "name": "Main Page",
+    "line": 1,
+    "id": "main-page",
+    "tags": [],
+    "uri": "sample.feature",
+    "elements": [
+      {
+        "id": "main-page;opening-the-app",
+        "keyword": "Scenario",
+        "line": 5,
+        "name": "Opening the app",
+        "tags": [],
+        "type": "scenario",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 6,
+            "name": "I am on the home page",
+            "result": {
+              "status": "passed",
+              "duration": 389000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 7,
+            "name": "I see \"React\" in the title",
+            "result": {
+              "status": "passed",
+              "duration": 11000000
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
