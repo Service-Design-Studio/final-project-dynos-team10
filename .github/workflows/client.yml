@@ -1,9 +1,5 @@
 name: Client App Run Tests
 
-defaults:
-  run:
-    working-directory: client
-
 on:
   push:
     paths:
@@ -21,3 +17,6 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: chrome
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          working-directory: client
