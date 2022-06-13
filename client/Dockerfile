@@ -1,3 +1,4 @@
+# build step
 FROM node:16.15.1-alpine as build
 WORKDIR /app
 COPY package*.json ./
@@ -5,6 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# production step
 FROM nginx:1.21-alpine as production
 # add nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/configfile.template
