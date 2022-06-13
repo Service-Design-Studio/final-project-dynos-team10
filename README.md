@@ -4,6 +4,8 @@
 
 ## Team Members
 - [Joel Tay](https://github.com/Vemrthiss)
+- [Tan Kay Wee](https://github.com/kayweeee)
+- [Tan Li Hui](https://github.com/t-lihui)
 
 ## Collaborating
 Clone the repository using `git clone`:
