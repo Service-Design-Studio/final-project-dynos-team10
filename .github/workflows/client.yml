@@ -5,6 +5,10 @@ on:
     paths:
     - "client/**"
 
+env:
+  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  SERVICE_NAME: dynostic-client
+
 jobs:
   cypress-run:
     runs-on: ubuntu-20.04
@@ -20,3 +24,27 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:3000'
           working-directory: client
+  build-and-deploy:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Alternative option - authentication via credentials json
+      - id: 'auth'
+        uses: google-github-actions/auth@v0.7.3
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.6.0
+      # Build and push image to Google Container Registry
+      - name: Build
+        run: |-
+          gcloud builds submit \
+            --quiet \
+            --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
