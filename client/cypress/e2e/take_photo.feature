@@ -10,7 +10,7 @@ Feature: Take Picture
         Then my camera should open
 
     # to reuse steps
-    # browser
+    # browser comes out with this prompt, we only code sad paths that our app can control/accomodate for
     # Scenario: Opening the camera function but it fails
     #     Given I am on the home page
     #     When I do not enable camera access
