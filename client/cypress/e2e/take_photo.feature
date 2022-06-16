@@ -10,11 +10,12 @@ Feature: Take Picture
         Then my camera should open
 
     # to reuse steps
-    Scenario: Opening the camera function but it fails
-        Given I am on the home page
-        When I do not enable camera access
-        And I click on the "Camera" button
-        Then I see a prompt to enable camera access in settings
+    # browser
+    # Scenario: Opening the camera function but it fails
+    #     Given I am on the home page
+    #     When I do not enable camera access
+    #     And I click on the "Camera" button
+    #     Then I see a prompt to enable camera access in settings
 
     Scenario: Taking one photo of a component
         Given I am on the camera page
