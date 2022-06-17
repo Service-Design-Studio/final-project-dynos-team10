@@ -34,4 +34,4 @@
 
 # secrets
 .env*
-/config/secrets.yml
+/config/secrets*
