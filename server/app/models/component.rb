@@ -1,12 +1,21 @@
 class Component < ApplicationRecord
 
-    attr_accessor :status, :component_type, :failing_reasons, :image_url
+    attr_accessor :component_id, :status, :component_type, :failing_reasons, :image_url
 
-    def initialize()
-    @status
-    @component_type = ''
-    @failing_reasons = ['']
-    @image_url = ['']
+    def initialize(component_type)
+        @component_id
+        @status
+        @component_type = component_type
+        @failing_reasons = ['']
+        @image_url = ['']
+    end
+
+    def get_component_id()
+        return @component_id
+    end
+
+    def set_component_id(new_component_id)
+        @component_id = new_component_id
     end
 
     def get_status()
