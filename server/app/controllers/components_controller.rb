@@ -1,6 +1,6 @@
 class ComponentsController < ApplicationController
 
-# to ensure that the current componeent is loaded from the session before any controller action occurs, 
+# to ensure that the current component is loaded from the session before any controller action occurs, 
 # and that the (possibly modified) current component is replaced in the session after each action completes.
 
     before_action :get_Component_from_session
@@ -16,7 +16,7 @@ class ComponentsController < ApplicationController
     end
 
     def store_Component_in_session
-        session[:component] = @componeent.to_yaml
+        session[:component] = @component.to_yaml
     end
 
     public
@@ -41,8 +41,8 @@ class ComponentsController < ApplicationController
     end
 
     def destroy
-        @componeent = Component.find(params[:id])
-        @componeent.destroy
+        @component = Component.find(params[:id])
+        @component.destroy
         flash[:success] = "The component was successfully destroyed."
         #redirect somewhere
 
