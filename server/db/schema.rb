@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_17_152521) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_19_141022) do
   create_table "components", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -19,6 +19,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_17_152521) do
   create_table "images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "public_url"
+    t.string "auth_url"
+    t.integer "component_id"
+    t.index ["component_id"], name: "index_images_on_component_id"
   end
 
+  add_foreign_key "images", "components"
 end

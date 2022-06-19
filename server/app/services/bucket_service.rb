@@ -1,7 +1,7 @@
 require "google/cloud/storage"
 
 class BucketService
-  attr_reader :storage, :bucket
+  attr_reader :storage, :bucket, :public_url_prefix, :auth_url_prefix
 
   def initialize
     super
@@ -10,10 +10,18 @@ class BucketService
       credentials: "config/service-account-credentials.json"
     )
     @bucket = storage.bucket "dynostic-server-bucket"
+    @public_url_prefix = "storage.googleapis.com"
+    @auth_url_prefix = "storage.cloud.google.com"
   end
 
   def get_file(filename)
     @bucket.file filename
+  end
+
+  # Transforms the public url to the authenticated url for a GCS bucket.
+  # This method exists because GCS does not provide a method to return the authenticated url, but only a public url
+  def get_auth_url_from_public(public_url)
+    public_url.sub @public_url_prefix, @auth_url_prefix
   end
 
   def create_image(base64_string, filename)
@@ -21,7 +29,7 @@ class BucketService
       File.open("temp.png", "wb") do |f|
         f.write(Base64.decode64(base64_string['data:image/png;base64,'.length .. -1]))
       end
-      @bucket.create_file("temp.png", filename)
+      return @bucket.create_file("temp.png", filename)
     rescue
       puts "error when creating image"
     ensure

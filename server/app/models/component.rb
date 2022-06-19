@@ -1,5 +1,5 @@
 class Component < ApplicationRecord
-
+    has_many :images
     attr_accessor :component_id, :status, :component_type, :failing_reasons, :image_url
 
     def initialize(component_type)
