@@ -42,11 +42,11 @@ class Component < ApplicationRecord
         @component_type = new_component_type
     end
 
-    def get_images()
+    def get_image_url()
         return @image_url
     end
 
-    def set_images(new_image_url)
+    def set_image_url(new_image_url)
         @image_url = new_image_url
     end
 
