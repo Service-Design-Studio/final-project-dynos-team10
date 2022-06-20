@@ -1,13 +1,15 @@
-Feature: Take Picture
+Feature: Take Photo
 
+    # start from the take photo page
     I want to take pictures of a component
 
-    # start from component page?
+
 
     Scenario: Opening the camera function
-        Given I am on the home page
-        And I click on the "Camera" button
+        Given I am on the status of components page
+        And I click on "Component xxx" button
         Then my camera should open
+        And I am on the take photo page
 
     # to reuse steps
     # browser comes out with this prompt, we only code sad paths that our app can control/accomodate for
@@ -17,46 +19,30 @@ Feature: Take Picture
     #     And I click on the "Camera" button
     #     Then I see a prompt to enable camera access in settings
 
-    Scenario: Taking one photo of a component
-        Given I am on the camera page
+
+    Scenario: Taking one photo of component xxx
+        Given I am on the camera page of component xxx
         And I click on the "take photo" button
         Then I see the photo taken
+        And I click "done" button
+        Then I am on the photo review page
 
-    Scenario: Option to take multiple photos of a component
+    Scenario: Option to take multiple photos of Component xxx
         # REUSE FIRST 3 STEPS
-        Given I am on the camera page
+        Given I am on the camera page of component xxx
         And I click on the "take photo" button
         Then I see the photo taken
         When I click on the "+" button
         Then I am on the camera page
         And I see a counter
-        And I click "done"
+        And I continue taking pictures by clicking on the "+" button
+        And I click "Done" button
         Then I am on the photo review page
 
-    Scenario: Leaving from camera page before uploading all pictures
-        Given I am on the camera page
-        And I have taken multiple pictures
-        And I press the back button
-        Then photos taken are not saved
-        And I am on the component page
-        And the respective component button colour remains yellow
-
-    Scenario: Leaving from photo review page before uploading all pictures
-        Given I am on the photo review page
-        And I have taken multiple pictures
-        And I press the back button
-        Then photos taken are not saved
-        And I am on the component page
-        And the respective component button colour remains yellow
-
     Scenario: Review the photos and upload
-        Given I am on the photo review page
+        Given I am on the photo review page of component xxx
         And I click on the "upload" button
         Then I see a prompt "successfully uploaded"
-        Then I am on the manual check page
+        And I am on the manual check page
+        #go to manual check to see if it passes manual QC (to pass_fail_check.feature)
 
-    Scenario: Review the photos and delete
-        Given I am on the photo review page
-        And I am viewing a photo
-        And I click on the "delete" button
-        Then the photo is removed from the carousel
