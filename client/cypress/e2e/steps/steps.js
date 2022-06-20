@@ -1,18 +1,18 @@
 import { Given, Then } from "cypress-cucumber-preprocessor/steps";
 
-#Given('I am on the home page', () => {
-    #cy.visit("http://localhost:3000/");
-#})
+Given('I am on the home page', () => {
+    cy.visit("http://localhost:3000/");
+})
 
-#Then(`I see {string} in the title`, (title) => {
-    #cy.title().should('include', title);
-#})
+Then(`I see {string} in the title`, (title) => {
+    cy.title().should('include', title);
+})
 
-#const defineSupportCode = require('cucumber').defineSupportCode;
-#const assert = require('assert');
+const defineSupportCode = require('cucumber').defineSupportCode;
+const assert = require('assert');
 
 
-#Scenario: Opening the camera function
+// Scenario: Opening the camera function
 defineSupportCode(function({ Given, Then, And }) {
     Given('I am on the status of components page', () => {
         cy.visit("http://localhost:3000/");
@@ -26,7 +26,7 @@ defineSupportCode(function({ Given, Then, And }) {
     })
 });
 
-#Scenario: Taking one photo of component xxx
+// Scenario: Taking one photo of component xxx
 defineSupportCode(function({ Given, Then, And }) {
     Given('I am on the camera page of {String}', () => {
         cy.visit("http://localhost:3000/");
@@ -42,7 +42,7 @@ defineSupportCode(function({ Given, Then, And }) {
     })
 });
 
-# Scenario: Taking multiple photo of component xxx
+//  Scenario: Taking multiple photo of component xxx
 defineSupportCode(function({ Given, Then, And, When }) {
     Given('I am on the camera page of {String}', () => {
         cy.visit("http://localhost:3000/");
@@ -65,7 +65,7 @@ defineSupportCode(function({ Given, Then, And, When }) {
     })
 })
 
-#Scenario: Review the photos and upload
+// Scenario: Review the photos and upload
 defineSupportCode(function({ Given, Then, And }) {
     Given('I am on the photo review page of {String}', () => {
         cy.visit("http://localhost:3000/");
@@ -79,9 +79,9 @@ defineSupportCode(function({ Given, Then, And }) {
     })
 });
 
-#Feature: delete photo
-#I want to delete photo(s) from Photo Review page
-#Scenario: Review the photos and delete
+// Feature: delete photo
+// I want to delete photo(s) from Photo Review page
+// Scenario: Review the photos and delete
 defineSupportCode(function({ Given, Then, And }) {
     Given('I am on the photo review page of {StringInDoubleQuotes}', () => {
         cy.visit("http://localhost:3000/");
