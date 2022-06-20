@@ -3,7 +3,7 @@ import './ComponentStatus.css'
 import { FaBars } from "react-icons/fa";
 
 function ComponentStatus() {
-    const componentnames = ["Label" , "Wires"]
+    const componentnames = ["Label" , "Wires", "XXX"]
 
     return (
         <div className="ComponentStatus">
@@ -13,17 +13,13 @@ function ComponentStatus() {
             </header>
             
             <div className="Buttongroup">
-                {/* componentnames.map((component) => 
-            <ComponentStatusButton component={component} />
-                ) */}
-            <ComponentStatusButton component="LABEL" />
-            <ComponentStatusButton component="WIRE" />
+                {
+                    componentnames.map((componentname) => 
+                        <ComponentStatusButton component={componentname} />
+                    )
+                }
+
             </div>
-
-            <ComponentStatusButton component="XXX" />
-            <ComponentStatusButton component="XXX" />
-            
-
         </div>
     )
 }

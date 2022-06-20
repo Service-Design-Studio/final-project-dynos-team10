@@ -13,23 +13,18 @@ header {
     flex-direction:row;
   }
 
-/* button:hover {
-    background-color: black; /* Green */
-    /* color: white;
-} */ 
-
 button { 
     background-color: white; 
     border: 2px solid #4285F4;  
     color: black; 
     font-weight: bold;
-    width: 110px;
-    height: 110px;
+    width: 6em;
+    height: 6em;
     cursor: pointer; 
     text-align: center;
-    /* float: left;
-    margin: 11px; */
+    margin: 15px;
     border-radius: 10px; 
+    font-size: large;
   } 
 
 button:hover{
