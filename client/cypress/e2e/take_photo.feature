@@ -1,9 +1,5 @@
 Feature: Take Picture
-
-    # start from the take photo page
     I want to take pictures of a component
-
-
 
     Scenario: Opening the camera function
         Given I am on the status of components page
@@ -18,7 +14,6 @@ Feature: Take Picture
     #     When I do not enable camera access
     #     And I click on the "Camera" button
     #     Then I see a prompt to enable camera access in settings
-
 
     Scenario: Taking one photo of component xxx
         Given I am on the camera page of component xxx
