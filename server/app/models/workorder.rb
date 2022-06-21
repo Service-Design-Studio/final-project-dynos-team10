@@ -1,7 +1,5 @@
 class Workorder < ApplicationRecord
-    has_many :components
-    attr_accessor :workorder_id, :status, :workorder_type, :failing_reasons, :component_list
-
+    
     def initialize(workorder_type)
         @workorder_id
         @status
@@ -49,7 +47,4 @@ class Workorder < ApplicationRecord
     def set_component_list(new_component_list)
         @component_list = new_component_list
     end
-
-    
-
 end

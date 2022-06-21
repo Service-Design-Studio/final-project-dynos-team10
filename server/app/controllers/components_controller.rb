@@ -28,6 +28,7 @@ class ComponentsController < ApplicationController
     def create
         new_component_type = params[:component_type]
         @component = Component.new(component_type)
+        @component = @workorder.components.create(component_type: )
         
     end
 
@@ -48,4 +49,5 @@ class ComponentsController < ApplicationController
 
 
     end
+
 end

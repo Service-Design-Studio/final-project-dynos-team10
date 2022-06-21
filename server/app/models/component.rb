@@ -1,5 +1,6 @@
 class Component < ApplicationRecord
     has_many :images
+    # belongs_to: workorder
     attr_accessor :component_id, :status, :component_type, :failing_reasons, :image_url
 
     def initialize(component_type)
@@ -49,5 +50,7 @@ class Component < ApplicationRecord
     def set_image_url(new_image_url)
         @image_url = new_image_url
     end
+
+    
 
 end
