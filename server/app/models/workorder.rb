@@ -1,82 +1,57 @@
 class Workorder < ApplicationRecord
     has_many :components
+    # TODO: sort out validations
+    validates :workorder_number, :machine_type, presence: true
 
-    attr_accessor :status, :failing_reasons
+    enum machine_type: {
+      machine_1: 0,
+      machine_2: 1,
+      machine_3: 2
+    }
 
-    validates :status, :failing_reasons, presence: true
+    def self.get_machine_types
+        Workorder.machine_types
+    end
+
+    # creates a new workorder
+    def self.create_record(workorder_number, machine_type)
+        machine_type_int = self.get_machine_types[machine_type]
+        if machine_type_int.nil?
+            machine_type_int = 0 # defaults to the first machine
+        end
+        Workorder.create(workorder_number: workorder_number, machine_type: machine_type_int)
+    end
+
+    def self.find_all
+        Workorder.all
+    end
 
     def self.find_one(workorder_id)
         Workorder.find_by(id: workorder_id)
     end
 
+    # TODO: test whether this works
     def self.get_failing_reasons(workorder_id)
-        @components = Component.find_all_by_workorder_id(workorder_id)
-        components.each do |comp|
+        workorder = self.find_one(workorder_id)
+        failing_reasons = []
+        workorder.components.each do |comp|
             failing_reasons << comp.get_failing_reasons(id: comp.id)
+        end
         return failing_reasons
-        end
+        # @components = Component.find_all_by_workorder_id(workorder_id)
+        # components.each do |comp|
+        #     failing_reasons << comp.get_failing_reasons(id: comp.id)
+        # return failing_reasons
+        # end
     end
 
-    def self.get_status(workorder_id)
-        @components = Component.find_all_by_workorder_id(workorder_id)
-        components.each do |comp|
-            if(comp.get_status(id: comp.id)==false)
-                status = false
-                return status
-        status = true
-        return status
-        end
-    end
-    
-    def self.find_all_by_workorder_id(workorder_id)
-        Workorder.where(["workorder_id = ?", workorder_id])
-    end
-
-    # def initialize(workorder_type)
-    #     @workorder_id
-    #     @status
-    #     @workorder_type = workorder_type
-    #     @failing_reasons
-    #     @component_list
-    # end
-
-    # def get_workorder_id()
-    #     return @workorder_id
-    # end
-
-    # def set_workorder_id(new_workorder_id)
-    #     @workorder_id = new_workorder_id
-    # end
-
-    # def get_status()
-    #     return @status
-    # end
-
-    # def set_status(new_status)
-    #     @status = new_status
-    # end
-
-    # def get_failing_reasons()
-    #     return @failing_reasons
-    # end
-
-    # def set_failing_reasons(new_failing_reasons)
-    #     @failing_reasons = new_failing_reasons
-    # end
-
-    # def get_Workorder_type()
-    #     return @workorder_type
-    # end
-
-    # def set_Workorder_type(new_Workorder_type)
-    #     @workorder_type = new_Workorder_type
-    # end
-
-    # def get_component_list()
-    #     return @component_list
-    # end
-
-    # def set_component_list(new_component_list)
-    #     @component_list = new_component_list
+    # def self.get_status(workorder_id)
+    #     @components = Component.find_all_by_workorder_id(workorder_id)
+    #     components.each do |comp|
+    #         if(comp.get_status(id: comp.id)==false)
+    #             return false
+    #         end
+    #     end
+    #     true
     # end
 end

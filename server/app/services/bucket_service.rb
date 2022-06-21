@@ -9,7 +9,8 @@ class BucketService
       project_id: "tsh-qc",
       credentials: "config/service-account-credentials.json"
     )
-    @bucket = storage.bucket "dynostic-server-bucket"
+    gcs_bucket_name = Rails.env.production? ? "dynostic-server-bucket" : "dynostic-test-bucket"
+    @bucket = storage.bucket gcs_bucket_name
     @public_url_prefix = "storage.googleapis.com"
     @auth_url_prefix = "storage.cloud.google.com"
   end
