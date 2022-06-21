@@ -14,14 +14,14 @@ class WorkorderController < ApplicationController
         end
 
         def create
-        @workorder = Workorder.new(params.require(:workorder).permit(:workorder_id, :workorder_type))
-        if @workorder.save
-            flash[:success] = "New workorder successfully created!"
-            # redirect_to workorderzes_url
-        else
-            flash.now[:error] = "New workorder creation failed"
-            # render :new
-        end
+        # @workorder = Workorder.new(params.require(:workorder).permit(:workorder_id, :workorder_type))
+        # if @workorder.save
+        #     flash[:success] = "New workorder successfully created!"
+        #     # redirect_to workorderzes_url
+        # else
+        #     flash.now[:error] = "New workorder creation failed"
+        #     # render :new
+        # end
         end
         
         def edit
