@@ -1,9 +1,11 @@
 class WorkorderController < ApplicationController
+
+
     def index
         @workorders = Workorder.all
-        end
+    end
 
-        def show
+    def show
         @workorder = Workorder.find(params[:id])
         # render :show
         end

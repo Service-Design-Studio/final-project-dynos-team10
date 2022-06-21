@@ -1,6 +1,37 @@
 class Workorder < ApplicationRecord
     has_many :components
 
+    attr_accessor :status, :failing_reasons
+
+    validates :status, :failing_reasons, presence: true
+
+    def self.find_one(workorder_id)
+        Workorder.find_by(id: workorder_id)
+    end
+
+    def self.get_failing_reasons(workorder_id)
+        @components = Component.find_all_by_workorder_id(workorder_id)
+        components.each do |comp|
+            failing_reasons << comp.get_failing_reasons(id: comp.id)
+        return failing_reasons
+        end
+    end
+
+    def self.get_status(workorder_id)
+        @components = Component.find_all_by_workorder_id(workorder_id)
+        components.each do |comp|
+            if(comp.get_status(id: comp.id)==false)
+                status = false
+                return status
+        status = true
+        return status
+        end
+    end
+    
+    def self.find_all_by_workorder_id(workorder_id)
+        Workorder.where(["workorder_id = ?", workorder_id])
+    end
+
     # def initialize(workorder_type)
     #     @workorder_id
     #     @status
