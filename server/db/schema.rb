@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_19_141022) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_21_025514) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "components", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "workorder_id"
+    t.index ["workorder_id"], name: "index_components_on_workorder_id"
   end
 
   create_table "images", force: :cascade do |t|
@@ -28,5 +30,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_19_141022) do
     t.index ["component_id"], name: "index_images_on_component_id"
   end
 
+  create_table "workorders", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "components", "workorders"
   add_foreign_key "images", "components"
 end
