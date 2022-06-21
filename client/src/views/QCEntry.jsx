@@ -27,12 +27,6 @@ function QCEntry() {
       }
   };
 
-  // useEffect (() => {
-  //     if (Object.keys(formErrors).length === 0 && isSubmit){
-  //         console.log(formValues)
-  //     }
-  // }, [formErrors])
-
   const validate = (values) => {
     const errors = {};
     if (!values.serialno) {
@@ -50,10 +44,9 @@ function QCEntry() {
         <FaBars
           style={{
             color: "black",
-            fontSize: "30px",
-            marginTop: "30px",
-            marginRight: "30px",
-            marginLeft: "20px",
+            fontSize: "1.5rem",
+            margin: "1.5rem",
+            marginTop: "2rem"
           }}
         />
         <h1>New QC Entry</h1>
@@ -74,7 +67,7 @@ function QCEntry() {
 
           <select name="type" value={formValues.type} onChange={handleChange}>
             <option value="default" disabled hidden>
-              Type of Machine
+              TYPE OF MACHINE
             </option>
             <option value="M1">Machine 1</option>
             <option value="M2">Machine 2</option>

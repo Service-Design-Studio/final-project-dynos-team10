@@ -4,26 +4,29 @@
 }
 
 header {
-    background-color: #dee2e6;
-    font-size: calc(10px + 2vmin);
-    color: black;
-    text-align: center;
-    padding: 5px;
-    display:flex; 
-    flex-direction:row;
-  }
+  background-color: #dee2e6;
+  font-size: 1rem;
+  color: black;
+  text-align: center;
+  padding: 0.01rem;
+  display:flex; 
+  flex-direction:row;
+  align-items: center;
+}
 
 button { 
     background-color: white; 
-    border: 2px solid #4285F4;  
+    border: 0.15rem solid #4285F4;  
     color: black; 
     font-weight: bold;
-    width: 6em;
-    height: 6em;
+    width: 7rem;
+    height: 7rem;
     cursor: pointer; 
     text-align: center;
-    margin: 15px;
-    border-radius: 10px; 
+    margin: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.3rem;
+    border-radius: 1rem; 
     font-size: large;
   } 
 
