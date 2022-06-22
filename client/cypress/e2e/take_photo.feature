@@ -16,26 +16,23 @@ Feature: Take Picture
     #     Then I see a prompt to enable camera access in settings
 
     Scenario: Taking one photo of component xxx
-        Given I am on the camera page of component xxx
-        And I click on the "take photo" button
-        Then I see the photo taken
-        And I click "done" button
-        Then I am on the photo review page
+        Given I am on the camera page of component "xxx"
+        And I click on the take photo button
+        Then I should see the counter showing "1"
+        When I click on the right arrow button
+        Then I should be on the "photo review" page
 
-    Scenario: Option to take multiple photos of Component xxx
-        # REUSE FIRST 3 STEPS
-        Given I am on the camera page of component xxx
-        And I click on the "take photo" button
-        Then I see the photo taken
-        When I click on the "+" button
-        Then I am on the camera page
-        And I see a counter
-        And I continue taking pictures by clicking on the "+" button
-        And I click "done" button
-        Then I am on the photo review page
+    Scenario: Taking multiple photos of component xxx
+        Given I am on the camera page of component "xxx"
+        And I click on the take photo button
+        Then I should see the counter showing "1"
+        When I click on the take photo button "4" times
+        Then I should see the counter showing "5"
+        When I click on the right arrow button
+        Then I am on the "photo review" page
 
     Scenario: Review the photos and upload
-        Given I am on the photo review page of component xxx
+        Given I am on the photo review page of component "xxx"
         And I click on the "upload" button
         Then I see a prompt "successfully uploaded"
         Then I am on the manual check page

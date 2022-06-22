@@ -1,6 +1,7 @@
 Feature: Pass Fail Check
     I want to check if the component passes or fails QC
 
+    @pending
     Scenario: Status of Label passes true positive
         Given I am on the photo review page
         And the AI imaging deems the label to be correctly positioned
@@ -9,18 +10,20 @@ Feature: Pass Fail Check
 
 	        #And the "label" component button colour turns green
 
-
+    @pending
     Scenario: Status of Label passes false positive
         Given I am on the photo review page
         And the AI imaging deems the label to be correctly positioned
         Then I am on the status of labels (pass) page
 	        #And the "label" component button colour turns green
 
+    @pending
     Scenario: Status of Label fails
         Given I am on the photo review page
         And the AI imaging deems the label to be incorrectly positioned
         Then I see the reasons for incorrect positioning in "Reasons for failing check" box
 
+    @pending
     Scenario: Status of Label fails true negative
         Given I am on the photo review page
         And AI imaging deems the label to be incorrectly positioned
@@ -28,6 +31,7 @@ Feature: Pass Fail Check
         Then I click "done" button
 	        #And the "label" component button colour turns red
 
+    @pending
     Scenario: Status of Label fails suspected false negative
         Given I am on the photo review page
         And AI imaging deems the label to be incorrectly positioned
@@ -35,6 +39,7 @@ Feature: Pass Fail Check
         Then I click "check manually" button
         Then I am on the status of labels (manual check) page
 
+    @pending
     Scenario: manual check of status of label passed
         Given I am on the status of labels (manual check) page
         And I click on the "upload photo" button
@@ -44,6 +49,7 @@ Feature: Pass Fail Check
         Then I am on the status of labels (pass) page
 	        #And the "label" component button colour turns green
 
+    @pending
     Scenario: manual check of status of label failed
         Given I am on the status of labels (manual check) page
         And I click on the "upload photo" button

@@ -1,10 +1,7 @@
 import { Given, Then, When, And } from "cypress-cucumber-preprocessor/steps";
 
-import { DEV_SERVER_URL, buildRoute } from './steps_helper';
+import { DEV_SERVER_URL, buildRoute, buildComponentButtonClass } from './steps_helper';
 
-Then(`I see {string} in the title`, (title) => {
-    cy.title().should('include', title);
-})
 // ROUTING
 Given('I am on the {string} page', (pageDescription) => {
     cy.visit(buildRoute(pageDescription));
@@ -13,10 +10,26 @@ And('I should be on the {string} page', (pageDescription) => {
     cy.url().should('eq', buildRoute(pageDescription));
 });
 
+// general steps
+// And('I should see an input field for {string}', (inputContent) => {
+//     cy.get('input').invoke('attr', 'placeholder').should(($inputPlaceholder) => {
+//         expect($inputPlaceholder.toLowerCase()).to.equal(inputContent.toLowerCase());
+//     });
+// })
+// And('I should see a {string} button', (buttonTextContent) => {
+//     cy.get('body').then(body => {
+//         expect(body.find(`button[textContent=${buttonTextContent}]`).length).to.be.greaterThan(0);
+//     })
+// })
 
+// ----------- work_order.feature ------------------
+
+
+
+// ------------- take_photo.feature ------------------
 // Scenario: Opening the camera function
 And('I click on component {string} button', (componentName) => {
-    const componentButtonClass = `.${componentName.toLowerCase().split(' ').join('-')}__btn`
+    const componentButtonClass = buildComponentButtonClass(componentName);
     cy.get(componentButtonClass).click();
 });
 Then('my camera should open',() => {
@@ -24,38 +37,30 @@ Then('my camera should open',() => {
 });
 
 // Scenario: Taking one photo of component xxx
-Given('I am on the camera page of {string}', () => {
-    cy.visit(DEV_SERVER_URL);
+// Is there a better way to do the below step? It seems to be a combination of other steps
+Given('I am on the camera page of component {string}', (componentName) => {
+    // reused step 1: I am on the {status of components} page
+    cy.visit(buildRoute('status of components'));
+    // reused step 2: I click on component {string} button
+    const componentButtonClass = buildComponentButtonClass(componentName);
+    cy.get(componentButtonClass).click();
 })
-And('I click on the {string} button', () => {
+And('I click on the take photo button', () => {
+    cy.get('.take-photo-btn').click();
 });
-Then('I see the photo taken',() => {
+Then('I should see the counter showing {string}', (count) => {
+    cy.get('.counter').contains(count);
 });
-And('I click on the "Done" button',() => {
+When('I click on the right arrow button',() => {
+    cy.get('.to-photo-review-btn').click();
 });
-Then('I am on the photo review page',  () => {
-    cy.visit(DEV_SERVER_URL);
-});
+
 //  Scenario: Taking multiple photo of component xxx
-Given('I am on the camera page of {string}', () => {
-    cy.visit(DEV_SERVER_URL);
-})
-And('I click on the {string} button', () => {
+When('I click on the take photo button {string} times', (times) => {
+    for (let i = 0; i < +times; i++) {
+        cy.get('.take-photo-btn').click();
+    }
 });
-Then('I see the photo taken',() => {
-});
-When('I click on the "+" button',() => {
-});
-Then(`I am on the camera page`,  () => {
-    cy.visit(DEV_SERVER_URL);
-})
-And('I see a counter', () => {
-});
-And('I continue taking pictures by clicking on the "+" button', () => {
-});
-Then('I am on the photo review page', () => {
-    cy.visit(DEV_SERVER_URL);
-})
 
 // Scenario: Review the photos and upload
 Given('I am on the photo review page of {string}', () => {

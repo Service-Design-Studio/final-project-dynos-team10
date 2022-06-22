@@ -3,7 +3,9 @@ const DEV_SERVER_URL = "http://localhost:3000/";
 const descriptionToRouteMap = {
     'home': '',
     "status of components": 'component-status',
-    "take photo": 'camera'
+    "take photo": 'camera',
+    'photo review': 'photo-review',
+    'qc entry': 'qc-entry'
 }
 
 /**
@@ -15,4 +17,13 @@ function buildRoute(pageDescription) {
     return DEV_SERVER_URL + descriptionToRouteMap[pageDescription];
 }
 
-export { DEV_SERVER_URL, buildRoute }
+/**
+ * Generates a class name to find the component button by css selector
+ * @param {string} componentName 
+ * @returns the DOM class name that should represent one component button in the component status page
+ */
+function buildComponentButtonClass(componentName) {
+    return `.${componentName.toLowerCase().split(' ').join('-')}__btn`
+}
+
+export { DEV_SERVER_URL, buildRoute, buildComponentButtonClass }
