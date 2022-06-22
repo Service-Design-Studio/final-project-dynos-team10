@@ -4,7 +4,7 @@ import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
 import { $axios } from '../axiosHelper';
 
-function QCEntry() {
+function QCEntry({navigation}) {
   const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState({
@@ -38,8 +38,8 @@ function QCEntry() {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      createWorkOrder().then(() => {
-        navigate("/component-status");
+        createWorkOrder().then(() => {
+        navigate('/component-status',{state:{serialno: formValues.serialno }});
       });
     }
   }, [formErrors, isSubmit]);
