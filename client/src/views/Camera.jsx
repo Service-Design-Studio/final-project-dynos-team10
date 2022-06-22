@@ -68,7 +68,6 @@ function Camera() {
     useEffect(() => {
         openCamera();
     }, [videoElement]);
-
     
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
@@ -76,26 +75,26 @@ function Camera() {
         <div class="flexbox-column">
 
             <div class="flexbox-top">
-                <div class="flexbox-top"> <FaArrowLeft class="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> </div>
-                <div class="flexbox-top empty-space"></div>
+                <div> <FaArrowLeft class="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> </div>
+                <div class="empty-space"></div>
                 <div class="flexbox-top-right" >
-                    <IoFlashOutline style={{fontSize: "40px", marginRight: "0.2em"}}/>
-                    <IoFlash style={{fontSize: "40px", marginRight: "0.2em"}}/>
-                    <BsCardImage  class="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "40px"}}/>
+                    <IoFlashOutline style={{fontSize: "2rem", marginRight: "0.2em"}}/>
+                    {/* will use if flash is implemented */}
+                    {/* <IoFlash style={{fontSize: "2rem", marginRight: "0.2em"}}/> */}
+                    <div> {count > 0 ? <BsCardImage  class="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : <BsCardImage style={{fontSize: "2rem", color: "transparent"}}/>  } </div>
                 </div>
-                    
             </div>
                 
-            <div class="flexbox-center camera">
+            <div class="flexbox-center">
                 <video autoPlay ref={videoElement}></video>
             </div>
 
-            <div class="flexbox-bottom">
-                {/* make counter square w rounded edges */}
-                <div> {count > 0 ? <div class="counter"> <span>{count}</span> </div> : null} </div>
-                <div> <button onClick={takePhoto} class="take-photo-btn" ></button> </div>
-                <div> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} class="hover to-photo-review-btn" style={{fontSize: "40px"}}/> : null} </div>
-            </div>
+            
+            <div class='wrapper'>
+                <div class="centered-vertically"> {count > 0 ? <div class="counter"> <span>{count}</span> </div> : null} </div>
+                <button onClick={takePhoto} class="take-photo-btn ignore-global" ></button> 
+                <div class="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} class="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
+            </div> 
 
             <div style={{display: "none"}} >
                 <canvas ref={photoRef}></canvas>
