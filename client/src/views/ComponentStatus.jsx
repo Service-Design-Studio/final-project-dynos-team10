@@ -1,10 +1,11 @@
 import ComponentStatusButton from "../components/ComponentStatusButton";
 import './ComponentStatus.css'
 import { FaBars } from "react-icons/fa";
+import {useLocation} from 'react-router-dom';
 
-function ComponentStatus() {
+function ComponentStatus({navigation}) {
     const componentnames = ["LABEL" , "WIRE", "XXX", "YYY"]
-
+    const location = useLocation();
     return (
         <div className="ComponentStatus">
             <header>
@@ -14,7 +15,8 @@ function ComponentStatus() {
             margin: "1.5rem",
             marginTop: "2rem"
           }}/> 
-            <h1>Machine 123</h1>
+
+            <h1>{location.state.serialno}</h1>
             </header>
             
             <div className="Buttongroup">
