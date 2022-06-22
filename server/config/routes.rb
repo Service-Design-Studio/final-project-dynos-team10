@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "application#index"
 
-  resources :workorders
-  resources :components
+  resources :workorders do
+    get "machine-types", on: :collection
+  end
+  resources :components do
+    get "component-types", on: :collection
+  end
   resources :images
 end

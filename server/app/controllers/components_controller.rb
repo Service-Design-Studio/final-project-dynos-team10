@@ -32,4 +32,7 @@ class ComponentsController < ApplicationController
 
     end
 
+    def component_types
+        render json: Component.get_component_types
+    end
 end

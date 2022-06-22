@@ -2,10 +2,10 @@ Feature: Take Picture
     I want to take pictures of a component
 
     Scenario: Opening the camera function
-        Given I am on the status of components page
-        And I click on "Component xxx" button
+        Given I am on the "status of components" page
+        And I click on component "XXX" button
         Then my camera should open
-        And I am on the take photo page
+        And I should be on the "take photo" page
 
     # to reuse steps
     # browser comes out with this prompt, we only code sad paths that our app can control/accomodate for

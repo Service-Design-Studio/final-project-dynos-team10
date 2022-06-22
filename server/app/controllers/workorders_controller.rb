@@ -34,5 +34,8 @@ class WorkordersController < ApplicationController
         # flash[:success] = "workorder successfully deleted!"
         # # redirect_to workorderzes_url
     end
-    
+
+    def machine_types
+        render json: Workorder.get_machine_types
+    end
 end

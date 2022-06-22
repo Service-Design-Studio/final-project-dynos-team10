@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
+import { $axios } from '../axiosHelper';
 
 function QCEntry() {
   const navigate = useNavigate();
@@ -22,9 +23,6 @@ function QCEntry() {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setIsSubmit(true);
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-        navigate("/component-status");
-      }
   };
 
   const validate = (values) => {
@@ -37,6 +35,27 @@ function QCEntry() {
     }
     return errors;
   };
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      createWorkOrder().then(() => {
+        navigate("/component-status");
+      });
+    }
+  }, [formErrors, isSubmit]);
+
+  const createWorkOrder = async () => {
+    try {
+      const result = await $axios.post('workorders', {
+        workorder_number: formValues.serialno,
+        machine_type: formValues.type
+      });
+      console.log({result});
+    } catch (e) {
+      console.error(e);
+      alert(e);
+    }
+  }
 
   return (
     <div>

@@ -3,7 +3,7 @@ import './ComponentStatus.css'
 import { FaBars } from "react-icons/fa";
 
 function ComponentStatus() {
-    const componentnames = ["LABEL" , "WIRE", "XXX", "XXX"]
+    const componentnames = ["LABEL" , "WIRE", "XXX", "YYY"]
 
     return (
         <div className="ComponentStatus">
