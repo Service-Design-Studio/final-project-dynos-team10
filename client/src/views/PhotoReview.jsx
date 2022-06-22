@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./Camera.css"
 import { useNavigate } from 'react-router-dom';
 
-import { FaArrowLeft, FaArrowRight, FaTrashAlt} from "react-icons/fa";
+import { FaArrowLeft, FaTrashAlt} from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
 import { MdLibraryAdd } from "react-icons/md";
+
+import photo_array from './Camera';
+import photoURI_array from './Camera';
 
 function PhotoReview() {
     const navigate = useNavigate();
@@ -22,7 +25,7 @@ function PhotoReview() {
                     facingMode: 'environment'
                 }
             });
-            const videoTrack = stream.getVideoTracks()[0];
+            // const videoTrack = stream.getVideoTracks()[0];
             videoElement.current.srcObject = stream;
 
         } catch (e) {
@@ -35,6 +38,15 @@ function PhotoReview() {
         openCamera();
     }, [videoElement]);
 
+
+    const display_canva = () => {
+        const dataURI = photoURI_array[0];
+        // imgConverted.src = dataURI;
+        console.log(dataURI);
+        const photo = photo_array[0];
+        console.log(photo);
+    }
+
     
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
@@ -42,19 +54,21 @@ function PhotoReview() {
         <div class="flexbox-column">
 
             <div class="flexbox-top">
-                <div> <FaArrowLeft class="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px"}}/> </div>
+                <FaArrowLeft class="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px"}}/> 
                 <div class="empty-space"></div>
                 <FaTrashAlt style={{fontSize: "40px"}}/>
             </div>
                 
             <div class="flexbox-center">
                 <video autoPlay ref={videoElement}></video>
+                {/* <img> src={photo_array[0]}</img>  */}
+                <img src="" id="imgConverted"></img>
             </div>
 
             <div class="flexbox-top">
                 <MdLibraryAdd class="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px"}}/>
                 <div class="empty-space"></div>
-                <AiOutlineSend style={{fontSize: "40px"}}/>
+                <AiOutlineSend onClick={display_canva} style={{fontSize: "40px"}}/>
             </div>
 
         </div>

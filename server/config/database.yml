@@ -9,7 +9,7 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  username: sdsrails
+#  username: sdsrails
   password: <%= ENV['POSTGRES_USER_PW'] %>
 
 development:

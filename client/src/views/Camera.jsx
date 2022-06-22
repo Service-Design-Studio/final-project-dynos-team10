@@ -9,16 +9,12 @@ import { BsCardImage } from "react-icons/bs";
 function Camera() {
     const navigate = useNavigate();
     const videoElement = useRef(null);
+    const photoRef = useRef(null);
 
     // only display counter and right arrow after user takes the first photo
     const [counter, setHasCounter] = useState(false)
     // increase value of counter after each photo is taken
     const [currentCount, addCount] = useState(0)
-
-    function increaseCount() {
-        setHasCounter(true)
-        addCount(prevCount => prevCount + 1)
-    }
 
     const openCamera = async () =>  {
         try {
@@ -32,13 +28,37 @@ function Camera() {
                     facingMode: 'environment'
                 }
             });
-            const videoTrack = stream.getVideoTracks()[0];
+            // const videoTrack = stream.getVideoTracks()[0];
             videoElement.current.srcObject = stream;
 
         } catch (e) {
             alert(`${e.name}`);
             console.error(e);
         }
+    }
+
+    const photoURI_array = [];
+    const photo_array = [];
+
+    const takePhoto = () => {
+        const width = 246.33 ; 
+        const height = 185.5 ;
+        let video = videoElement.current;
+        let photo = photoRef.current;
+        photo.width = width;
+        photo.height = height;
+
+        let context = photo.getContext('2d');
+        const canva_image = context.drawImage(video, 0, 0, width, height);
+        photo_array.push(canva_image);
+        
+        setHasCounter(true);
+        addCount(prevCount => prevCount + 1);
+
+        const dataURI = photo.toDataURL();
+        console.log(dataURI);
+        photoURI_array.push(dataURI);
+        
     }
 
     useEffect(() => {
@@ -69,11 +89,17 @@ function Camera() {
             <div class="flexbox-bottom">
                 {/* make counter square w rounded edges */}
                 <div> {counter ? <div class="counter"> <span>{currentCount}</span> </div> : null} </div>
-                <div> <button onClick={()=>increaseCount()} class="takePhoto" ></button> </div>
+                <div> <button onClick={takePhoto} class="takePhoto" ></button> </div>
                 <div> {counter ? <FaArrowRight onClick={() => navigate('/photo-review')} class="hover" style={{fontSize: "40px"}}/> : null} </div>
             </div>
 
+            <div class="flexbox-center" >
+                <canvas ref={photoRef}></canvas>
+            </div>
+
         </div>
+
+        
         
         
     )

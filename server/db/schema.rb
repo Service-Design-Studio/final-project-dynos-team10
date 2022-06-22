@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_21_025514) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_21_111547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,14 +18,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_21_025514) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "workorder_id"
+    t.integer "component_type", default: 0
+    t.boolean "status"
+    t.text "failing_reasons", default: [], array: true
     t.index ["workorder_id"], name: "index_components_on_workorder_id"
   end
 
   create_table "images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "public_url"
-    t.string "auth_url"
+    t.string "public_url", limit: 1024
+    t.string "auth_url", limit: 1024
     t.bigint "component_id"
     t.index ["component_id"], name: "index_images_on_component_id"
   end
@@ -33,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_21_025514) do
   create_table "workorders", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "workorder_number"
+    t.integer "machine_type", default: 0
   end
 
   add_foreign_key "components", "workorders"

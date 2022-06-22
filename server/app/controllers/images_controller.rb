@@ -3,14 +3,20 @@ require "securerandom"
 class ImagesController < ApplicationController
   # TODO: Permit params
   def index
-
+    render json: {success: true, data: Image.find_all}
   end
 
   def create
     new_image_base64 = params[:image]
+    component_id = params[:component_id]
     random_filename = "#{SecureRandom.uuid}.png"
     bucket_image_file = BUCKET.create_image new_image_base64, random_filename
-    image_record = Image.create_new_image bucket_image_file
+    image_record = Image.create_record component_id, bucket_image_file
+    if image_record.id.nil?
+      # TODO: change http status?
+      render json: { success: false, errors: image_record.errors }
+      return
+    end
     render json: { success: true, data: image_record }
   end
 
