@@ -41,4 +41,6 @@ button:hover{
     flex-flow: row wrap;
 }
 
-
+.Buttongroup > * {
+  text-transform: uppercase;
+}
