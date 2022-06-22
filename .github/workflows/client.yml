@@ -25,6 +25,7 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:3000'
           working-directory: client
+          command: npm run cypress:run
           env: TAGS='not @pending'
   build-and-deploy:
     needs: cypress-run
