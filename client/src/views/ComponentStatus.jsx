@@ -6,7 +6,7 @@ import { selectWorkorderComponents, addNewComponent } from "../store/workorder/w
 import { useEffect } from "react";
 
 function ComponentStatus() {
-    const componentnames = ["LABEL" , "WIRE", "XXX", "YYY"];
+    const componentnames = ["label" , "wire", "xxx", "yyy"];
     const components = useSelector(selectWorkorderComponents);
 
     useEffect(() => {
