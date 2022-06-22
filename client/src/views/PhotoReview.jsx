@@ -10,48 +10,13 @@ import FailIconSvg from '../assets/fail-icon.svg';
 
 import photo_array from './Camera';
 import photoURI_array from './Camera';
+import SwipeableTextMobileStepper from '../components/PhotoCarousel';
 
 import './PhotoReview.css';
 
 function PhotoReview() {
     const navigate = useNavigate();
-    const videoElement = useRef(null);
 
-    const openCamera = async () =>  {
-        try {
-            // .getUserMedia() method - display live video feed from camera 
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    minAspectRatio: 1.333,
-                    // minFrameRate: 30,
-                    // width: 1920,
-                    // heigth: 1080,
-                    facingMode: 'environment'
-                }
-            });
-            // const videoTrack = stream.getVideoTracks()[0];
-            videoElement.current.srcObject = stream;
-
-        } catch (e) {
-            alert(`${e.name}`);
-            console.error(e);
-        }
-    }
-
-    useEffect(() => {
-        openCamera();
-    }, [videoElement]);
-
-
-    const display_canva = () => {
-        const dataURI = photoURI_array[0];
-        // imgConverted.src = dataURI;
-        console.log(dataURI);
-        const photo = photo_array[0];
-        console.log(photo);
-    }
-
-    
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
         // 3 flexbox item along main/hori axis (go back, empty or take photo button, other icons)
@@ -65,9 +30,8 @@ function PhotoReview() {
             </div>
                 
             <div className="flexbox-center">
-                <video autoPlay ref={videoElement}></video>
-                {/* <img> src={photo_array[0]}</img>  */}
-                <img src="" id="imgConverted"></img>
+                {/* <video autoPlay ref={videoElement}></video> */}
+                <SwipeableTextMobileStepper/>
             </div>
 
 
