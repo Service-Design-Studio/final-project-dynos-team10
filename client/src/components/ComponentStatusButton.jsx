@@ -1,14 +1,24 @@
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { addNewComponent } from '../store/workorder/workorderSlice';
 import '../views/ComponentStatus.css'
 
 function ComponentStatusButton(props) {
-    const navigate = useNavigate();
+    const componentName = props.component;
 
-    const computedClassName = props.component.toLowerCase().split(' ').join('-') + '__btn';
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const computedClassName = componentName.toLowerCase().split(' ').join('-') + '__btn';
+
+    const handleClick = () => {
+        dispatch(addNewComponent(componentName));
+        navigate('/camera');
+    }
 
     return (
-        <button className={computedClassName} onClick={() => navigate('/camera')}>
-            {props.component}
+        <button className={computedClassName} onClick={handleClick}>
+            {componentName}
         </button>
     )
 }

@@ -1,9 +1,17 @@
 import ComponentStatusButton from "../components/ComponentStatusButton";
 import './ComponentStatus.css'
 import { FaBars } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import { selectWorkorderComponents, addNewComponent } from "../store/workorder/workorderSlice";
+import { useEffect } from "react";
 
 function ComponentStatus() {
-    const componentnames = ["LABEL" , "WIRE", "XXX", "YYY"]
+    const componentnames = ["LABEL" , "WIRE", "XXX", "YYY"];
+    const components = useSelector(selectWorkorderComponents);
+
+    useEffect(() => {
+        console.log({components});
+    }, [components])
 
     return (
         <div className="ComponentStatus">

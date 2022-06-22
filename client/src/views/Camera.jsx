@@ -15,6 +15,8 @@ function Camera() {
     const [counter, setHasCounter] = useState(false)
     // increase value of counter after each photo is taken
     const [currentCount, addCount] = useState(0)
+    // current image capture
+    const [imageCapture, setImageCapture] = useState();
 
     const openCamera = async () =>  {
         try {
@@ -28,8 +30,9 @@ function Camera() {
                     facingMode: 'environment'
                 }
             });
-            // const videoTrack = stream.getVideoTracks()[0];
+            const videoTrack = stream.getVideoTracks()[0];
             videoElement.current.srcObject = stream;
+            setImageCapture(new ImageCapture(videoTrack));
 
         } catch (e) {
             alert(`${e.name}`);
@@ -37,29 +40,43 @@ function Camera() {
         }
     }
 
-    const photoURI_array = [];
-    const photo_array = [];
+    const photoArray = [];
 
-    const takePhoto = () => {
-        const width = 246.33 ; 
-        const height = 185.5 ;
-        let video = videoElement.current;
+    const takePhoto = async () => {
+        const imageBitmap = await imageCapture.grabFrame();
         let photo = photoRef.current;
-        photo.width = width;
-        photo.height = height;
+        photo.width = imageBitmap.width;
+        photo.height = imageBitmap.height;
+        photo.getContext('2d').drawImage(imageBitmap, 0, 0);
+        console.log({imageBitmap});
+        const base64Image = photo.toDataURL();
+        photoArray.push(base64Image);
+        console.log({photoArray});
 
-        let context = photo.getContext('2d');
-        const canva_image = context.drawImage(video, 0, 0, width, height);
-        photo_array.push(canva_image);
-        
         setHasCounter(true);
         addCount(prevCount => prevCount + 1);
-
-        const dataURI = photo.toDataURL();
-        console.log(dataURI);
-        photoURI_array.push(dataURI);
-        
     }
+
+    // const takePhoto = () => {
+    //     const width = 246.33 ; 
+    //     const height = 185.5 ;
+    //     let video = videoElement.current;
+    //     let photo = photoRef.current;
+    //     photo.width = width;
+    //     photo.height = height;
+
+    //     let context = photo.getContext('2d');
+    //     const canva_image = context.drawImage(video, 0, 0, width, height);
+    //     photo_array.push(canva_image);
+        
+    //     setHasCounter(true);
+    //     addCount(prevCount => prevCount + 1);
+
+    //     const dataURI = photo.toDataURL();
+    //     console.log(photo_array);
+    //     photoURI_array.push(dataURI);
+        
+    // }
 
     useEffect(() => {
         openCamera();
