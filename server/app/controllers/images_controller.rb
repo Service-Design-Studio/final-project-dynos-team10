@@ -6,12 +6,16 @@ class ImagesController < ApplicationController
     render json: {success: true, data: Image.find_all}
   end
 
+  def commit_new_image(image_string, component_id)
+    random_filename = "#{SecureRandom.uuid}.png"
+    bucket_image_file = BUCKET.create_image image_string, random_filename
+    Image.create_record component_id, bucket_image_file
+  end
+
   def create
     new_image_base64 = params[:image]
     component_id = params[:component_id]
-    random_filename = "#{SecureRandom.uuid}.png"
-    bucket_image_file = BUCKET.create_image new_image_base64, random_filename
-    image_record = Image.create_record component_id, bucket_image_file
+    image_record = commit_new_image new_image_base64, component_id
     if image_record.id.nil?
       # TODO: change http status?
       render json: { success: false, errors: image_record.errors }
@@ -36,5 +40,26 @@ class ImagesController < ApplicationController
 
   def destroy
 
+  end
+
+  # function to BATCH create images
+  def batch_create
+    new_images_base64 = params[:images]
+    component_id = params[:component_id]
+    image_records = []
+    errors = []
+    new_images_base64.each do |image_string|
+      new_image_record = commit_new_image image_string, component_id
+      if new_image_record.id.nil?
+        errors << new_image_record.errors
+      end
+      image_records << new_image_record
+    end
+
+    if errors.length > 0
+      render json: { success: false, data: { image_records: image_records, errors: errors } }
+    else
+      render json: { success: true, data: image_records }
+    end
   end
 end

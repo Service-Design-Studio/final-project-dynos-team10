@@ -16,6 +16,9 @@ export const workorderSlice = createSlice({
     name: 'workorder',
     initialState,
     reducers: {
+        setWorkorderNumber: (state, action) => {
+            state.workorderNumber = action.payload;
+        },
         addNewComponent: (state, action) => {
             const componentName = action.payload;
             if (componentName in state.components) {
@@ -32,6 +35,10 @@ export const workorderSlice = createSlice({
             const { componentName, image } = action.payload;
             state.components[componentName].images.push(image);
         },
+        removeComponentImageByIndex: (state, action) => {
+            const { componentName, index } = action.payload;
+            state.components[componentName].images.splice(index, 1);
+        },
         updateCurrentComponentName: (state, action) => {
             state.currentComponentName = action.payload;
         }
@@ -39,7 +46,13 @@ export const workorderSlice = createSlice({
 })
 
 // ACTIONS/SETTERRS/MUTATORS
-export const { addNewComponent, addImageToComponent, updateCurrentComponentName } = workorderSlice.actions;
+export const { 
+    setWorkorderNumber,
+    addNewComponent,
+    addImageToComponent,
+    updateCurrentComponentName,
+    removeComponentImageByIndex
+} = workorderSlice.actions;
 
 // GETTERS
 export const selectWorkorderNumber = (state) => state.workorder.workorderNumber;

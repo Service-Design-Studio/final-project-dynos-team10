@@ -56,7 +56,6 @@ function Camera() {
         photo.width = imageBitmap.width;
         photo.height = imageBitmap.height;
         photo.getContext('2d').drawImage(imageBitmap, 0, 0);
-        console.log({imageBitmap});
         const base64Image = photo.toDataURL();
 
         dispatch(addImageToComponent({
@@ -73,28 +72,28 @@ function Camera() {
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
         // 3 flexbox item along main/hori axis (go back, empty or take photo button, other icons)
-        <div class="flexbox-column">
+        <div className="flexbox-column">
 
-            <div class="flexbox-top">
-                <div class="flexbox-top"> <FaArrowLeft class="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> </div>
-                <div class="flexbox-top empty-space"></div>
-                <div class="flexbox-top-right" >
+            <div className="flexbox-top">
+                <div className="flexbox-top"> <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> </div>
+                <div className="flexbox-top empty-space"></div>
+                <div className="flexbox-top-right" >
                     <IoFlashOutline style={{fontSize: "40px", marginRight: "0.2em"}}/>
                     <IoFlash style={{fontSize: "40px", marginRight: "0.2em"}}/>
-                    <BsCardImage  class="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "40px"}}/>
+                    <BsCardImage  className="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "40px"}}/>
                 </div>
                     
             </div>
                 
-            <div class="flexbox-center camera">
+            <div className="flexbox-center camera">
                 <video autoPlay ref={videoElement}></video>
             </div>
 
-            <div class="flexbox-bottom">
+            <div className="flexbox-bottom">
                 {/* make counter square w rounded edges */}
-                <div> {count > 0 ? <div class="counter"> <span>{count}</span> </div> : null} </div>
-                <div> <button onClick={takePhoto} class="take-photo-btn" ></button> </div>
-                <div> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} class="hover to-photo-review-btn" style={{fontSize: "40px"}}/> : null} </div>
+                <div> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
+                <div> <button onClick={takePhoto} className="take-photo-btn" ></button> </div>
+                <div> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "40px"}}/> : null} </div>
             </div>
 
             <div style={{display: "none"}} >

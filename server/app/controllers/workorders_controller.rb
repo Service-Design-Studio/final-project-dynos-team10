@@ -1,6 +1,11 @@
 class WorkordersController < ApplicationController
     # TODO: permit params
     def index
+        workorder_number = params[:workorder_number]
+        unless workorder_number.nil?
+            render json: { success: true, data: Workorder.find_one_by_workorder_number(workorder_number) }
+            return
+        end
         all_workorders = Workorder.find_all
         render json: { success: true, data: all_workorders }
     end

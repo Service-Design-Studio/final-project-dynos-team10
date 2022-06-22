@@ -7,39 +7,31 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 
 
-function SwipeableTextMobileStepper() {
+function SwipeableTextMobileStepper({
+  activeStep,
+  handleNext,
+  handleBack,
+  handleStepChange
+}) {
   const theme = useTheme();
-  const [activeStep, setActiveStep] = useState(0);
+
   const components = useSelector(selectCurrentComponent);
-  const canvasEls = useRef(new Array());
   const maxSteps = useMemo(() => {
     return components.images.length;
-  }, [components]);  
+  }, [components]);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStepChange = (step) => {
-    setActiveStep(step);
-  };
-
-
-  useEffect(() => {
+  const canvasEls = useRef([]);
+  const [canvasReady, setCanvasReady] = useState(false);
+  const [canvasIntervalId, setCanvasIntervalId] = useState(0);
+  const setImages = () => {
     // set image sources
     components.images.map((step, index) => {
-      console.log(canvasEls.current);
       const canvas = canvasEls.current[index];
       const ctx = canvas.getContext("2d");
 
@@ -49,35 +41,43 @@ function SwipeableTextMobileStepper() {
       };
       image.src = step;
     });
-
-    
-  }, [])
-
+  }
+  const delaySetImages = () => {
+    const intervalId = setInterval(() => {
+      if (canvasEls.current.length === maxSteps) {
+        setCanvasReady(true);
+      }
+    }, 200);
+    setCanvasIntervalId(intervalId);
+  }
   useEffect(() => {
-    console.log(canvasEls.current);
-  }, [canvasEls.current]);
+    delaySetImages();
+
+    if (canvasReady) {
+      clearInterval(canvasIntervalId);
+      setImages();
+    }
+  }, [canvasReady])
+  // useEffect(() => {
+  //   setImages();
+  // }, [components.images])
 
   const generateCanvases = () => {
-    const result = components.images.map((step, index) => {
-      console.log(components.images, index);
-      return(
-        <div>
+    return components.images.map((step, index) => {
+      return (
           <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
-          {/* {
-            Math.abs(activeStep - index) <= 2
-            ? (
+          // {
+          //   Math.abs(activeStep - index) <= 2
+          //   ? (
 
-              // <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
+          //     <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
 
-              // <canvas className={`canvas__${index}`}></canvas>
-            )
-            : null
-          } */}
-        </div>
+          //     // <canvas className={`canvas__${index}`}></canvas>
+          //   )
+          //   : null
+          // }
       )
     })
-    console.log({result, refs: canvasEls.current});
-    return result;
   }
 
 
