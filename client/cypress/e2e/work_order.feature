@@ -1,5 +1,4 @@
 Feature: New Work Order
-
     I want to start a new work order to save photos and inspection data
 
     @pending
