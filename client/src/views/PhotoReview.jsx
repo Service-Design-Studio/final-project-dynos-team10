@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./Camera.css"
 import { useNavigate } from 'react-router-dom';
 
@@ -33,6 +33,10 @@ function PhotoReview() {
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
+    const hasImages = useMemo(() => {
+        return currentComponent.images.length > 0;
+    }, [currentComponent]);
+
     const deleteActivePhoto = () => {
         dispatch(removeComponentImageByIndex({
             index: activeStep,
@@ -98,50 +102,64 @@ function PhotoReview() {
             </div>
                 
             <div className="flexbox-center">
-                <SwipeableTextMobileStepper
-                    activeStep={activeStep}
-                    handleNext={handleNext}
-                    handleBack={handleBack}
-                    handleStepChange={handleStepChange}
-                    key={carouselKey}
-                />
-            </div>
-
-
-            <div style={{textAlign: 'center'}}>
-                <h3>Indicate Status to Proceed</h3>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <button className="photo-review-status-btn photo-review-status-btn--fail" onClick={() => setChosenStatus('fail')}>
-                        <img src={FailIconSvg} width={65}></img>
-                        <p>Fail</p>
-                    </button>
-                    <button className="photo-review-status-btn photo-review-status-btn--pass" onClick={() => setChosenStatus('pass')}>
-                        <img src={PassIconSvg} width={65}></img>
-                        <p>Pass</p>
-                    </button>
-                </div>
                 {
-                    chosenStatus &&
-                    (
-                        <>
-                            <h4>You have chosen: {chosenStatus.toUpperCase()}</h4>
-                            <button 
-                                onClick={postComponentPhotos}
-                                style={{
-                                    margin: 0,
-                                    padding: '10px 0',
-                                    height: 'auto',
-                                    backgroundColor: '#4285F4',
-                                    color: 'white',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Proceed
-                            </button>
-                        </>
-                    )
+                    !hasImages
+                    ?   <button
+                            className="photo-review-camera-btn--secondary"
+                            style={{
+                                textTransform: 'capitalize'
+                            }}
+                            onClick={() => navigate('/camera')}
+                        >
+                        go back to camera
+                    </button>
+                    : <SwipeableTextMobileStepper
+                        activeStep={activeStep}
+                        handleNext={handleNext}
+                        handleBack={handleBack}
+                        handleStepChange={handleStepChange}
+                        key={carouselKey}
+                    />
                 }
             </div>
+
+            {
+                hasImages &&
+                <div style={{textAlign: 'center'}}>
+                    <h3>Indicate Status to Proceed</h3>
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <button className="photo-review-status-btn photo-review-status-btn--fail" onClick={() => setChosenStatus('fail')}>
+                            <img src={FailIconSvg} width={65}></img>
+                            <p>Fail</p>
+                        </button>
+                        <button className="photo-review-status-btn photo-review-status-btn--pass" onClick={() => setChosenStatus('pass')}>
+                            <img src={PassIconSvg} width={65}></img>
+                            <p>Pass</p>
+                        </button>
+                    </div>
+                    {
+                        chosenStatus &&
+                        (
+                            <>
+                                <h4>You have chosen: {chosenStatus.toUpperCase()}</h4>
+                                <button 
+                                    onClick={postComponentPhotos}
+                                    style={{
+                                        margin: 0,
+                                        padding: '10px 0',
+                                        height: 'auto',
+                                        backgroundColor: '#4285F4',
+                                        color: 'white',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Proceed
+                                </button>
+                            </>
+                        )
+                    }
+                </div>
+            }
         </div>
     )
 }

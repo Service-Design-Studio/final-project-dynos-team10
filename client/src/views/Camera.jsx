@@ -68,6 +68,14 @@ function Camera() {
     useEffect(() => {
         openCamera();
     }, [videoElement]);
+
+    const [canTakePhoto, setCanTakePhoto] = useState(false);
+    useEffect(() => {
+        if (imageCapture) {
+            setCanTakePhoto(true);
+        }
+    }, [imageCapture])
+
     
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
