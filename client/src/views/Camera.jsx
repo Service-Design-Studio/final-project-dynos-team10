@@ -68,6 +68,13 @@ function Camera() {
         openCamera();
     }, [videoElement]);
 
+    const [canTakePhoto, setCanTakePhoto] = useState(false);
+    useEffect(() => {
+        if (imageCapture) {
+            setCanTakePhoto(true);
+        }
+    }, [imageCapture])
+
     
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
@@ -92,7 +99,7 @@ function Camera() {
             <div className="flexbox-bottom">
                 {/* make counter square w rounded edges */}
                 <div> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
-                <div> <button onClick={takePhoto} className="take-photo-btn" ></button> </div>
+                <div> <button disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn" ></button> </div>
                 <div> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "40px"}}/> : null} </div>
             </div>
 

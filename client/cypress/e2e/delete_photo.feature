@@ -1,4 +1,4 @@
-Feature: delete photo
+Feature: Delete Photo
     I want to delete photo(s) from Photo Review page
     
     Scenario: Review the photos and delete one
@@ -13,4 +13,4 @@ Feature: delete photo
         Given I am on the photo review page of component "xxx"
         Then I should see all my photos in the carousel
         And I click on the "delete" button
-        Then I should see a "go back to camera" button
+        Then I should see a Go Back To Camera button
