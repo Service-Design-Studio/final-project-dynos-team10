@@ -47,7 +47,7 @@ Given('I am on the camera page of component {string}', (componentName) => {
     cy.get(componentButtonClass).click();
 })
 And('I click on the take photo button', () => {
-    cy.wait(1000);
+    cy.wait(2000);
     cy.get('.take-photo-btn').click();
 });
 Then('I should see the counter showing {string}', (count) => {
@@ -59,7 +59,7 @@ When('I click on the right arrow button',() => {
 
 //  Scenario: Taking multiple photo of component xxx
 When('I click on the take photo button {string} times', (times) => {
-    cy.wait(1000);
+    cy.wait(2000);
     for (let i = 0; i < +times; i++) {
         cy.get('.take-photo-btn').click();
     }
