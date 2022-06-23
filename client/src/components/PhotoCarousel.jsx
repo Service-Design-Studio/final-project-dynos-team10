@@ -82,9 +82,9 @@ function SwipeableTextMobileStepper({
 
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+    <Box sx={{ maxWidth: "200%", flexGrow: 1 }}>
       <Paper
-        square
+        square 
         elevation={0}
         sx={{
           display: 'flex',

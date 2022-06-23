@@ -35,8 +35,8 @@ function Camera() {
                 video: {
                     // minAspectRatio: 1.333,
                     // minFrameRate: 30,
-                    // width: 1920,
-                    // heigth: 1080,
+                    width: 1920,
+                    heigth: 2000,
                     facingMode: 'environment'
                 }
             });
@@ -55,7 +55,7 @@ function Camera() {
         let photo = photoRef.current;
         photo.width = imageBitmap.width;
         photo.height = imageBitmap.height;
-        photo.getContext('2d').drawImage(imageBitmap, 0, 0);
+        photo.getContext('2d').drawImage(imageBitmap, 0, 0, 800, 300);
         console.log({imageBitmap});
         const base64Image = photo.toDataURL();
 
@@ -72,28 +72,27 @@ function Camera() {
     return (
         // 3 flexbox container along cross/vertical axis (header, camera, bottom)
         // 3 flexbox item along main/hori axis (go back, empty or take photo button, other icons)
-        <div class="flexbox-column">
+        <div className="flexbox-column">
 
-            <div class="flexbox-top">
-                <div> <FaArrowLeft class="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> </div>
-                <div class="empty-space"></div>
-                <div class="flexbox-top-right" >
+            <div className="flexbox-top">
+                <div> <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> </div>
+                <div className="empty-space"></div>
+                <div className="flexbox-top-right" >
                     <IoFlashOutline style={{fontSize: "2rem", marginRight: "0.2em"}}/>
                     {/* will use if flash is implemented */}
                     {/* <IoFlash style={{fontSize: "2rem", marginRight: "0.2em"}}/> */}
-                    <div> {count > 0 ? <BsCardImage  class="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : <BsCardImage style={{fontSize: "2rem", color: "transparent"}}/>  } </div>
+                    <div> {count > 0 ? <BsCardImage  className="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : <BsCardImage style={{fontSize: "2rem", color: "transparent"}}/>  } </div>
                 </div>
             </div>
                 
-            <div class="flexbox-center">
+            <div className="flexbox-center camera">
                 <video autoPlay ref={videoElement}></video>
             </div>
-
             
-            <div class='wrapper'>
-                <div class="centered-vertically"> {count > 0 ? <div class="counter"> <span>{count}</span> </div> : null} </div>
-                <button onClick={takePhoto} class="take-photo-btn ignore-global" ></button> 
-                <div class="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} class="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
+            <div className='wrapper'>
+                <div className="centered-vertically"> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
+                <button onClick={takePhoto} className="take-photo-btn ignore-global" ></button> 
+                <div className="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
             </div> 
 
             <div style={{display: "none"}} >
