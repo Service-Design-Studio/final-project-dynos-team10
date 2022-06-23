@@ -94,7 +94,7 @@ function PhotoReview() {
                 <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> 
                 <div className="empty-space"></div>
                 <MdLibraryAdd className="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px", marginRight: '1rem'}}/>
-                <FaTrashAlt style={{fontSize: "40px"}} onClick={deleteActivePhoto}/>
+                <FaTrashAlt className="photo-review-delete-btn" style={{fontSize: "40px"}} onClick={deleteActivePhoto}/>
             </div>
                 
             <div className="flexbox-center">
@@ -111,11 +111,11 @@ function PhotoReview() {
             <div style={{textAlign: 'center'}}>
                 <h3>Indicate Status to Proceed</h3>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <button className="photo-review-status-btn" onClick={() => setChosenStatus('fail')}>
+                    <button className="photo-review-status-btn photo-review-status-btn--fail" onClick={() => setChosenStatus('fail')}>
                         <img src={FailIconSvg} width={65}></img>
                         <p>Fail</p>
                     </button>
-                    <button className="photo-review-status-btn" onClick={() => setChosenStatus('pass')}>
+                    <button className="photo-review-status-btn photo-review-status-btn--pass" onClick={() => setChosenStatus('pass')}>
                         <img src={PassIconSvg} width={65}></img>
                         <p>Pass</p>
                     </button>

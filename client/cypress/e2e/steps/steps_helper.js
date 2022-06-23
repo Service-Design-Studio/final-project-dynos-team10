@@ -26,4 +26,8 @@ function buildComponentButtonClass(componentName) {
     return `.${componentName.toLowerCase().split(' ').join('-')}__btn`
 }
 
-export { DEV_SERVER_URL, buildRoute, buildComponentButtonClass }
+function generateRandIntEndsInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export { DEV_SERVER_URL, buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive }

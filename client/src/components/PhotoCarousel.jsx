@@ -101,6 +101,7 @@ function SwipeableTextMobileStepper({
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
+        className="photo-carousel"
       >
         {generateCanvases()}
       </SwipeableViews>

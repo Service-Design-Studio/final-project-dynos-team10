@@ -49,16 +49,16 @@ function QCEntry({navigation}) {
   }, [formErrors, isSubmit]);
 
   const createWorkOrder = async () => {
-    try {
-      const result = await $axios.post('workorders', {
-        workorder_number: formValues.serialno,
-        machine_type: formValues.type
-      });
-      console.log({result});
-    } catch (e) {
-      console.error(e);
-      alert(e);
-    }
+    // try {
+    //   const result = await $axios.post('workorders', {
+    //     workorder_number: formValues.serialno,
+    //     machine_type: formValues.type
+    //   });
+    //   console.log({result});
+    // } catch (e) {
+    //   console.error(e);
+    //   alert(e);
+    // }
   }
 
   return (
@@ -88,7 +88,7 @@ function QCEntry({navigation}) {
 
           <p>{formErrors.serialno}</p>
 
-          <select name="type" value={formValues.type} onChange={handleChange}>
+          <select className="machine-type-select" name="type" value={formValues.type} onChange={handleChange}>
             <option value="default" disabled hidden>
               TYPE OF MACHINE
             </option>
@@ -99,7 +99,7 @@ function QCEntry({navigation}) {
 
           <p>{formErrors.type}</p>
 
-          <button onClick={handleNextPage}>NEXT</button>
+          <button className="submit-workorder-btn" onClick={handleNextPage}>NEXT</button>
         </div>
       </form>
     </div>
