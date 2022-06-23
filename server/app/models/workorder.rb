@@ -2,6 +2,7 @@ class Workorder < ApplicationRecord
     has_many :components
     # TODO: sort out validations
     validates :workorder_number, :machine_type, presence: true
+    validates :workorder_number, uniqueness: true
 
     enum machine_type: {
       machine_1: 0,
@@ -28,6 +29,10 @@ class Workorder < ApplicationRecord
 
     def self.find_one(workorder_id)
         Workorder.find_by(id: workorder_id)
+    end
+
+    def self.find_one_by_workorder_number(workorder_number)
+        Workorder.find_by(workorder_number: workorder_number)
     end
 
     # TODO: test whether this works

@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   resources :components do
     get "component-types", on: :collection
   end
-  resources :images
+  resources :images do
+    post "batch-create", on: :collection
+  end
 end

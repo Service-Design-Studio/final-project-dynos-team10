@@ -31,9 +31,12 @@ Feature: Take Picture
         When I click on the right arrow button
         Then I am on the "photo review" page
 
-    Scenario: Review the photos and upload
+    # check with group if this is intended
+    Scenario: Review the photos and mark pass/fail
         Given I am on the photo review page of component "xxx"
-        And I click on the "upload" button
-        Then I see a prompt "successfully uploaded"
-        Then I am on the manual check page
+        Then I should see all my photos in the carousel
+        And I should see the "pass" icon
+        And I should see the "fail" icon
+        # Then I see a prompt "successfully uploaded"
+        # Then I am on the manual check page
         #go to manual check to see if it passes manual QC (to pass_fail_check.feature)

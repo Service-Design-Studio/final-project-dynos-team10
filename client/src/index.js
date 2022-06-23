@@ -7,6 +7,16 @@ import { BrowserRouter } from "react-router-dom";
 import Router from './router';
 import { store } from './store';
 import { Provider } from 'react-redux';
+import { debounce } from 'debounce';
+import { saveState } from './browserStorage';
+
+store.subscribe(
+  // this callback function runs whenever a redux store dispatch is made
+  // max write to localStorage is 2s after changes in effect
+  debounce(() => {
+    saveState(store.getState());
+  }, 2000)
+)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

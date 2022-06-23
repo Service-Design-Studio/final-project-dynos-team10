@@ -21,9 +21,11 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: chrome
+          install-command: npm install --legacy-peer-deps
           start: npm start
           wait-on: 'http://localhost:3000'
           working-directory: client
+          command: npm run cypress:run
   build-and-deploy:
     needs: cypress-run
     runs-on: ubuntu-latest

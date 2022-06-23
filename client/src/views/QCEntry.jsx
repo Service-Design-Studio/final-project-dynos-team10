@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
 import { $axios } from '../axiosHelper';
+import { useDispatch } from "react-redux";
+import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 
 function QCEntry({navigation}) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
     serialno: "",
@@ -38,23 +41,24 @@ function QCEntry({navigation}) {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-        createWorkOrder().then(() => {
-        navigate('/component-status',{state:{serialno: formValues.serialno }});
+      createWorkOrder().then(() => {
+        dispatch(setWorkorderNumber(formValues.serialno));
+        navigate('/component-status');
       });
     }
   }, [formErrors, isSubmit]);
 
   const createWorkOrder = async () => {
-    try {
-      const result = await $axios.post('workorders', {
-        workorder_number: formValues.serialno,
-        machine_type: formValues.type
-      });
-      console.log({result});
-    } catch (e) {
-      console.error(e);
-      alert(e);
-    }
+    // try {
+    //   const result = await $axios.post('workorders', {
+    //     workorder_number: formValues.serialno,
+    //     machine_type: formValues.type
+    //   });
+    //   console.log({result});
+    // } catch (e) {
+    //   console.error(e);
+    //   alert(e);
+    // }
   }
 
   return (
@@ -84,18 +88,18 @@ function QCEntry({navigation}) {
 
           <p>{formErrors.serialno}</p>
 
-          <select name="type" value={formValues.type} onChange={handleChange}>
+          <select className="machine-type-select" name="type" value={formValues.type} onChange={handleChange}>
             <option value="default" disabled hidden>
               TYPE OF MACHINE
             </option>
-            <option value="M1">Machine 1</option>
-            <option value="M2">Machine 2</option>
-            <option value="M3">Machine 3</option>
+            <option value="machine_1">Machine 1</option>
+            <option value="machine_2">Machine 2</option>
+            <option value="machine_3">Machine 3</option>
           </select>
 
           <p>{formErrors.type}</p>
 
-          <button onClick={handleNextPage}>NEXT</button>
+          <button className="submit-workorder-btn" onClick={handleNextPage}>NEXT</button>
         </div>
       </form>
     </div>
