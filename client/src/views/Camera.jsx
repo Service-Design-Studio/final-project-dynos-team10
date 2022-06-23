@@ -36,7 +36,7 @@ function Camera() {
                     // minAspectRatio: 1.333,
                     // minFrameRate: 30,
                     // width: 1920,
-                    // heigth: 1080,
+                    // heigth: 2000,
                     facingMode: 'environment'
                 }
             });
@@ -55,7 +55,8 @@ function Camera() {
         let photo = photoRef.current;
         photo.width = imageBitmap.width;
         photo.height = imageBitmap.height;
-        photo.getContext('2d').drawImage(imageBitmap, 0, 0);
+        photo.getContext('2d').drawImage(imageBitmap, 0, 0, photo.width, photo.height);
+        console.log({imageBitmap});
         const base64Image = photo.toDataURL();
 
         dispatch(addImageToComponent({
@@ -82,26 +83,25 @@ function Camera() {
         <div className="flexbox-column">
 
             <div className="flexbox-top">
-                <div className="flexbox-top"> <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> </div>
-                <div className="flexbox-top empty-space"></div>
+                <div> <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> </div>
+                <div className="empty-space"></div>
                 <div className="flexbox-top-right" >
-                    <IoFlashOutline style={{fontSize: "40px", marginRight: "0.2em"}}/>
-                    <IoFlash style={{fontSize: "40px", marginRight: "0.2em"}}/>
-                    <BsCardImage  className="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "40px"}}/>
+                    <IoFlashOutline style={{fontSize: "2rem", marginRight: "0.2em"}}/>
+                    {/* will use if flash is implemented */}
+                    {/* <IoFlash style={{fontSize: "2rem", marginRight: "0.2em"}}/> */}
+                    <div> {count > 0 ? <BsCardImage  className="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : <BsCardImage style={{fontSize: "2rem", color: "transparent"}}/>  } </div>
                 </div>
-                    
             </div>
                 
             <div className="flexbox-center camera">
                 <video autoPlay ref={videoElement}></video>
             </div>
-
-            <div className="flexbox-bottom">
-                {/* make counter square w rounded edges */}
-                <div> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
-                <div> <button disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn" ></button> </div>
-                <div> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "40px"}}/> : null} </div>
-            </div>
+            
+            <div className='wrapper'>
+                <div className="centered-vertically"> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
+                <button onClick={takePhoto} className="take-photo-btn ignore-global" ></button> 
+                <div className="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
+            </div> 
 
             <div style={{display: "none"}} >
                 <canvas ref={photoRef}></canvas>
