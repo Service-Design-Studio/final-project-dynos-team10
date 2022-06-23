@@ -35,8 +35,8 @@ function Camera() {
                 video: {
                     // minAspectRatio: 1.333,
                     // minFrameRate: 30,
-                    width: 1920,
-                    heigth: 2000,
+                    // width: 1920,
+                    // heigth: 2000,
                     facingMode: 'environment'
                 }
             });
@@ -55,7 +55,7 @@ function Camera() {
         let photo = photoRef.current;
         photo.width = imageBitmap.width;
         photo.height = imageBitmap.height;
-        photo.getContext('2d').drawImage(imageBitmap, 0, 0, 800, 300);
+        photo.getContext('2d').drawImage(imageBitmap, 0, 0, photo.width, photo.height);
         console.log({imageBitmap});
         const base64Image = photo.toDataURL();
 
