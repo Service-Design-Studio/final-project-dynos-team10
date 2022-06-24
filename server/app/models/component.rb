@@ -11,6 +11,8 @@ class Component < ApplicationRecord
       component_3: 2
     }
 
+
+
     def self.get_component_types
         Component.component_types
     end
@@ -29,6 +31,14 @@ class Component < ApplicationRecord
 
     def self.find_all
         Component.all
+    end
+
+    def self.find_all_by_workorder_id(workorder_id)
+        Component.find_by(workorder_id: workorder_id)
+    end
+
+    def self.get_failing_reason(component_id)
+        Component.find_by(id: component_id).failing_reasons
     end
     
     # def self.find_all_by_workorder_id(workorder_id)
