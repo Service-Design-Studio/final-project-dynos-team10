@@ -36,3 +36,6 @@
 .env*
 /config/secrets*
 /config/*credentials.json
+
+#ignore byebug history
+.byebug_history
