@@ -9,7 +9,7 @@ const descriptionToRouteMap = {
 }
 
 /**
- * This function will build the appropriate route for testing based on a path description
+ * This function will build the appropriate route for testing based on a path description.
  * It is the tester's responsibility to map path descriptions used in our cucumber DSL
  * to the front end app routes
  */
