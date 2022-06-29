@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
-import { $axios } from '../axiosHelper';
+import { $axios } from '../helpers/axiosHelper';
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 

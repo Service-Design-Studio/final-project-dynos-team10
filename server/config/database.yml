@@ -9,13 +9,12 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  username: usg1103
+  # username: usg1103
   password: <%= ENV['POSTGRES_USER_PW'] %>
 
 development:
   <<: *default
   database: dynostic_development
-  # host: "<%= ENV.fetch("DB_SOCKET_DIR") { '/cloudsql' } %>/<%= ENV["CLOUD_SQL_CONNECTION_NAME"] %>"
 
 
 # Warning: The database defined as "test" will be erased and
