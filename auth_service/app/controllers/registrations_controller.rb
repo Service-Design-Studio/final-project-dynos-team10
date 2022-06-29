@@ -35,7 +35,7 @@ class RegistrationsController < ApplicationController
     # webauthn_credential = WebAuthn::Credential.from_create(params)
     webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
     # user = User.create!(session["current_registration"]["user_attributes"])
-    user = User.create!(params[:user_attributes])
+    user = User.create!(user_params)
 
     begin
       webauthn_credential.verify(params[:challenge])
@@ -48,8 +48,6 @@ class RegistrationsController < ApplicationController
       )
 
       if credential.save
-        sign_in(user)
-
         render json: { status: "ok" }, status: :ok
       else
         render json: "Couldn't register your Security Key", status: :unprocessable_entity
@@ -57,7 +55,13 @@ class RegistrationsController < ApplicationController
     rescue WebAuthn::Error => e
       render json: "Verification failed: #{e.message}", status: :unprocessable_entity
     ensure
-      session.delete("current_registration")
+      # session.delete("current_registration")
     end
+  end
+
+  private
+
+  def user_params
+    params.require(:user_attributes).permit(:username, :webauthn_id, :id, :created_at, :updated_at)
   end
 end
