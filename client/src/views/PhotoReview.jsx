@@ -13,7 +13,7 @@ import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
 import { removeComponentImageByIndex, selectCurrentComponent, selectCurrentComponentName, selectWorkorderNumber } from "../store/workorder/workorderSlice";
 
-import { $axios } from '../axiosHelper';
+import { $axios } from '../helpers/axiosHelper';
 
 function PhotoReview() {
     const navigate = useNavigate();

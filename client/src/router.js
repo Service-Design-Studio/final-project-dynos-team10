@@ -4,6 +4,7 @@ import QCEntry from './views/QCEntry'
 import App from './App';
 import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
+import Register from "./views/Register";
 
 function Router() {
     return (
@@ -13,6 +14,7 @@ function Router() {
             <Route path="/camera" element={<Camera/>} />
             <Route path="/photo-review" element={<PhotoReview/>} />
             <Route path="/qc-entry" element={<QCEntry/>} />
+            <Route path="/register" element={<Register/>}/>
         </Routes>
     )
 }

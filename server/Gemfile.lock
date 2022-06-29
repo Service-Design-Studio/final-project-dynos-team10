@@ -259,6 +259,7 @@ DEPENDENCIES
   debug
   dotenv-rails
   google-cloud-storage
+  jwt
   pg
   puma (~> 5.0)
   rack-cors
