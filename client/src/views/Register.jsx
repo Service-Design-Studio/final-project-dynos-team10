@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { setToken, saveRegistration, selectRegisteredCredentials } from '../store/auth/authSlice';
+import { setToken, saveRegistration, selectRegisteredCredentials, selectToken } from '../store/auth/authSlice';
 import { register, authenticate } from '../helpers/webAuthHelper';
 
-const BASE_URL = 'https://4f6a-2401-7400-c807-76c-40-890b-d3a3-c954.ap.ngrok.io';
+const BASE_URL = 'https://dynostic-auth-oakg5bt7gq-as.a.run.app';
 
 export default function Register() {
     const dispatch = useDispatch();
     const registeredCredentials = useSelector(selectRegisteredCredentials);
+    const accessToken = useSelector(selectToken);
 
     const [username, setUsername] = useState('');
     const [credentialNickname, setCredentialNickname] = useState('');
@@ -53,13 +54,28 @@ export default function Register() {
         dispatch(setToken(token));
     }
 
+    const validateSignIn = async () => {
+        let result = await axios.get('https://dynostic-api-oakg5bt7gq-as.a.run.app/verify-jwt', {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        });
+        console.log({result});
+        if (result.data.token_valid) {
+            alert('You are already logged in!');
+        } else {
+            alert('Something went wrong, you are NOT logged in');
+        }
+    }
+
     return (
         <div>
             <h1>Register</h1>
             <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
             <input placeholder="credential nickname" value={credentialNickname} onChange={(e) => setCredentialNickname(e.target.value)}></input>
-            <button onClick={registerUser}>Submit</button>
-            <button onClick={signIn}>Sign In</button>
+            <button onClick={registerUser}>Step 1: Register</button>
+            <button onClick={signIn}>Step 2: Sign In</button>
+            <button onClick={validateSignIn}>Step 3: Validate signed in</button>
         </div>
     )
 }

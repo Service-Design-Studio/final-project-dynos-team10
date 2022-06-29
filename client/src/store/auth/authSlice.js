@@ -30,6 +30,7 @@ export const {
 
 const decodedToken = token => jwt_decode(token);
 
+export const selectToken = state => state.auth.token;
 export const selectDecodedToken = state => decodedToken(state.auth.token);
 export const selectWebAuthnRegistrations = state => state.auth.webAuthnRegistrations;
 export const selectRegisteredCredentials = state => {
