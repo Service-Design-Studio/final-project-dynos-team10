@@ -9,21 +9,48 @@ import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
 import Login from "./views/Login";
 import { useEffect } from "react";
-import useAuth from "./hooks/useAuth";
 import Home from "./views/Home";
+import { useDispatch, useSelector } from "react-redux";
+import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlice";
+import axios from 'axios';
 
 function Router() {
     let location = useLocation();
-    const { verifyToken } = useAuth();
 
     const publicRoutes = ['/register', '/login'];
 
-    useEffect(() => {
-        console.log(`location has changed: ${location.pathname}`);
-        if (!publicRoutes.some(pubRouteName => location.pathname.includes(pubRouteName))) {
-            // TODO: what happens if verifyToken is awaited?
-            verifyToken();
+    const accessToken = useSelector(selectToken);
+    const dispatch = useDispatch();
+
+    const verifyToken = async () => {
+        const result = await axios.get('https://dynostic-api-oakg5bt7gq-as.a.run.app/verify-jwt', {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        });
+        console.log({result});
+        if (result.data.token_valid) {
+            dispatch(setIsAuthenticated(true));
+        } else {
+            // do sth here before immediately logging out user?
+            
+            dispatch(setToken(''));
+            dispatch(setIsAuthenticated(false));
         }
+    }
+    
+    // useEffect(() => {
+    //     verifyToken();
+    // }, []);
+
+    useEffect(() => {
+        (async() => {
+            console.log(`location has changed: ${location.pathname}`);
+            if (!publicRoutes.some(pubRouteName => location.pathname.includes(pubRouteName))) {
+                // TODO: what happens if verifyToken is awaited?
+                await verifyToken();
+            }
+        })();
     }, [location])
 
     return (

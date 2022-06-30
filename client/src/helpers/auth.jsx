@@ -1,13 +1,10 @@
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { selectIsAuthenticated } from "../store/auth/authSlice";
 
 export function RequireAuth({ children }) {
+    const isAuthenticated = useSelector(selectIsAuthenticated);
     let location = useLocation();
-    const { isAuthenticated } = useAuth();
-    useEffect(() => {
-        console.log({isAuthenticated});
-    }, [isAuthenticated])
     if (!isAuthenticated) {
         return <Navigate to="/login" state={{ from: location }} replace />
     }

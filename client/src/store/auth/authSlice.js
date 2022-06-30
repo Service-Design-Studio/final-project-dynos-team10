@@ -3,7 +3,8 @@ import jwt_decode from 'jwt-decode';
 
 const initialState = {
     token: '',
-    webAuthnRegistrations: []
+    webAuthnRegistrations: [],
+    isAuthenticated: false
 }
 
 export const authSlice = createSlice({
@@ -18,6 +19,9 @@ export const authSlice = createSlice({
         },
         saveRegistration: (state, action) => {
             state.webAuthnRegistrations = [...state.webAuthnRegistrations, action.payload];
+        },
+        setIsAuthenticated: (state, action) => {
+            state.isAuthenticated = action.payload;
         }
     }
 })
@@ -25,7 +29,8 @@ export const authSlice = createSlice({
 export const {
     setToken,
     setWebAuthnRegistrations,
-    saveRegistration
+    saveRegistration,
+    setIsAuthenticated
 } = authSlice.actions;
 
 const decodedToken = token => jwt_decode(token);
@@ -43,5 +48,6 @@ export const selectCurrentUserId = (state) => {
     const decoded = decodedToken(state.auth.token);
     return parseInt(decoded.aud[0], 10)
 }
+export const selectIsAuthenticated = state => state.auth.isAuthenticated;
 
 export default authSlice.reducer;
