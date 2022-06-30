@@ -12,4 +12,8 @@ class User < ApplicationRecord
   def can_delete_credentials?
     credentials.size > CREDENTIAL_MIN_AMOUNT
   end
+
+  def self.find_all
+    User.all
+  end
 end

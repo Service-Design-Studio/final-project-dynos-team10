@@ -11,4 +11,6 @@ Rails.application.routes.draw do
   resource :credential, only: [:create, :destroy] do
     post :callback, on: :collection
   end
+
+  resources :users, only: [:index, :show, :update]
 end
