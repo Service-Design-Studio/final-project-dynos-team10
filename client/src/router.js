@@ -55,11 +55,11 @@ function Router() {
 
     return (
         <Routes>
-            {/* <Route path="/" element={<App/>} /> */}
-            {/* <Route path="/component-status" element={<ComponentStatus/>} />
+            <Route path="/" element={<App/>} /> 
+            <Route path="/component-status" element={<ComponentStatus/>} />
             <Route path="/camera" element={<Camera/>} />
             <Route path="/photo-review" element={<PhotoReview/>} />
-            <Route path="/qc-entry" element={<QCEntry/>} /> */}
+            <Route path="/qc-entry" element={<QCEntry/>} />
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
 
