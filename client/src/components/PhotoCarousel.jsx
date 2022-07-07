@@ -12,7 +12,6 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 
-
 function SwipeableTextMobileStepper({
   activeStep,
   handleNext,
@@ -35,9 +34,13 @@ function SwipeableTextMobileStepper({
       const canvas = canvasEls.current[index];
       const ctx = canvas.getContext("2d");
 
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      console.log(viewportWidth, viewportHeight)
+
       const image = new Image();
       image.onload = function() {
-        ctx.drawImage(image, 0, 0);
+        ctx.drawImage(image, 0, 0, viewportWidth, viewportHeight);
       };
       image.src = step;
     });
@@ -65,7 +68,8 @@ function SwipeableTextMobileStepper({
   const generateCanvases = () => {
     return components.images.map((step, index) => {
       return (
-          <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
+          <img key={index} src={step}></img>
+          // <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
           // {
           //   Math.abs(activeStep - index) <= 2
           //   ? (
@@ -82,19 +86,7 @@ function SwipeableTextMobileStepper({
 
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 50,
-          pl: 2,
-          bgcolor: 'background.default',
-        }}
-      >
-      </Paper>
+    <Box sx={{ maxWidth: "200%", flexGrow: 1 }}>
 
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -103,7 +95,26 @@ function SwipeableTextMobileStepper({
         enableMouseEvents
         className="photo-carousel"
       >
-        {generateCanvases()}
+        {/* {generateCanvases()} */}
+        {
+          components.images.map((step, index) => (
+            <div key={index}>
+              {Math.abs(activeStep - index) <= 2 ? (
+                <Box
+                  component="img"
+                  sx={{
+                    height: '100%',
+                    display: 'block',
+                    maxWidth: 400,
+                    overflow: 'hidden',
+                    width: '100%',
+                  }}
+                  src={step}
+                />
+              ) : null}
+            </div>
+          ))
+        }
       </SwipeableViews>
       <MobileStepper
         steps={maxSteps}

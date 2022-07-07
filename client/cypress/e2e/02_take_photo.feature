@@ -40,3 +40,9 @@ Feature: Take Picture
         # Then I see a prompt "successfully uploaded"
         # Then I am on the manual check page
         #go to manual check to see if it passes manual QC (to pass_fail_check.feature)
+
+    @pending
+    Scenario: Leaving photo review page before uploading all photos of component xxx
+        Given I am on the camera page of component "xxx"
+        And I click the back button
+        Then I am on the status of components page

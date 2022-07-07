@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "application#index"
 
+  get 'verify-jwt', to: 'application#verify_jwt'
+
   resources :workorders do
     get "machine-types", on: :collection
   end

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addNewComponent, updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
-import '../views/ComponentStatus.css'
+import {Button} from "@mantine/core"
 
 function ComponentStatusButton(props) {
     const componentName = props.component;
@@ -27,9 +27,15 @@ function ComponentStatusButton(props) {
     }
 
     return (
-        <button className={computedClassName} onClick={handleClick}>
-            {componentName}
-        </button>
+        <Button 
+        colour="blue" 
+        variant="outline" 
+        className={computedClassName} 
+        onClick={handleClick}
+        style={{marginTop: 30, marginInline: 20, width: 120, height: 120}}> 
+        
+            <h2>{componentName}</h2>
+            </Button>
     )
 }
 

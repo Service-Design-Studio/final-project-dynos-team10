@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
-import { $axios } from "../axiosHelper";
+import { $axios } from '../helpers/axiosHelper';
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
@@ -90,9 +90,10 @@ function QCEntry({ navigation }) {
             />
           </MediaQuery>
 
-          <Text>QC Entry</Text>
+          <h1>QC Entry</h1>
         </div>
       </Header>
+
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100%", marginTop: "10%"}}>
 
@@ -102,22 +103,13 @@ function QCEntry({ navigation }) {
         type="text"
         value={formValues.serialno}
         onChange={handleChange}
-        size="md"
+        size="sm"
+        style= {{paddingLeft: 12, paddingRight: 12, width: 200}}
       />
 
       <p>{formErrors.serialno}</p>
 
-      {/* <select className="machine-type-select" name="type" value={formValues.type} onChange={handleChange}>
-            <option value="default" disabled hidden>
-              TYPE OF MACHINE
-            </option>
-            <option value="machine_1">Machine 1</option>
-            <option value="machine_2">Machine 2</option>
-            <option value="machine_3">Machine 3</option>
-          </select> */}
-
       <Select
-        onChange={handleChange}
         placeholder="Machine Type"
         name="type"
         value={formValues.type}
@@ -126,6 +118,7 @@ function QCEntry({ navigation }) {
           { value: "machine_2", label: "Machine 2" },
           { value: "machine_3", label: "Machine 3" },
         ]}
+        onChange={(e) => setFormValues({ ...formValues, ["type"]: e })}
       />
 
       <p>{formErrors.type}</p>

@@ -36,19 +36,31 @@ class Workorder < ApplicationRecord
     end
 
     # TODO: test whether this works
-    def self.get_failing_reasons(workorder_id)
-        workorder = self.find_one(workorder_id)
-        failing_reasons = []
-        workorder.components.each do |comp|
-            failing_reasons << comp.get_failing_reasons(id: comp.id)
-        end
-        return failing_reasons
-        # @components = Component.find_all_by_workorder_id(workorder_id)
-        # components.each do |comp|
-        #     failing_reasons << comp.get_failing_reasons(id: comp.id)
-        # return failing_reasons
-        # end
-    end
+    #doesnt work as intended while doing rspec testing
+    # def self.get_failing_reasons(workorder_id)
+    #     # workorder = self.find_one(workorder_id)
+    #     # all_comps = Component.find_all_by_workorder_id(workorder_id)
+    #     failing_reasons = []
+    #     # byebug
+    #     puts "all comps us"
+    #     all_comps = Component.find_all_by_workorder_id(workorder_id)
+    #     failing_reasons = [all_comps.get_failing_reasons(Component.get_failing_reasons(all_comps.id))]
+    #     # puts all_comps
+    #     # Component.find_all_by_workorder_id(workorder_id) do |comp|
+    #     #     failing_reasons << comp.get_failing_reasons(id: comp.id)
+    #     #     puts "component is"
+    #     #     puts comp
+    #     #     puts "failing reason is"
+    #     #     puts failing_reasons
+
+    #     # end
+    #     return failing_reasons
+    #     # @components = Component.find_all_by_workorder_id(workorder_id)
+    #     # components.each do |comp|
+    #     #     failing_reasons << comp.get_failing_reasons(id: comp.id)
+    #     # return failing_reasons
+    #     # end
+    # end
 
     # def self.get_status(workorder_id)
     #     @components = Component.find_all_by_workorder_id(workorder_id)
