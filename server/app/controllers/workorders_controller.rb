@@ -3,23 +3,23 @@ class WorkordersController < ApplicationController
     def index
         workorder_number = params[:workorder_number]
         unless workorder_number.nil?
-            render json: { success: true, data: Workorder.find_one_by_workorder_number(workorder_number) }
+            render json: success_json(Workorder.find_one_by_workorder_number(workorder_number))
             return
         end
         all_workorders = Workorder.find_all
-        render json: { success: true, data: all_workorders }
+        render json: success_json(all_workorders)
     end
 
     def create
         workorder_number = params[:workorder_number]
         machine_type = params[:machine_type]
         workorder_record = Workorder.create_record workorder_number, machine_type
-        render json: { success: true, data: workorder_record }
+        render json: success_json(workorder_record)
     end
 
     def show
         workorder = Workorder.find_one params[:id]
-        render json: { success: true, data: workorder }
+        render json: success_json(workorder)
     end
 
     def update

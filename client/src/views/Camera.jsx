@@ -99,7 +99,7 @@ function Camera() {
             
             <div className='wrapper'>
                 <div className="centered-vertically"> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
-                <button onClick={takePhoto} className="take-photo-btn ignore-global" ></button> 
+                <button disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn ignore-global" ></button> 
                 <div className="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
             </div> 
 
