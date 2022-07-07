@@ -95,10 +95,10 @@ function PhotoReview() {
         <div className="flexbox-column">
 
             <div className="flexbox-top">
-                <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> 
+                <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> 
                 <div className="empty-space"></div>
-                <MdLibraryAdd className="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px", marginRight: '1rem'}}/>
-                <FaTrashAlt className="photo-review-delete-btn" style={{fontSize: "40px"}} onClick={deleteActivePhoto}/>
+                <MdLibraryAdd className="hover" onClick={() => navigate('/camera')} style={{fontSize: "2rem", marginRight: '1rem'}}/>
+                <FaTrashAlt className="photo-review-delete-btn" style={{fontSize: "2rem"}} onClick={deleteActivePhoto}/>
             </div>
                 
             <div className="flexbox-center">
