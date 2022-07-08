@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import axios from 'axios';
-
-const BASE_URL = 'https://dynostic-auth-oakg5bt7gq-as.a.run.app';
+import { $authAxios } from '../helpers/axiosHelper';
 
 export default function Login() {
     const { state } = useLocation();
@@ -27,14 +25,14 @@ export default function Login() {
 
 
     const signIn = async () => {
-        let result = await axios.post(`${BASE_URL}/session`, {
+        let result = await $authAxios.post('session', {
             username
         });
         console.log({result});
         const { challenge } = result.data;
         const pubKeyCredential = await authenticate(challenge, registeredCredentials);
 
-        result = await axios.post(`${BASE_URL}/session/callback`, {
+        result = await $authAxios.post(`session/callback`, {
             public_key_credential: pubKeyCredential,
             username,
             challenge

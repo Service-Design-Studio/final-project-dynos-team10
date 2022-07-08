@@ -61,16 +61,16 @@ function QCEntry({ navigation }) {
   }, [formErrors, isSubmit]);
 
   const createWorkOrder = async () => {
-    // try {
-    //   const result = await $axios.post('workorders', {
-    //     workorder_number: formValues.serialno,
-    //     machine_type: formValues.type
-    //   });
-    //   console.log({result});
-    // } catch (e) {
-    //   console.error(e);
-    //   alert(e);
-    // }
+    try {
+      const result = await $axios.post('workorders', {
+        workorder_number: formValues.serialno,
+        machine_type: formValues.type
+      });
+      console.log({result});
+    } catch (e) {
+      console.error(e);
+      alert(e);
+    }
   };
 
   const theme = useMantineTheme();
