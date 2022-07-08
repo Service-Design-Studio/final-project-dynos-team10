@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import Home from "./views/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlice";
-import axios from 'axios';
+import { $axios } from "./helpers/axiosHelper";
 
 function Router() {
     let location = useLocation();
@@ -23,7 +23,7 @@ function Router() {
     const dispatch = useDispatch();
 
     const verifyToken = async () => {
-        const result = await axios.get('https://dynostic-api-oakg5bt7gq-as.a.run.app/verify-jwt', {
+        const result = await $axios.get('verify-jwt', {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
