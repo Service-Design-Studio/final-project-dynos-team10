@@ -12,5 +12,7 @@ Rails.application.routes.draw do
     post :callback, on: :collection
   end
 
-  resources :users, only: [:index, :show, :update]
+  resources :users, only: [:index, :show, :update] do
+    get ":id/credentials", on: :collection, to: 'users#get_credentials'
+  end
 end

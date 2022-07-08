@@ -14,4 +14,9 @@ class UsersController < ApplicationController
   def update
 
   end
+
+  def get_credentials
+    credentials = User.find_one_credentials params[:id]
+    render json: success_json(credentials)
+  end
 end
