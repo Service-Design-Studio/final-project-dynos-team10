@@ -28,12 +28,21 @@ jobs:
         with:
           bundler-cache: true
           working-directory: server
+      - name: Base64 encode secret
+        id: base64-enc
+        shell: python
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          import base64
+          import os
+          print(f'::set-output name=GCP_CREDENTIALS_BASE64::{base64.b64encode(os.environb[b"GCP_CREDENTIALS"])}')
       - name: Create config/service-account-credentials.json for GCS
         run: |-
           cd server/config
-          echo "${GCP_CREDENTIALS// /}" | base64 --decode > service-account-credentials.json
+          echo $GCP_CREDENTIALS_ENC | base64 --decode > service-account-credentials.json
         env:
-          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          GCP_CREDENTIALS_ENC: ${{ steps.base64-enc.outputs.GCP_CREDENTIALS_BASE64 }}
       # database setup
       - name: Set up database schema
         run: |-
