@@ -75,6 +75,11 @@ jobs:
           echo $GCP_CREDENTIALS > service-account-credentials.json
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Google Cloud SQL Proxy
+        uses: mattes/gce-cloudsql-proxy-action@v1.0.1
+        with:
+          creds: ${{ secrets.GCP_CREDENTIALS }}
+          instance: ${{ secrets.SERVER_CLOUD_SQL_CONNECTION_NAME }}
       - name: Build
         run: |-
           cd server &&

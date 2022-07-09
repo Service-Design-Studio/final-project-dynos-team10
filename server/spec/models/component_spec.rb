@@ -68,7 +68,7 @@ RSpec.describe Component, :type => :model do
   describe '.find_all' do
     it 'should return all the component objects' do
       count = Component.all.count
-      expect(Component.find_all().to_a.count).to equal(count)
+      expect(Component.find_all.to_a.count).to equal(count)
     end
   end
 
