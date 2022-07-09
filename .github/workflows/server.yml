@@ -5,12 +5,46 @@ on:
     paths:
     - "server/**"
 
-env:
-  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-  SERVICE_NAME: dynostic-api
-
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Ruby, JRuby, TruffleRuby and Gems
+        uses: ruby/setup-ruby@v1.110.0
+        with:
+          bundler-cache: true
+          working-directory: server
+      # database setup
+      - name: Set up database schema
+        run: |-
+          cd server &&
+          bin/rails db:schema:load
+      - name: Seed test database
+        run: |-
+          cd server &&
+          bin/rails db:seed
+      # test runners
+      - name: Run tests
+        run: |-
+          cd server &&
+          bundle exec rspec
+
   build-and-deploy:
+    needs: unit-test
     runs-on: ubuntu-latest
     # Add "id-token" with the intended permissions.
     permissions:
@@ -30,6 +64,4 @@ jobs:
       - name: Build
         run: |-
           cd server &&
-          gcloud builds submit \
-            --quiet \
-            --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          gcloud builds submit
