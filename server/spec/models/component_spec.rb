@@ -67,16 +67,18 @@ RSpec.describe Component, :type => :model do
 
   describe '.find_all' do
     it 'should return all the component objects' do
-      workorder = Workorder.create_record("1",1)
-      c1 = Component.create_record(workorder.id,1,false)
-      c2 = Component.create_record(workorder.id,2,false)
-      expect(Component.find_all()).to match_array([c1,c2])
+      count = Component.all.count
+      expect(Component.find_all().to_a.count).to equal(count)
     end
   end
 
-  
-
-  
-
+  describe '.find_all_by_workorder_id' do
+    it 'should return all the component objects belonging to one workorder' do
+      workorder = Workorder.create_record("2",1)
+      c1 = Component.create_record(workorder.id,1,false)
+      c2 = Component.create_record(workorder.id,2,false)
+      expect(Component.find_all_by_workorder_id(workorder.id)).to match_array([c1,c2])
+    end
+  end
 end
 
