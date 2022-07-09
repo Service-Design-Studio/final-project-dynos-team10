@@ -32,7 +32,9 @@ jobs:
         run: |-
           cd server/config &&
           touch service-account-credentials.json &&
-          echo ${{ secrets.GCP_CREDENTIALS }} > service-account-credentials.json
+          'echo "$CREDENTIALS" > service-account-credentials.json'
+        env:
+          CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       # database setup
       - name: Set up database schema
         run: |-
