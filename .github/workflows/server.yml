@@ -30,9 +30,9 @@ jobs:
           working-directory: server
       - name: Create config/service-account-credentials.json for GCS
         run: |-
-          cd server/config &&
-          touch service-account-credentials.json &&
-          'echo "$CREDENTIALS" > service-account-credentials.json'
+          cd server/config
+          cat service-account-credentials.json | base64
+          'echo "$CREDENTIALS" | base64 -d > service-account-credentials.json'
         env:
           CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       # database setup
