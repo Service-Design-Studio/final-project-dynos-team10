@@ -31,8 +31,8 @@ jobs:
       - name: Create config/service-account-credentials.json for GCS
         run: |-
           cd server/config
-          echo "$GCP_CREDENTIALS" > gcp_credentials_enc.json
-          cat gcp_credentials_enc.json | base64 -d > service-account-credentials.json
+          echo "${GCP_CREDENTIALS// /}" > gcp_credentials_enc.json
+          cat gcp_credentials_enc.json | base64 --decode > service-account-credentials.json
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       # database setup
