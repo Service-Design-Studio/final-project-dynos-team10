@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-workorders =[{:workorder_number => "WO1"},
+workorders =[{:workorder_number => "WO1", :machine_type => 0},
              {:workorder_number => "WO2", :machine_type => 1}]
 
 components = [{:workorder_id => 1, :status => false},
