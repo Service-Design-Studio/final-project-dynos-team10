@@ -28,6 +28,11 @@ jobs:
         with:
           bundler-cache: true
           working-directory: server
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config &&
+          touch service-account-credentials.json &&
+          echo ${{ secrets.GCP_CREDENTIALS }} > service-account-credentials.json
       # database setup
       - name: Set up database schema
         run: |-
