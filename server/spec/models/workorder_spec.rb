@@ -34,9 +34,8 @@ RSpec.describe Workorder, :type => :model do
   describe '.find_one' do
     context "given workorder id" do 
       it 'returns the workorder with that workorder_id' do
-        workorder = Workorder.new(id: "1")
-        # byebug
-        expect(Workorder.find_one("1")).to eq(@workorder)
+        workorder = Workorder.create_record("1", 1)
+        expect(Workorder.find_one(workorder.id)).to eq(workorder)
       end
     end
   end
@@ -60,8 +59,8 @@ RSpec.describe Workorder, :type => :model do
   describe '.find_one' do
     context "given workorder number" do 
       it 'returns the workorder with that workorder number' do
-        workorder = Workorder.new(workorder_number: "123")
-        expect(Workorder.find_one_by_workorder_number("1")).to eq(@workorder)
+        workorder = Workorder.create_record("1", 1)
+        expect(Workorder.find_one_by_workorder_number(workorder.workorder_number)).to eq(workorder)
       end
     end
   end
