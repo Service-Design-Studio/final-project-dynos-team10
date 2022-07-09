@@ -34,4 +34,3 @@ end
 images.each do |image|
   Image.create!(image)
 end
-

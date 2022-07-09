@@ -49,16 +49,17 @@ jobs:
       - name: Set up database schema
         run: |-
           cd server &&
-          RAILS_ENV=test bin/rails db:schema:load
+          RAILS_ENV=test &&
+          bin/rails db:schema:load
       - name: Seed test database
         run: |-
           cd server &&
-          RAILS_ENV=test bin/rails db:seed
+          bin/rails db:seed
       # test runners
       - name: Run tests
         run: |-
           cd server &&
-          RAILS_ENV=test bundle exec rspec
+          bundle exec rspec
 
   # build-and-deploy:
   #   needs: unit-test
