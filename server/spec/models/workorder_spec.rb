@@ -52,7 +52,7 @@ RSpec.describe Workorder, :type => :model do
 
   describe '.get_machine_types' do
     it 'should return all the different machine types' do
-      expect(Workorder.get_machine_types()).to match_array([["machine_3", 2], ["machine_1", 0], ["machine_2", 1]])
+      expect(Workorder.get_machine_types).to match_array([["machine_3", 2], ["machine_1", 0], ["machine_2", 1]])
     end
   end
 
