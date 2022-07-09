@@ -67,7 +67,14 @@ jobs:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.6.0
-      # Build and push image to Google Container Registry
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config
+          touch service-account-credentials.json
+          cat service-account-credentials.json | base64
+          echo $GCP_CREDENTIALS > service-account-credentials.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       - name: Build
         run: |-
           cd server &&
