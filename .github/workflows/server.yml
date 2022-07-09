@@ -47,9 +47,10 @@ jobs:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
       # database setup
       - name: Set up database schema
+        env:
+          RAILS_ENV: test
         run: |-
           cd server &&
-          RAILS_ENV=test &&
           bin/rails db:schema:load
       - name: Seed test database
         run: |-
