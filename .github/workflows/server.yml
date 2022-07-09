@@ -5,12 +5,53 @@ on:
     paths:
     - "server/**"
 
-env:
-  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
-  SERVICE_NAME: dynostic-api
-
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+      RAILS_MASTER_KEY: ${{ secrets.SERVER_MASTER_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Ruby, JRuby, TruffleRuby and Gems
+        uses: ruby/setup-ruby@v1.110.0
+        with:
+          bundler-cache: true
+          working-directory: server
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config
+          touch service-account-credentials.json
+          cat service-account-credentials.json | base64
+          echo $GCP_CREDENTIALS > service-account-credentials.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      # database setup
+      - name: Set up and seed database
+        run: |
+          cd server
+          bundle exec bin/rails db:prepare
+          bundle exec bin/rails db:schema:load
+          bundle exec bin/rails db:seed --trace
+      # test runners
+      - name: Run tests
+        run: |-
+          cd server &&
+          bundle exec rspec
+
   build-and-deploy:
+    needs: unit-test
     runs-on: ubuntu-latest
     # Add "id-token" with the intended permissions.
     permissions:
@@ -26,10 +67,20 @@ jobs:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.6.0
-      # Build and push image to Google Container Registry
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config
+          touch service-account-credentials.json
+          cat service-account-credentials.json | base64
+          echo $GCP_CREDENTIALS > service-account-credentials.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Google Cloud SQL Proxy
+        uses: mattes/gce-cloudsql-proxy-action@v1.0.1
+        with:
+          creds: ${{ secrets.GCP_CREDENTIALS }}
+          instance: ${{ secrets.SERVER_CLOUD_SQL_CONNECTION_NAME }}
       - name: Build
         run: |-
           cd server &&
-          gcloud builds submit \
-            --quiet \
-            --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+          gcloud builds submit

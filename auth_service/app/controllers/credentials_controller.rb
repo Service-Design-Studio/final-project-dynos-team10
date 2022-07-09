@@ -2,6 +2,8 @@
 # TODO: review this controller and its need
 class CredentialsController < ApplicationController
   def create
+    current_user = User.find_by(id: params[:user_id])
+
     create_options = WebAuthn::Credential.options_for_create(
       user: {
         id: current_user.webauthn_id,
@@ -10,18 +12,23 @@ class CredentialsController < ApplicationController
       exclude: current_user.credentials.pluck(:external_id)
     )
 
-    session[:current_registration] = { challenge: create_options.challenge }
+    # session[:current_registration] = { challenge: create_options.challenge }
 
-    respond_to do |format|
-      format.json { render json: create_options }
-    end
+    # respond_to do |format|
+    #   format.json { render json: create_options }
+    # end
+
+    render json: { create_options: create_options }
   end
 
   def callback
-    webauthn_credential = WebAuthn::Credential.from_create(params)
+    # webauthn_credential = WebAuthn::Credential.from_create(params)
+    webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
 
     begin
-      webauthn_credential.verify(session["current_registration"]["challenge"])
+      # webauthn_credential.verify(session["current_registration"]["challenge"])
+      webauthn_credential.verify(params[:challenge])
+      current_user = User.find_by(id: params[:user_id])
 
       credential = current_user.credentials.find_or_initialize_by(
         external_id: Base64.strict_encode64(webauthn_credential.raw_id)
@@ -39,7 +46,7 @@ class CredentialsController < ApplicationController
     rescue WebAuthn::Error => e
       render json: "Verification failed: #{e.message}", status: :unprocessable_entity
     ensure
-      session.delete("current_registration")
+      # session.delete("current_registration")
     end
   end
 

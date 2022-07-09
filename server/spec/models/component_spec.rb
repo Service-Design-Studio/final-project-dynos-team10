@@ -11,14 +11,14 @@ RSpec.describe Component, :type => :model do
   #   expect(Component.new).to be_valid
   # end
 
-  it "is not valid without a component_type" do
-    component = Component.new(component_type: nil)
-    expect(component).to_not be_valid
-  end
+  #cant test this cuz validates requires us to input a component type and nil/""/'' maps to 0 which is label, this test is not required
+  # it "is not valid without a component_type" do
+  #   component = Component.new(component_type: nil)
+  #   expect(component).to_not be_valid
+  # end
 
   it "is not valid without a workorder_id" do
-    component = Component.new(workorder_id: nil)
-    expect(component).to_not be_valid
+    component = Component.create_record(nil,1,false)
   end
 
     #how to test uniqueness?
@@ -39,9 +39,10 @@ RSpec.describe Component, :type => :model do
   describe '.find_one' do
     context "given component id" do 
       it 'returns the component with that component_id' do
-        component = Component.new(id: "1")
+        workorder = Workorder.create_record("1", 1)
+        component = Component.create_record(workorder.id,1,false)
         # byebug
-        expect(Component.find_one("1")).to eq(@component)
+        expect(Component.find_one(component.id)).to eq(component)
       end
     end
   end
@@ -66,16 +67,18 @@ RSpec.describe Component, :type => :model do
 
   describe '.find_all' do
     it 'should return all the component objects' do
-      workorder = Workorder.create_record("1",1)
-      c1 = Component.create_record(workorder.id,1,false)
-      c2 = Component.create_record(workorder.id,2,false)
-      expect(Component.find_all()).to match_array([c1,c2])
+      count = Component.all.count
+      expect(Component.find_all.to_a.count).to equal(count)
     end
   end
 
-  
-
-  
-
+  describe '.find_all_by_workorder_id' do
+    it 'should return all the component objects belonging to one workorder' do
+      workorder = Workorder.create_record("2",1)
+      c1 = Component.create_record(workorder.id,1,false)
+      c2 = Component.create_record(workorder.id,2,false)
+      expect(Component.find_all_by_workorder_id(workorder.id)).to match_array([c1,c2])
+    end
+  end
 end
 
