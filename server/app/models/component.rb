@@ -34,7 +34,7 @@ class Component < ApplicationRecord
     end
 
     def self.find_all_by_workorder_id(workorder_id)
-        Component.find_by(workorder_id: workorder_id)
+        Component.where(workorder_id: workorder_id)
     end
 
     def self.get_failing_reason(component_id)
