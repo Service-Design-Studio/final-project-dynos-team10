@@ -21,7 +21,7 @@ RSpec.describe Image, type: :model do
   end
 end
 
-# HOW TO PUT IMAGE FILE as attribute
+# HOW TO PUT IMAGE FILE as attribute?
 # describe '.find_one' do
 #   context "given image id" do 
 #     it 'returns the image with that image id' do
