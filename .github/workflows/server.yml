@@ -31,6 +31,7 @@ jobs:
       - name: Create config/service-account-credentials.json for GCS
         run: |-
           cd server/config
+          touch service-account-credentials.json
           cat service-account-credentials.json | base64
           'echo "$CREDENTIALS" | base64 -d > service-account-credentials.json'
         env:
