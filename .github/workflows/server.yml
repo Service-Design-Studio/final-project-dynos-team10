@@ -43,7 +43,7 @@ jobs:
           cd server
           bundle exec bin/rails db:prepare
           bundle exec bin/rails db:schema:load
-          bundle exec bin/rails db:seed
+          bundle exec bin/rails db:seed --trace
       # test runners
       - name: Run tests
         run: |-
