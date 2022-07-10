@@ -106,7 +106,7 @@ function PhotoReview() {
 
                 <Grid.Col span={3} align="center" >
                     <ActionIcon color="dark" variant="transparent">
-                        <FaArrowLeft onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}} />
+                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
                     </ActionIcon>
                 </Grid.Col>
                     
@@ -120,7 +120,7 @@ function PhotoReview() {
 
                 <Grid.Col span={2} align="center">
                     <ActionIcon color="dark" variant="transparent">
-                        <FaTrashAlt onClick={deleteActivePhoto} style={{fontSize: "2rem"}} />
+                        <FaTrashAlt onClick={deleteActivePhoto} className="photo-review-delete-btn" style={{fontSize: "2rem"}} />
                     </ActionIcon>
                 </Grid.Col>
 
@@ -138,7 +138,7 @@ function PhotoReview() {
                             className="photo-review-camera-btn--secondary"
                             colour="blue" 
                             variant="outline" 
-                            style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.5rem"}}
+                            style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.2rem"}}
                             onClick={() => navigate('/camera')}
                         >
                         go back to camera
@@ -150,6 +150,7 @@ function PhotoReview() {
                         handleBack={handleBack}
                         handleStepChange={handleStepChange}
                         key={carouselKey}
+                        className="photo-carousel"
                         style={{display: "flex",
                             justify: "center"}}
                         

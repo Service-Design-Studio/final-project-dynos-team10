@@ -94,7 +94,7 @@ function Camera() {
 
                 <Grid.Col span={3} align="center" >
                     <ActionIcon color="dark" variant="transparent">
-                        <FaArrowLeft onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}} />
+                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
                     </ActionIcon>
                 </Grid.Col>
                     
@@ -116,7 +116,7 @@ function Camera() {
                 <Grid.Col span={1}></Grid.Col>
                     
                 <Grid.Col span={10} align="center">
-                    <video style={{width: "100%"}} autoPlay ref={videoElement}></video>
+                    <video style={{width: "100%"}} className="camera" autoPlay ref={videoElement}></video>
                 </Grid.Col>
 
                 <Grid.Col span={1}></Grid.Col>
@@ -135,18 +135,18 @@ function Camera() {
                 <Grid.Col span={3} align="right">
                     {count > 0 ?
                         <ThemeIcon 
-                            variant="outline" radius="md" size="lg" color="dark">
+                            variant="outline" radius="md" size="lg" color="dark" className="counter">
                             <span>{count}</span>
                         </ThemeIcon> : null}
                 </Grid.Col>
                     
                 <Grid.Col span={3} align="center">
-                    <ActionIcon disabled={!canTakePhoto} onClick={takePhoto} color="dark" size="xl" radius="xl" variant="outline"></ActionIcon>
+                    <ActionIcon disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn" color="dark" size="xl" radius="xl" variant="outline"></ActionIcon>
                 </Grid.Col>
 
                 <Grid.Col span={3} align="left">
                     <ActionIcon color="dark" variant="transparent">
-                        {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : null} 
+                        {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} 
                     </ActionIcon>
                 </Grid.Col>
 

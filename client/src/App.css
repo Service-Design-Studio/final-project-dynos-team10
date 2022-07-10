@@ -36,13 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-/* photo review page -> carousel */
-.react-swipeable-view-container > * {
-  display: flex;
-  justify-content: center;
-}
-.mantine-Container-root > * {
-  margin: 0.6rem;
-}
-/* ------------------------------ */
