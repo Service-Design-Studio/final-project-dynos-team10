@@ -1,10 +1,18 @@
-.photo-review-status-btn {
+/* photo review page -> carousel and indicate status */
+.react-swipeable-view-container > * {
+    display: flex;
+    justify-content: center;
+  }
+  .mantine-Container-root > * {
+    margin: 0.6rem;
+  }
+  .photo-review-status-btn {
     border: none;
     cursor: pointer;
-    transition: all 1s;
-}
-
-.photo-review-status-btn:hover {
+    transition: all 0.5s;
+  }
+  .photo-review-status-btn:hover {
     background-color: transparent;
-    transform: scale(1.2);
-}
+    transform: scale(1.1);
+  }
+  /* ------------------------------ */
