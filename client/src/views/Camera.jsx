@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import "./Camera.css"
 import { useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaArrowRight} from "react-icons/fa";
@@ -151,3 +150,25 @@ function Camera() {
 }
 
 export default Camera;
+
+
+
+{/* <Grid grow align="center">
+
+    <Grid.Col span={3} align="right">
+        <button className="photo-review-status-btn photo-review-status-btn--fail" onClick={() => setChosenStatus('fail')}>
+            <img src={FailIconSvg} width={65}></img>
+            <p>Fail</p>
+        </button>
+    </Grid.Col>
+
+    <Grid.Col span={3} align="center"></Grid.Col>
+        
+    <Grid.Col span={3} align="center">
+        <button className="photo-review-status-btn photo-review-status-btn--pass" onClick={() => setChosenStatus('pass')}>
+            <img src={PassIconSvg} width={65}></img>
+            <p>Pass</p>
+        </button>
+    </Grid.Col>
+
+</Grid> */}
