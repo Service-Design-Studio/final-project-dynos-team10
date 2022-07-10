@@ -60,7 +60,7 @@ RSpec.describe Component, :type => :model do
 
   describe '.get_component_types' do
     it 'should return all the different component types' do
-      test_component_types = Component.get_component_types()
+      test_component_types = Component.get_component_types
       expect(test_component_types).to match_array([["component_3", 2], ["label", 0], ["wire", 1]])
     end
   end
