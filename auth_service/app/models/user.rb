@@ -16,4 +16,12 @@ class User < ApplicationRecord
   def self.find_all
     User.all
   end
+
+  def self.find_one(user_id)
+    User.find(user_id)
+  end
+
+  def self.find_one_credentials(user_id)
+    self.find_one(user_id).credentials
+  end
 end

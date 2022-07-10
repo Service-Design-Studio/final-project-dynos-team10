@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import "./Camera.css"
 import { useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaTrashAlt} from "react-icons/fa";
-import { AiOutlineSend } from "react-icons/ai";
 import { MdLibraryAdd } from "react-icons/md";
 import PassIconSvg from '../assets/pass-icon.svg';
 import FailIconSvg from '../assets/fail-icon.svg';
@@ -12,6 +10,14 @@ import SwipeableTextMobileStepper from '../components/PhotoCarousel';
 import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
 import { removeComponentImageByIndex, selectCurrentComponent, selectCurrentComponentName, selectWorkorderNumber } from "../store/workorder/workorderSlice";
+
+import {
+    Container,
+    ActionIcon,
+    Grid,
+    Space,
+    Button
+  } from "@mantine/core";
 
 import { $axios } from '../helpers/axiosHelper';
 
@@ -90,71 +96,112 @@ function PhotoReview() {
     }
 
     return (
-        // 3 flexbox container along cross/vertical axis (header, camera, bottom)
-        // 3 flexbox item along main/hori axis (go back, empty or take photo button, other icons)
-        <div className="flexbox-column">
+        
+        <div style={{margin: 30}}>
 
-            <div className="flexbox-top">
-                <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "40px"}}/> 
-                <div className="empty-space"></div>
-                <MdLibraryAdd className="hover" onClick={() => navigate('/camera')} style={{fontSize: "40px", marginRight: '1rem'}}/>
-                <FaTrashAlt className="photo-review-delete-btn" style={{fontSize: "40px"}} onClick={deleteActivePhoto}/>
-            </div>
-                
-            <div className="flexbox-center">
-                {
+            {/* top section */}
+            <Space h="xl" />
+
+            <Grid grow align="center">
+
+                <Grid.Col span={3} align="center" >
+                    <ActionIcon color="dark" variant="transparent">
+                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
+                    </ActionIcon>
+                </Grid.Col>
+                    
+                <Grid.Col span={4}></Grid.Col>
+
+                <Grid.Col span={2} align="right">
+                    <ActionIcon color="dark" variant="transparent">
+                        <MdLibraryAdd onClick={() => navigate('/camera')} style={{fontSize: "2rem"}} />
+                    </ActionIcon>
+                </Grid.Col>
+
+                <Grid.Col span={2} align="center">
+                    <ActionIcon color="dark" variant="transparent">
+                        <FaTrashAlt onClick={deleteActivePhoto} className="photo-review-delete-btn" style={{fontSize: "2rem"}} />
+                    </ActionIcon>
+                </Grid.Col>
+
+            </Grid>
+            
+            <Space h="xl" />
+
+            {/* middle section -> carousel */}
+            <Container px="xs">
+            {
                     !hasImages
-                    ?   <button
+                    ?   
+                        <Container align="center">
+                        <Button
                             className="photo-review-camera-btn--secondary"
-                            style={{
-                                textTransform: 'capitalize'
-                            }}
+                            colour="blue" 
+                            variant="outline" 
+                            style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.2rem"}}
                             onClick={() => navigate('/camera')}
                         >
                         go back to camera
-                    </button>
+                    </Button>
+                    </Container>
                     : <SwipeableTextMobileStepper
                         activeStep={activeStep}
                         handleNext={handleNext}
                         handleBack={handleBack}
                         handleStepChange={handleStepChange}
                         key={carouselKey}
+                        className="photo-carousel"
+                        style={{display: "flex",
+                            justify: "center"}}
+                        
                     />
                 }
-            </div>
 
+            </Container>
             {
                 hasImages &&
                 <div style={{textAlign: 'center'}}>
                     <h3>Indicate Status to Proceed</h3>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <button className="photo-review-status-btn photo-review-status-btn--fail" onClick={() => setChosenStatus('fail')}>
-                            <img src={FailIconSvg} width={65}></img>
-                            <p>Fail</p>
-                        </button>
-                        <button className="photo-review-status-btn photo-review-status-btn--pass" onClick={() => setChosenStatus('pass')}>
-                            <img src={PassIconSvg} width={65}></img>
-                            <p>Pass</p>
-                        </button>
-                    </div>
+
+                    <Grid grow align="center">
+
+                        <Grid.Col span={3} align="right" variant="subtle">
+                            <button 
+                                className="photo-review-status-btn photo-review-status-btn--fail" 
+                                onClick={() => setChosenStatus('fail')}
+                                style={{backgroundColor: "transparent"}}>
+                                <img src={FailIconSvg} width={55}></img>
+                                <p>Fail</p>
+                            </button>
+                        </Grid.Col>
+
+                        <Grid.Col span={1} align="center"></Grid.Col>
+                            
+                        <Grid.Col span={3} align="left">
+                            <button 
+                                className="photo-review-status-btn photo-review-status-btn--pass" 
+                                onClick={() => setChosenStatus('pass')}
+                                style={{backgroundColor: "transparent"}}>
+                                <img src={PassIconSvg} width={55}></img>
+                                <p>Pass</p>
+                            </button>
+                        </Grid.Col>
+
+                    </Grid>
+
                     {
                         chosenStatus &&
                         (
                             <>
                                 <h4>You have chosen: {chosenStatus.toUpperCase()}</h4>
-                                <button 
+                                <Button 
                                     onClick={postComponentPhotos}
-                                    style={{
-                                        margin: 0,
-                                        padding: '10px 0',
-                                        height: 'auto',
-                                        backgroundColor: '#4285F4',
-                                        color: 'white',
-                                        cursor: 'pointer'
-                                    }}
+                                    colour="blue" 
+                                    variant="outline" 
+                                    size="md"
                                 >
                                     Proceed
-                                </button>
+                                </Button>
                             </>
                         )
                     }
@@ -163,6 +210,5 @@ function PhotoReview() {
         </div>
     )
 }
-
 
 export default PhotoReview;

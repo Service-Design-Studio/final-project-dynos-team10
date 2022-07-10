@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import Home from "./views/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlice";
-import axios from 'axios';
+import { $axios } from "./helpers/axiosHelper";
 
 function Router() {
     let location = useLocation();
@@ -25,7 +25,7 @@ function Router() {
     const dispatch = useDispatch();
 
     const verifyToken = async () => {
-        const result = await axios.get('https://dynostic-api-oakg5bt7gq-as.a.run.app/verify-jwt', {
+        const result = await $axios.get('verify-jwt', {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
@@ -49,6 +49,10 @@ function Router() {
         (async() => {
             console.log(`location has changed: ${location.pathname}`);
             if (!publicRoutes.some(pubRouteName => location.pathname.includes(pubRouteName))) {
+                if (process.env.NODE_ENV === "development") {
+                    dispatch(setIsAuthenticated(true));
+                    return;
+                }
                 // TODO: what happens if verifyToken is awaited?
                 await verifyToken();
             }
@@ -57,11 +61,11 @@ function Router() {
 
     return (
         <Routes>
-            <Route path="/" element={<App/>} /> 
+            {/* <Route path="/" element={<App/>} /> 
             <Route path="/component-status" element={<ComponentStatus/>} />
             <Route path="/camera" element={<Camera/>} />
             <Route path="/photo-review" element={<PhotoReview/>} />
-            <Route path="/qc-entry" element={<QCEntry/>} />
+            <Route path="/qc-entry" element={<QCEntry/>} /> */}
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
             <Route path="/failreasons" element={<FailReasons/>} />

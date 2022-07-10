@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import "./Camera.css"
 import { useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaArrowRight} from "react-icons/fa";
@@ -13,7 +12,16 @@ import {
     selectCurrentComponent
 } from "../store/workorder/workorderSlice";
 
+import {
+    ActionIcon,
+    Grid,
+    Space,
+    ThemeIcon
+  } from "@mantine/core";
+
 function Camera() {
+    // const theme = useMantineTheme();
+
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentComponent = useSelector(selectCurrentComponent);
     const dispatch = useDispatch();
@@ -75,41 +83,77 @@ function Camera() {
             setCanTakePhoto(true);
         }
     }, [imageCapture])
-
     
     return (
-        // 3 flexbox container along cross/vertical axis (header, camera, bottom)
-        // 3 flexbox item along main/hori axis (go back, empty or take photo button, other icons)
-        <div className="flexbox-column">
+        <div style={{margin: 30}}>
 
-            <div className="flexbox-top">
-                <div> <FaArrowLeft className="hover" onClick={() => navigate('/component-status')} style={{fontSize: "2rem"}}/> </div>
-                <div className="empty-space"></div>
-                <div className="flexbox-top-right" >
-                    <IoFlashOutline style={{fontSize: "2rem", marginRight: "0.2em"}}/>
-                    {/* will use if flash is implemented */}
-                    {/* <IoFlash style={{fontSize: "2rem", marginRight: "0.2em"}}/> */}
-                    <div> {count > 0 ? <BsCardImage  className="hover" onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : <BsCardImage style={{fontSize: "2rem", color: "transparent"}}/>  } </div>
-                </div>
-            </div>
+            {/* top section */}
+            <Space h="xl" />
+
+            <Grid grow align="center">
+
+                <Grid.Col span={3} align="center" >
+                    <ActionIcon color="dark" variant="transparent">
+                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
+                    </ActionIcon>
+                </Grid.Col>
+                    
+                <Grid.Col span={6}></Grid.Col>
+
+                <Grid.Col span={3} align="center">
+                    <ActionIcon color="dark" variant="transparent">
+                        {count > 0 ? <BsCardImage onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : null} 
+                    </ActionIcon>
+                </Grid.Col>
+
+            </Grid>
+
+            <Space h={60}/>
+
+            {/* middle section -> video */}
+            <Grid grow>
+
+                <Grid.Col span={1}></Grid.Col>
+                    
+                <Grid.Col span={10} align="center">
+                    <video style={{width: "100%"}} className="camera" autoPlay ref={videoElement}></video>
+                </Grid.Col>
+
+                <Grid.Col span={1}></Grid.Col>
                 
-            <div className="flexbox-center camera">
-                <video autoPlay ref={videoElement}></video>
-            </div>
-            
-            <div className='wrapper'>
-                <div className="centered-vertically"> {count > 0 ? <div className="counter"> <span>{count}</span> </div> : null} </div>
-                <button disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn ignore-global" ></button> 
-                <div className="centered-vertically"> {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="hover to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} </div>   
-            </div> 
+            </Grid>
+
+            <Space h={60}/>
 
             <div style={{display: "none"}} >
                 <canvas ref={photoRef}></canvas>
             </div>
 
+            {/* bottom section*/}
+            <Grid grow align="center">
+
+                <Grid.Col span={3} align="right">
+                    {count > 0 ?
+                        <ThemeIcon 
+                            variant="outline" radius="md" size="lg" color="dark" className="counter">
+                            <span>{count}</span>
+                        </ThemeIcon> : null}
+                </Grid.Col>
+                    
+                <Grid.Col span={3} align="center">
+                    <ActionIcon disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn" color="dark" size="xl" radius="xl" variant="outline"></ActionIcon>
+                </Grid.Col>
+
+                <Grid.Col span={3} align="left">
+                    <ActionIcon color="dark" variant="transparent">
+                        {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} 
+                    </ActionIcon>
+                </Grid.Col>
+
+            </Grid>
+
         </div>
     )
 }
-
 
 export default Camera;
