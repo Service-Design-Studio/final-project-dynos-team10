@@ -90,6 +90,7 @@ function Camera() {
 
             {/* top section */}
             <Space h="xl" />
+
             <Grid grow align="center">
 
                 <Grid.Col span={3} align="center" >
@@ -108,17 +109,22 @@ function Camera() {
 
             </Grid>
 
-            <Space h="xl" />
-            <Space h="xl" />
+            <Space h={60}/>
 
             {/* middle section -> video */}
-            <Container px="xs">
-                <video style={{width: "100%"}} autoPlay ref={videoElement}></video>
-            </Container>
+            <Grid grow>
 
-            <Space h="xl" />
-            <Space h="xl" />
+                <Grid.Col span={1}></Grid.Col>
+                    
+                <Grid.Col span={10} align="center">
+                    <video style={{width: "100%"}} autoPlay ref={videoElement}></video>
+                </Grid.Col>
 
+                <Grid.Col span={1}></Grid.Col>
+                
+            </Grid>
+
+            <Space h={60}/>
 
             <div style={{display: "none"}} >
                 <canvas ref={photoRef}></canvas>
@@ -128,9 +134,11 @@ function Camera() {
             <Grid grow align="center">
 
                 <Grid.Col span={3} align="right">
-                    <ThemeIcon variant="outline" radius="md" size="lg" color="dark">
-                        {count > 0 ? <span>{count}</span> : null}
-                    </ThemeIcon>
+                    {count > 0 ?
+                        <ThemeIcon 
+                            variant="outline" radius="md" size="lg" color="dark">
+                            <span>{count}</span>
+                        </ThemeIcon> : null}
                 </Grid.Col>
                     
                 <Grid.Col span={3} align="center">

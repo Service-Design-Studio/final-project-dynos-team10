@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaTrashAlt} from "react-icons/fa";
-import { AiOutlineSend } from "react-icons/ai";
 import { MdLibraryAdd } from "react-icons/md";
 import PassIconSvg from '../assets/pass-icon.svg';
 import FailIconSvg from '../assets/fail-icon.svg';
@@ -17,7 +16,6 @@ import {
     ActionIcon,
     Grid,
     Space,
-    ThemeIcon,
     Button
   } from "@mantine/core";
 
@@ -103,6 +101,7 @@ function PhotoReview() {
 
             {/* top section */}
             <Space h="xl" />
+
             <Grid grow align="center">
 
                 <Grid.Col span={3} align="center" >
@@ -157,7 +156,6 @@ function PhotoReview() {
                     />
                 }
 
-
             </Container>
             {
                 hasImages &&
@@ -211,6 +209,5 @@ function PhotoReview() {
         </div>
     )
 }
-
 
 export default PhotoReview;
