@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   Header,
   MediaQuery,
@@ -8,12 +9,14 @@ import {
   Button,
   List,
   Paper,
-  Text
+  Text,
+  Center
 } from "@mantine/core";
-
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { padding } from "@mui/system";
 
 function FailReasons() {
+  const navigate = useNavigate();
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
 
@@ -28,8 +31,14 @@ function FailReasons() {
   const handleClick = () => {
     setReasons((arr) => [...arr, value]);
     setValue("");
-    console.log(reasons);
   };
+
+  const nextButton = () => {
+    // if (reasons.length > 0) {
+    //     return <Button style={{marginLeft: 10}} size="md" variant="filled" uppercase>NEXT</Button>
+    // }
+    return <Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>NEXT</Button>
+  }
 
   const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
 
@@ -64,18 +73,18 @@ function FailReasons() {
           flexDirection: "column",
           alignItems: "center",
           height: "100%",
-          marginTop: "10%",
+          marginTop: "5%",
         }}
       >
         <HighlightOffIcon
           style={{ fontSize: 100, color: "red", alignItems: "center" }}
         ></HighlightOffIcon>
-      <Text>Reasons for failing check:</Text>
+      <Text style={{marginTop: 15}}>Reasons for failing check:</Text>
       </div>
       
 
       <Paper
-        style={{ margin: 40, padding: 20, marginTop: 0 }}
+        style={{ margin: 40, padding: 10, marginTop: 0 }}
         sx={(theme) => ({
           backgroundColor: theme.colors.gray[0],
         })}
@@ -95,19 +104,16 @@ function FailReasons() {
         value={value}
         onChange={handleChange}
       />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100%",
-          marginTop: "10%",
-        }}
-      >
-        <Button size="md" variant="filled" uppercase onClick={handleClick}>
+
+        <Center>
+        <Button style={{marginRight: 10}} size="md" variant="filled" uppercase onClick={handleClick}>
           ENTER
         </Button>
-      </div>
+
+        {nextButton}
+        {/* conditionally render the button + navigate back to component status */}
+
+        </Center>
     </div>
   );
 }

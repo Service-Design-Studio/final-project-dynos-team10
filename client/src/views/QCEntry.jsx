@@ -127,7 +127,6 @@ function QCEntry({ navigation }) {
       </Button>
       </div>
 
-      {/* <button className="submit-workorder-btn" onClick={handleNextPage}>NEXT</button> */}
     </div>
   );
 }
