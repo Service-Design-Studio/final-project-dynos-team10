@@ -33,12 +33,16 @@ function FailReasons() {
     setValue("");
   };
 
-  const nextButton = () => {
-    // if (reasons.length > 0) {
-    //     return <Button style={{marginLeft: 10}} size="md" variant="filled" uppercase>NEXT</Button>
-    // }
-    return <Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>NEXT</Button>
-  }
+  const handleNextPage = () => {
+    navigate('/component-status')
+  };
+
+  const NextButton = () => {
+    if (reasons.length > 0) {
+        return (<Button onClick={handleNextPage} style={{marginLeft: 10}} size="md" variant="filled" uppercase>NEXT</Button>)
+    };
+    return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>NEXT</Button>)
+  };
 
   const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
 
@@ -109,9 +113,7 @@ function FailReasons() {
         <Button style={{marginRight: 10}} size="md" variant="filled" uppercase onClick={handleClick}>
           ENTER
         </Button>
-
-        {nextButton}
-        {/* conditionally render the button + navigate back to component status */}
+        <NextButton/>
 
         </Center>
     </div>
