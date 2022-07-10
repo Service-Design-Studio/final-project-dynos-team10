@@ -7,7 +7,10 @@ import {
   MediaQuery,
   Burger,
   useMantineTheme,
+  Button
 } from "@mantine/core";
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
+import DraftsRoundedIcon from '@mui/icons-material/DraftsRounded';
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -21,6 +24,9 @@ export default function Home() {
     }
     const theme = useMantineTheme();
     const [opened, setOpened] = useState(false);
+    const handleNextPage = () => {
+      navigate('/qc-entry')
+    };
 
     return (
     <div>
@@ -35,10 +41,33 @@ export default function Home() {
               mr="xl"
             />
           </MediaQuery>
-
           <h1>Home</h1>
         </div>
       </Header>
+
+      <div style={{ display: "flex", flexDirection:"row", flexWrap: "wrap", alignItems: "center", justifyContent: "center", height: "100%" }}>
+      <Button 
+        colour="blue" 
+        variant="outline" 
+        style={{marginTop: 30, marginInline: 20, height: 75}} 
+        leftIcon={<AddBoxRoundedIcon style={{fontSize: 50}}/>}
+        onClick={handleNextPage}
+        fullWidth> 
+        
+            <h2 style={{color: 'black'}}>New Entry</h2>
+            </Button>
+
+            <Button 
+        colour="blue" 
+        variant="outline" 
+        style={{marginTop: 30, marginInline: 20, height: 75}} 
+        leftIcon={<DraftsRoundedIcon style={{fontSize: 50}}/>}
+        fullWidth> 
+            <h2 style={{color: 'black'}}>Drafts</h2>
+            </Button>
+
+</div>
+
       </div>
     )
 }
