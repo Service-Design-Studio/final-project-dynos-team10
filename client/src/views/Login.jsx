@@ -90,7 +90,7 @@ export default function Login() {
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
                     <Button onClick={signIn} fullWidth mt="xl">
-                        Sign In
+                        Log In
                     </Button>
                 </Paper>
             </Container>
