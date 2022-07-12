@@ -18,8 +18,11 @@ RSpec.describe Component, :type => :model do
   # end
 
   it "is not valid without a workorder_id" do
-    component = Component.create_record(nil,1,false)
+    component = Component.create_record(nil,"label",false)
   end
+
+  # it { should validate_uniqueness_of(:component_type).scoped_to(:workorder_id).ignoring_case_sensitivity}
+
 
     #how to test uniqueness?
   # it "is not valid without a unique workorder_id and unique component_type" do
@@ -32,15 +35,13 @@ RSpec.describe Component, :type => :model do
   describe "Components" do
     it { should belong_to(:workorder) }
   end
-
-
   # ***** testing of methods *********
 
   describe '.find_one' do
     context "given component id" do 
       it 'returns the component with that component_id' do
         workorder = Workorder.create_record("1", 1)
-        component = Component.create_record(workorder.id,1,false)
+        component = Component.create_record(workorder.id,"label",false)
         # byebug
         expect(Component.find_one(component.id)).to eq(component)
       end
@@ -50,7 +51,7 @@ RSpec.describe Component, :type => :model do
   describe '.create_record' do
     context "given workorder id, component_type and status" do 
       it 'creates the component with the given arguements' do
-        test_component = Component.create_record("1",1,false)
+        test_component = Component.create_record("1","label",false)
         expect(test_component.workorder_id).to equal(1)
         expect(test_component.component_type).to eq("label")
         expect(test_component.status).to be_falsy
@@ -75,8 +76,9 @@ RSpec.describe Component, :type => :model do
   describe '.find_all_by_workorder_id' do
     it 'should return all the component objects belonging to one workorder' do
       workorder = Workorder.create_record("2",1)
-      c1 = Component.create_record(workorder.id,1,false)
-      c2 = Component.create_record(workorder.id,2,false)
+      c1 = Component.create_record(workorder.id,"wire",false)
+      c2 = Component.create_record(workorder.id,"component_3",false)
+      # byebug
       expect(Component.find_all_by_workorder_id(workorder.id)).to match_array([c1,c2])
     end
   end
