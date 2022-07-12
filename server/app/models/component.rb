@@ -2,7 +2,7 @@ class Component < ApplicationRecord
     has_many :images
     belongs_to :workorder
     validates :component_type, :workorder_id, presence: true
-    # validates :component_type, uniqueness: { scope: :workorder_id}
+    validates :component_type, uniqueness: { scope: :workorder_id}
     # TODO: validate uniqueness of the above 2 AS a whole unit
     validates :status, inclusion: [true, false] # detection of boolean field presence, different validation because of under the hood ops
 
