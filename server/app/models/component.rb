@@ -22,7 +22,10 @@ class Component < ApplicationRecord
             component_type_int = 0 # defaults to the label //why are we doing this?
         end
         # byebug
-        Component.create(component_type: component_type_int, status: status, workorder_id: workorder_id)
+        new_component = Component.create(component_type: component_type_int, status: status, workorder_id: workorder_id)
+        # if new_component.nil?
+        #
+        # end
     end
 
     def self.find_one(component_id)
