@@ -33,9 +33,9 @@ export default function Login() {
 
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
-        // if (isAuthenticated) {
-        //     navigate('/');
-        // }
+        if (isAuthenticated) {
+            navigate('/');
+        }
     }, [])
 
 

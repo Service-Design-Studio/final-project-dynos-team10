@@ -18,3 +18,15 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+// CATCHING TEST FAILS
+// https://docs.cypress.io/api/events/catalog-of-events#Catching-Test-Failures
+// Check if no API request was made, e.g. a button calls an API but does client-side validation first
+// If client-side validation fails, it does not make an API request hence cy.wait() fails
+// reassess this for unintended consequences for network calls
+Cypress.on('fail', (error, runnable) => {
+    if (error.message.toLowerCase().includes('no request ever occurred')) {
+        return false;
+    }
+    throw error;
+});

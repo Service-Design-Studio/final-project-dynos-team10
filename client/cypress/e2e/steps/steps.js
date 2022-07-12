@@ -16,10 +16,13 @@ Then('I fill in the input field for {string} with {string}', (inputContent, newC
     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
 })
 And('I select some option in select field for machine type', () => {
-    cy.get('.machine-type-select').select(1);
+    cy.get('input[placeholder="Machine Type"]').click();
+    cy.get('.mantine-Select-item:first').click();
 })
 When('I click on the next button', () => {
-    cy.get('.submit-workorder-btn').click();   
+    cy.intercept('POST', 'https://dynostic-dev-api-oakg5bt7gq-as.a.run.app/workorders').as('createWorkorder');
+    cy.get('.submit-workorder-btn').click();
+    cy.wait('@createWorkorder');
 })
 Then('I should see {string}', (text) => {
     cy.get('body').contains(text);
