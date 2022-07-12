@@ -24,7 +24,6 @@ Feature: Registering as a new user
         Then I should see "username is not unique"
         And I should be on the "register" page
     
-    @pending
     Scenario: Registering without username
         Given I am on the "register" page
         Then I fill in the input field for "Credential Nickname" with "test"
@@ -32,7 +31,6 @@ Feature: Registering as a new user
         Then I should see "Username is required"
         And I should be on the "register" page
 
-    @pending
     Scenario: Registering without credential nickname
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"
@@ -40,7 +38,6 @@ Feature: Registering as a new user
         Then I should see "Credential Nickname is required"
         And I should be on the "register" page
 
-    @pending
     Scenario: Registering without any fields
         Given I am on the "register" page
         Then I click on the register button

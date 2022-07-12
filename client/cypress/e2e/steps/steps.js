@@ -141,100 +141,105 @@ Then('I should see a Go Back To Camera button', () => {
     cy.get('.photo-review-camera-btn--secondary').should('exist');
 });
 
-// ------------- status_of_components.feature ------------------
-//Scenario: uploading photos to the component "xxx" manual check page
-Given('I am on the status of component {string} manual check page', (componentName) => {
-    cy.visit(buildRoute('status of component {string} manual check'));
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).click();
-})
-And('I click on the upload photo button', () => {
-    cy.get('.upload-photo-btn').click();
-})
-And('my camera should open',() => {
-        cy.get('.camera').should('exist');
-})
-And('the pass button turns {string}',(colour) => {
-    cy.get('pass-btn').should('have.class', `.${colour}__btn`)
-});
-And('the fail button turns {string}',(colour) => {
-    cy.get('fail-btn').should('have.class', `.${colour}__btn`)
+// --------------- register.feature ------------------------
+Then('I click on the register button', () => {
+    cy.get('.register-btn').click();
 });
 
-// Scenario: component xxx passing manual check
-Given('the pass button of component {string} turns {string}', (componentName,green) => {
-    cy.visit(buildRoute('status of component {string} manual check clicked'));
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get('pass-btn').should('have.class', `.${green}__btn`);
-})
-And('the fail button turns {string}', (red) => {
-    cy.get('fail-btn').should('have.class', `.${red}__btn`);
-})
-Then('I click on the pass button', () => {
-    cy.wait(2000);
-    cy.get('.pass-btn').click();
-})
-Then('I am on the manual status pass page',() => {
-    cy.visit(buildRoute('manual status pass'));
-})
-And('the done button turns {string}',(blue) => {
-    cy.get('done-btn').should('have.class', `.${blue}__btn`);
-})
-Then('I am on the status of components page', () => {
-    cy.visit(buildRoute('status of components'));
-})
-And('the component {string} button turns {string}}',(componentName,colour) => {
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
-})
+// // ------------- status_of_components.feature ------------------
+// //Scenario: uploading photos to the component "xxx" manual check page
+// Given('I am on the status of component {string} manual check page', (componentName) => {
+//     cy.visit(buildRoute('status of component {string} manual check'));
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get(componentButtonClass).click();
+// })
+// And('I click on the upload photo button', () => {
+//     cy.get('.upload-photo-btn').click();
+// })
+// And('my camera should open',() => {
+//         cy.get('.camera').should('exist');
+// })
+// And('the pass button turns {string}',(colour) => {
+//     cy.get('pass-btn').should('have.class', `.${colour}__btn`)
+// });
+// And('the fail button turns {string}',(colour) => {
+//     cy.get('fail-btn').should('have.class', `.${colour}__btn`)
+// });
 
-// Scenario: component xxx failing manual check
-Given('the fail button of component {string} turns {string}', (componentName,green) => {
-    cy.visit(buildRoute('status of component {string} manual check clicked'));
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get('pass-btn').should('have.class', `.${green}__btn`);
-})
-And('the fail button turns {string}', (red) => {
-    cy.get('fail-btn').should('have.class', `.${red}__btn`);
-})
-Then('I click on the fail button', () => {
-    cy.wait(2000);
-    cy.get('.fail-btn').click();
-})
-Then('I am on the manual status fail page',(componentName) => {
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.visit(buildRoute('manual status fail'));
-})
-Then('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
-    cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
-})
-Then('the done button turns {string}',(blue) => {
-    cy.get('done-btn').should('have.class', `.${blue}__btn`);
-})
-Then('I am on the status of components page', (componentName) => {
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.visit(buildRoute('status of components'));
-})
-And('the component {string} button turns {string}}',(componentName,colour) => {
-        const componentButtonClass = buildComponentButtonClass(componentName);
-        cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
-})
+// // Scenario: component xxx passing manual check
+// Given('the pass button of component {string} turns {string}', (componentName,green) => {
+//     cy.visit(buildRoute('status of component {string} manual check clicked'));
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get('pass-btn').should('have.class', `.${green}__btn`);
+// })
+// And('the fail button turns {string}', (red) => {
+//     cy.get('fail-btn').should('have.class', `.${red}__btn`);
+// })
+// Then('I click on the pass button', () => {
+//     cy.wait(2000);
+//     cy.get('.pass-btn').click();
+// })
+// Then('I am on the manual status pass page',() => {
+//     cy.visit(buildRoute('manual status pass'));
+// })
+// And('the done button turns {string}',(blue) => {
+//     cy.get('done-btn').should('have.class', `.${blue}__btn`);
+// })
+// Then('I am on the status of components page', () => {
+//     cy.visit(buildRoute('status of components'));
+// })
+// And('the component {string} button turns {string}}',(componentName,colour) => {
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
+// })
+
+// // Scenario: component xxx failing manual check
+// Given('the fail button of component {string} turns {string}', (componentName,green) => {
+//     cy.visit(buildRoute('status of component {string} manual check clicked'));
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get('pass-btn').should('have.class', `.${green}__btn`);
+// })
+// And('the fail button turns {string}', (red) => {
+//     cy.get('fail-btn').should('have.class', `.${red}__btn`);
+// })
+// Then('I click on the fail button', () => {
+//     cy.wait(2000);
+//     cy.get('.fail-btn').click();
+// })
+// Then('I am on the manual status fail page',(componentName) => {
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.visit(buildRoute('manual status fail'));
+// })
+// Then('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
+//     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
+// })
+// Then('the done button turns {string}',(blue) => {
+//     cy.get('done-btn').should('have.class', `.${blue}__btn`);
+// })
+// Then('I am on the status of components page', (componentName) => {
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.visit(buildRoute('status of components'));
+// })
+// And('the component {string} button turns {string}}',(componentName,colour) => {
+//         const componentButtonClass = buildComponentButtonClass(componentName);
+//         cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
+// })
 
 
-//Scenario: exiting component xxx check before submitting all photos of Component xxx
-Given('I have taken multiple photos of component {string}', (componentName) => {
-    // reused step 1: I am on the {status of components} page
-    cy.visit(buildRoute('status of components'));
-    // reused step 2: I click on component {string} button
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).click();
-    // (reused) step 3: Take at least 1 photo
-    cy.get('.take-photo-btn').click();
-})
-And('I am on the photo review page', () => {
-    cy.visit(buildRoute('photo review'));
-})
-And('the component {string} button turns {string}}',(componentName,colour) => {
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
-})
+// //Scenario: exiting component xxx check before submitting all photos of Component xxx
+// Given('I have taken multiple photos of component {string}', (componentName) => {
+//     // reused step 1: I am on the {status of components} page
+//     cy.visit(buildRoute('status of components'));
+//     // reused step 2: I click on component {string} button
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get(componentButtonClass).click();
+//     // (reused) step 3: Take at least 1 photo
+//     cy.get('.take-photo-btn').click();
+// })
+// And('I am on the photo review page', () => {
+//     cy.visit(buildRoute('photo review'));
+// })
+// And('the component {string} button turns {string}}',(componentName,colour) => {
+//     const componentButtonClass = buildComponentButtonClass(componentName);
+//     cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
+// })

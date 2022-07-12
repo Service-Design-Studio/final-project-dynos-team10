@@ -21,6 +21,7 @@ import {
   ActionIcon,
   Tooltip
 } from '@mantine/core';
+import { useForm } from '@mantine/form';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -28,14 +29,27 @@ export default function Register() {
     const registeredCredentials = useSelector(selectRegisteredCredentials);
     const accessToken = useSelector(selectToken);
 
-    const [username, setUsername] = useState('');
-    const [credentialNickname, setCredentialNickname] = useState('');
-    // const [users, setUsers] = useState([]);
+    const form = useForm({
+        initialValues: {
+            username: '',
+            credentialNickname: ''
+        },
+        validate: {
+            username: (value) => (value.length <= 0 ? 'Username is required' : null),
+            credentialNickname: (value) => (value.length <= 0 ? 'Credential Nickname is required' : null)
+        }
+    })
 
     const registerUser = async() => {
+        const validation = form.validate();
+        if (validation.hasErrors) {
+            // has errors
+            return;
+        }
+        
         let result = await $authAxios.post('registration', {
             registration: {
-                username
+                username: form.values.username
             }
         });
         console.log({result});
@@ -48,7 +62,7 @@ export default function Register() {
             public_key_credential: pubKeyCredential,
             user_attributes: userAttributes,
             challenge,
-            credential_nickname: credentialNickname
+            credential_nickname: form.values.credentialNickname
         })
         console.log({result});
 
@@ -78,13 +92,17 @@ export default function Register() {
                 </Text>
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                <TextInput
+                    label="Username"
+                    placeholder="Username"
+                    required
+                    {...form.getInputProps('username')}
+                />
                 <TextInput 
                     label="Credential Nickname" 
                     placeholder="Credential Nickname" 
-                    required 
-                    value={credentialNickname} 
-                    onChange={(e) => setCredentialNickname(e.target.value)}
+                    required
+                    {...form.getInputProps('credentialNickname')}
                     rightSection={
                         <Tooltip
                             label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
@@ -98,11 +116,9 @@ export default function Register() {
                             </ActionIcon>
                         </Tooltip>
                     }
-                    mt="md" />
-                {/* <Group position="apart" mt="md">
-                <Checkbox label="Remember me" />
-                </Group> */}
-                <Button onClick={registerUser} fullWidth mt="xl">
+                    mt="md"
+                />
+                <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
                     Register
                 </Button>
             </Paper>
