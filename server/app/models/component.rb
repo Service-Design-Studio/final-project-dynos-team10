@@ -12,7 +12,6 @@ class Component < ApplicationRecord
       component_3: 2
     }
 
-
     def self.get_component_types
         Component.component_types
     end
