@@ -20,7 +20,7 @@ And('I select some option in select field for machine type', () => {
     cy.get('.mantine-Select-item:first').click();
 })
 When('I click on the next button', () => {
-    cy.intercept('POST', 'https://dynostic-dev-api-oakg5bt7gq-as.a.run.app/workorders').as('createWorkorder');
+    cy.intercept('POST', 'workorders').as('createWorkorder');
     cy.get('.submit-workorder-btn').click();
     cy.wait('@createWorkorder');
 })

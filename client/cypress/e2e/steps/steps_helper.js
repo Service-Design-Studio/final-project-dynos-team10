@@ -5,7 +5,9 @@ const descriptionToRouteMap = {
     "status of components": 'component-status',
     "take photo": 'camera',
     'photo review': 'photo-review',
-    'qc entry': 'qc-entry'
+    'qc entry': 'qc-entry',
+    'register': 'register',
+    'login': 'login'
 }
 
 /**

@@ -5,6 +5,7 @@ import { setToken, saveRegistration, selectRegisteredCredentials, selectToken } 
 import { register, authenticate } from '../helpers/webAuthHelper';
 import { useNavigate } from 'react-router-dom';
 import AppLogo from '../assets/dynostic-logo.svg';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 import {
   TextInput,
@@ -16,7 +17,9 @@ import {
   Container,
   Group,
   Button,
-  Space
+  Space,
+  ActionIcon,
+  Tooltip
 } from '@mantine/core';
 
 export default function Register() {
@@ -54,23 +57,6 @@ export default function Register() {
 
     return (
         <div>
-            {/* <h1>Register</h1>
-            <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-            <input placeholder="credential nickname" value={credentialNickname} onChange={(e) => setCredentialNickname(e.target.value)}></input>
-            <button onClick={registerUser}>Register</button> */}
-            {/* <button onClick={signIn}>Step 2: Sign In</button> */}
-            {/* <button onClick={validateSignIn}>Step 3: Validate signed in</button> */}
-            {/* <button onClick={getUsers}>Check Login: Get Users</button> */}
-
-            {/* <h1>Users</h1>
-            {
-                users.map(el => (
-                    <div key={el.id}>
-                        id: {el.id}, username: {el.username}
-                    </div>
-                ))
-            } */}
-            
             <Space h="1.8rem"/>
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
@@ -95,23 +81,33 @@ export default function Register() {
                 <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
                 <TextInput 
                     label="Credential Nickname" 
-                    placeholder="Nickname" 
+                    placeholder="Credential Nickname" 
                     required 
                     value={credentialNickname} 
-                    onChange={(e) => setCredentialNickname(e.target.value)} 
+                    onChange={(e) => setCredentialNickname(e.target.value)}
+                    rightSection={
+                        <Tooltip
+                            label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
+                            position="bottom"
+                            placement="start"
+                            wrapLines
+                            width={200}
+                        >
+                            <ActionIcon>
+                                <FaQuestionCircle/>
+                            </ActionIcon>
+                        </Tooltip>
+                    }
                     mt="md" />
                 {/* <Group position="apart" mt="md">
                 <Checkbox label="Remember me" />
                 </Group> */}
                 <Button onClick={registerUser} fullWidth mt="xl">
-                Sign in
+                    Register
                 </Button>
             </Paper>
             </Container>
 
-        </div>
-
-
-
+        </div> 
     )
 }
