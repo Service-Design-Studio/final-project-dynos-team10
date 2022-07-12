@@ -61,10 +61,6 @@ export default function Login() {
 
     return (
         <div>
-            {/* <h1>Login</h1>
-            <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-            <button onClick={signIn}>Sign In</button> */}
-
             <Space h="2.3rem"/>
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>

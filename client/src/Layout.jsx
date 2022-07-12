@@ -46,13 +46,7 @@ export default function Layout() {
             else if (routeHideArr.includes(location.pathname)){
                 console.log("visibility = false")
                 setVisibility(false);
-                setTitle("");
-                return;
-            }
-            else if (!(location.pathname in routeMap)) {
-                console.log("visibility = true but need to set title");
-                setVisibility(true);
-                setTitle("SET TITLE");
+                setTitle(""); // in case navbar still shows, title = ""
                 return;
             }
         })();
