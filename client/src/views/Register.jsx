@@ -1,9 +1,23 @@
 import { $authAxios } from '../helpers/axiosHelper';
-import { useState } from 'react';
+import { React, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, saveRegistration, selectRegisteredCredentials, selectToken } from '../store/auth/authSlice';
 import { register, authenticate } from '../helpers/webAuthHelper';
 import { useNavigate } from 'react-router-dom';
+import AppLogo from '../assets/dynostic-logo.svg';
+
+import {
+  TextInput,
+  Checkbox,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Group,
+  Button,
+  Space
+} from '@mantine/core';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -40,10 +54,10 @@ export default function Register() {
 
     return (
         <div>
-            <h1>Register</h1>
+            {/* <h1>Register</h1>
             <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
             <input placeholder="credential nickname" value={credentialNickname} onChange={(e) => setCredentialNickname(e.target.value)}></input>
-            <button onClick={registerUser}>Register</button>
+            <button onClick={registerUser}>Register</button> */}
             {/* <button onClick={signIn}>Step 2: Sign In</button> */}
             {/* <button onClick={validateSignIn}>Step 3: Validate signed in</button> */}
             {/* <button onClick={getUsers}>Check Login: Get Users</button> */}
@@ -56,6 +70,48 @@ export default function Register() {
                     </div>
                 ))
             } */}
+            
+            <Space h="1.8rem"/>
+            <Container align="center">
+                <img src={AppLogo} width="240rem"></img>
+            </Container>
+
+            <Container size={420} my={10}>
+            
+                <Title
+                    align="center"
+                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+                >
+                    Register
+                </Title>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    Have an account already?{' '}
+                    <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
+                        Login here
+                    </Anchor>
+                </Text>
+
+            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                <TextInput 
+                    label="Credential Nickname" 
+                    placeholder="Nickname" 
+                    required 
+                    value={credentialNickname} 
+                    onChange={(e) => setCredentialNickname(e.target.value)} 
+                    mt="md" />
+                {/* <Group position="apart" mt="md">
+                <Checkbox label="Remember me" />
+                </Group> */}
+                <Button onClick={registerUser} fullWidth mt="xl">
+                Sign in
+                </Button>
+            </Paper>
+            </Container>
+
         </div>
+
+
+
     )
 }
