@@ -6,6 +6,7 @@ import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
 import FailReasons from "./views/FailReasonsM";
+import Test from "./views/Test";
 
 import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
@@ -69,6 +70,7 @@ function Router() {
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
             <Route path="/failreasons" element={<FailReasons/>} />
+            <Route path="/test" element={<Test/>} />
 
             <Route
                 path="/"

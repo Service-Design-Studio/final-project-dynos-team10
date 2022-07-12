@@ -6,7 +6,7 @@ import {
     Header,
     MediaQuery,
     Burger,
-    useMantineTheme,
+    useMantineTheme
   } from "@mantine/core";
   import {useState} from "react";
 

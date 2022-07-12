@@ -6,7 +6,7 @@ import {Button} from "@mantine/core"
 
 function ComponentStatusButton(props) {
     const componentName = props.component;
-
+    
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const workorderComponents = useSelector(selectWorkorderComponents);
@@ -23,7 +23,7 @@ function ComponentStatusButton(props) {
             navigate('/photo-review');
             return;
         }
-        navigate('/camera');
+        // navigate('/camera');
     }
 
     return (
