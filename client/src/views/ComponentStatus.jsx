@@ -3,15 +3,10 @@ import { FaBars } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { selectWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
-    AppShell,
     Header,
-    Text,
     MediaQuery,
     Burger,
     useMantineTheme,
-    TextInput,
-    Select,
-    Button,
   } from "@mantine/core";
   import {useState} from "react";
 

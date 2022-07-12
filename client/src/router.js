@@ -5,6 +5,8 @@ import App from './App';
 import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
+import FailReasons from "./views/FailReasonsM";
+
 import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
 import Login from "./views/Login";
@@ -66,6 +68,7 @@ function Router() {
             <Route path="/qc-entry" element={<QCEntry/>} /> */}
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
+            <Route path="/failreasons" element={<FailReasons/>} />
 
             <Route
                 path="/"

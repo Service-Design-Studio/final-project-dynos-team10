@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import "./QCEntry.css";
 import { FaBars } from "react-icons/fa";
 import { $axios } from '../helpers/axiosHelper';
 import { useDispatch } from "react-redux";
@@ -111,6 +110,7 @@ function QCEntry({ navigation }) {
 
       <Select
         placeholder="Machine Type"
+        className="machine-type-select"
         name="type"
         value={formValues.type}
         data={[
@@ -123,12 +123,11 @@ function QCEntry({ navigation }) {
 
       <p>{formErrors.type}</p>
 
-      <Button size="md" variant="filled" onClick={handleNextPage} uppercase>
+      <Button size="md" variant="filled" onClick={handleNextPage} uppercase className="submit-workorder-btn">
         NEXT
       </Button>
       </div>
 
-      {/* <button className="submit-workorder-btn" onClick={handleNextPage}>NEXT</button> */}
     </div>
   );
 }
