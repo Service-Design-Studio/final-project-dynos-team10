@@ -3,25 +3,22 @@ Feature: Registering as a new user
 
     # note: cannot test what happens when user CANCELS the authentication operation on their device
     # since we are running automated testing, it does not have access to such APIs on different devices
-
-    # try stubbing/fixtures
-
-    @pending
+    
     Scenario: Registering as a completely new user
         Given I am on the "register" page
-        Then I fill in the input field for "Username" with a unique input
-        Then I fill in the input field for "Credential Nickname" with a unique input 
-        Then I click on the register button
-        Then I should see "Signed Up Successfully"
-        And I should be on the "login" page
+        Then I fill in the input field for "Username" with "uNiQuENamE"
+        Then I fill in the input field for "Credential Nickname" with "uNiQuENamEKeY" 
+        Then I click on the register button, expecting "success"
+        Then I should see "Successful Registration"
+        When I click on the Log In Now button
+        Then I should be on the "login" page
 
-    @pending
     Scenario: Registering with non-unique username
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"
         Then I fill in the input field for "Credential Nickname" with "test"
-        Then I click on the register button
-        Then I should see "username is not unique"
+        Then I click on the register button, expecting "username is not unique"
+        Then I should see "Username is not unique"
         And I should be on the "register" page
     
     Scenario: Registering without username
