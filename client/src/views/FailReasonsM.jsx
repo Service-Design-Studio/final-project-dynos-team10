@@ -48,28 +48,6 @@ function FailReasons() {
 
   return (
     <div>
-      <Header height={70} p="md">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Burger
-              opened={opened}
-              onClick={() => setOpened((o) => !o)}
-              size="sm"
-              color={theme.colors.gray[6]}
-              mr="xl"
-            />
-          </MediaQuery>
-
-          <h1>Machine 123</h1>
-        </div>
-      </Header>
 
       <div
         style={{

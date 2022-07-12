@@ -71,7 +71,7 @@ export default function Register() {
 
     return (
         <div>
-            <Space h="1.8rem"/>
+            <Space h="2.3rem"/>
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
             </Container>

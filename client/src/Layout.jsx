@@ -1,8 +1,86 @@
-import { Outlet } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { setToken, setIsAuthenticated } from "./store/auth/authSlice";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+
+import {
+    Header,
+    MediaQuery,
+    Burger,
+    useMantineTheme,
+    Button
+  } from "@mantine/core";
+
+// hash map, key -> route, value -> title at header, both are strings
+let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home"}; 
+let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
 // Insert navbar and global layouts here
 export default function Layout() {
+    const theme = useMantineTheme();
+    const [opened, setOpened] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // location.pathname is a string of current route
+    let location = useLocation();
+    const [title, setTitle] = useState("") // set title at header
+    const [visibility, setVisibility] = useState(true); // visibility of header
+    
+    const logout = () => {
+        dispatch(setToken(''));
+        dispatch(setIsAuthenticated(false));
+        navigate('/login');
+    }
+
+    useEffect(() => {
+        (async() => {
+            console.log(`location has changed: ${location.pathname}`);
+            if (location.pathname in routeMap) {
+                console.log("visibility = true");
+                setVisibility(true);
+                setTitle(routeMap[location.pathname]);
+                return;
+            }
+            else if (routeHideArr.includes(location.pathname)){
+                console.log("visibility = false")
+                setVisibility(false);
+                setTitle("");
+                return;
+            }
+            else if (!(location.pathname in routeMap)) {
+                console.log("visibility = true but need to set title");
+                setVisibility(true);
+                setTitle("SET TITLE");
+                return;
+            }
+        })();
+    }, [location])
+
     return (
-        <Outlet />
+        <>
+            {visibility ? 
+                <Header height={70} p="md">
+                    <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
+                    <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                        <Burger
+                            opened={opened}
+                            onClick={() => setOpened((o) => !o)}
+                            size="sm"
+                            color={theme.colors.gray[6]}
+                            mr="xl"
+                            />
+                    </MediaQuery>
+
+                    <h1>{title}</h1>
+                    <Button onClick={logout}>Log Out</Button>
+
+                    </div>
+                </Header>
+            : null}
+
+            <Outlet />
+        </>
     )
 }

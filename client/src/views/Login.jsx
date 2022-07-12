@@ -7,14 +7,11 @@ import AppLogo from '../assets/dynostic-logo.svg';
 
 import {
     TextInput,
-    PasswordInput,
-    Checkbox,
     Anchor,
     Paper,
     Title,
     Text,
     Container,
-    Group,
     Button,
     Space
   } from '@mantine/core';
@@ -33,9 +30,9 @@ export default function Login() {
 
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
-        // if (isAuthenticated) {
-        //     navigate('/');
-        // }
+        if (isAuthenticated) {
+            navigate('/');
+        }
     }, [])
 
 
@@ -68,7 +65,7 @@ export default function Login() {
             <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
             <button onClick={signIn}>Sign In</button> */}
 
-            <Space h="1.8rem"/>
+            <Space h="2.3rem"/>
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
             </Container>
