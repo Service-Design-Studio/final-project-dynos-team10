@@ -35,6 +35,13 @@ RSpec.describe Component, :type => :model do
   describe "Components" do
     it { should belong_to(:workorder) }
   end
+
+  it "should not allow to have more than 1 component to be have the same workorder id and same component_types " do
+    work_order = Workorder.create_record("10",1)
+    comp1 = Component.create_record(work_order.id,"wire",false)
+    comp2 = Component.create_record(work_order.id,"wire",false)
+    expect(comp2.id.nil?).to be_truthy
+  end
   # ***** testing of methods *********
 
   describe '.find_one' do
