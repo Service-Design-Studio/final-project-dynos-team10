@@ -2,7 +2,22 @@ import { authenticate } from '../helpers/webAuthHelper';
 import { setToken, selectRegisteredCredentials, setIsAuthenticated, selectIsAuthenticated } from '../store/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
+import AppLogo from '../assets/dynostic-logo.svg';
+
+import {
+    TextInput,
+    PasswordInput,
+    Checkbox,
+    Anchor,
+    Paper,
+    Title,
+    Text,
+    Container,
+    Group,
+    Button,
+    Space
+  } from '@mantine/core';
 
 import { $authAxios } from '../helpers/axiosHelper';
 
@@ -18,9 +33,9 @@ export default function Login() {
 
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
-        if (isAuthenticated) {
-            navigate('/');
-        }
+        // if (isAuthenticated) {
+        //     navigate('/');
+        // }
     }, [])
 
 
@@ -49,9 +64,37 @@ export default function Login() {
 
     return (
         <div>
-            <h1>Login</h1>
+            {/* <h1>Login</h1>
             <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-            <button onClick={signIn}>Sign In</button>
+            <button onClick={signIn}>Sign In</button> */}
+
+            <Space h="1.8rem"/>
+            <Container align="center">
+                <img src={AppLogo} width="240rem"></img>
+            </Container>
+
+            <Container size={420} my={20}>
+                <Title
+                    align="center"
+                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+                    >
+                    Login
+                </Title>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    Do not have an account yet?{' '}
+                    <Anchor href="#" size="sm" onClick={() => navigate('/register')}>
+                        Register here
+                    </Anchor>
+                </Text>
+
+                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    <Button onClick={signIn} fullWidth mt="xl">
+                        Sign In
+                    </Button>
+                </Paper>
+            </Container>
+
         </div>
     )
 }
