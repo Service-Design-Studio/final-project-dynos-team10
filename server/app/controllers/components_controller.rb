@@ -31,8 +31,4 @@ class ComponentsController < ApplicationController
     def destroy
 
     end
-
-    def component_types
-        render json: Component.get_component_types
-    end
 end

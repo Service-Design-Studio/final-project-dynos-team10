@@ -6,12 +6,10 @@ Rails.application.routes.draw do
 
   get 'verify-jwt', to: 'application#verify_jwt'
 
-  resources :workorders do
-    get "machine-types", on: :collection
-  end
-  resources :components do
-    get "component-types", on: :collection
-  end
+  resources :workorders
+
+  resources :components
+
   resources :images do
     post "batch-create", on: :collection
   end

@@ -14,6 +14,10 @@ class WorkordersController < ApplicationController
         workorder_number = params[:workorder_number]
         machine_type = params[:machine_type]
         workorder_record = Workorder.create_record workorder_number, machine_type
+        if workorder_record.id.nil?
+            render json: fail_json(errors: workorder_record.errors, data: workorder_record), status: :unprocessable_entity
+            return
+        end
         render json: success_json(workorder_record)
     end
 
@@ -38,9 +42,5 @@ class WorkordersController < ApplicationController
         # @workorder.destroy
         # flash[:success] = "workorder successfully deleted!"
         # # redirect_to workorderzes_url
-    end
-
-    def machine_types
-        render json: Workorder.get_machine_types
     end
 end

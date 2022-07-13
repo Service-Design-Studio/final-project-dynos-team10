@@ -6,13 +6,13 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-workorders =[{:workorder_number => "WO1", :machine_type => 0},
-             {:workorder_number => "WO2", :machine_type => 1}]
+workorders =[{:workorder_number => "WO1", :machine_type => "machine_1"},
+             {:workorder_number => "WO2", :machine_type => "machine_2"}]
 
-components = [{:workorder_id => 1, :status => false, :component_type => 1},
-              {:workorder_id => 1, :status => false, :failing_reasons => ["Wrong position"]},
-              {:workorder_id => 2, :status => true, :component_type => 1},
-              {:workorder_id => 2, :status => true}]
+components = [{:workorder_id => 1, :status => false, :component_type => "component_1"},
+              {:workorder_id => 1, :status => false, :component_type => "component_2", :failing_reasons => ["Wrong position"]},
+              {:workorder_id => 2, :status => true, :component_type => "component_1"},
+              {:workorder_id => 2, :status => true, :component_type => "component_2"}]
 
 images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/032e11e6-d779-4882-bc01-aee951b65ac3.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/032e11e6-d779-4882-bc01-aee951b65ac3.png"},
           {:component_id => 1, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/08306026-b08d-4016-b4fa-0a31afeac9f1.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/08306026-b08d-4016-b4fa-0a31afeac9f1.png"},
