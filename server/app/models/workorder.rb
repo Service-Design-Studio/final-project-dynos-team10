@@ -4,23 +4,9 @@ class Workorder < ApplicationRecord
     validates :workorder_number, :machine_type, presence: true
     validates :workorder_number, uniqueness: true
 
-    enum machine_type: {
-      machine_1: 0,
-      machine_2: 1,
-      machine_3: 2
-    }
-
-    def self.get_machine_types
-        Workorder.machine_types
-    end
-
     # creates a new workorder
     def self.create_record(workorder_number, machine_type)
-        machine_type_int = self.get_machine_types[machine_type]
-        if machine_type_int.nil?
-            machine_type_int = 0 # defaults to the first machine
-        end
-        Workorder.create(workorder_number: workorder_number, machine_type: machine_type_int)
+        Workorder.create(workorder_number: workorder_number, machine_type: machine_type)
     end
 
     def self.find_all
