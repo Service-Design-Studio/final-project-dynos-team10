@@ -9,7 +9,14 @@ import SwipeableTextMobileStepper from '../components/PhotoCarousel';
 
 import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
-import { removeComponentImageByIndex, selectCurrentComponent, selectCurrentComponentName, selectWorkorderNumber, updateCurrentComponentStatus } from "../store/workorder/workorderSlice";
+import { 
+    removeComponentImageByIndex, 
+    selectCurrentComponent, 
+    selectCurrentComponentName, 
+    selectWorkorderNumber, 
+    updateCurrentComponentStatus,
+    selectWorkorderComponents
+} from "../store/workorder/workorderSlice";
 
 import {
     Container,
@@ -39,6 +46,7 @@ function PhotoReview() {
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
+
     const hasImages = useMemo(() => {
         return currentComponent.images.length > 0;
     }, [currentComponent]);
@@ -64,46 +72,57 @@ function PhotoReview() {
     }
 
     const [chosenStatus, setChosenStatus] = useState('');
-    const postComponentPhotos = async() => {
+    
+    // const postComponentPhotos = async() => {
 
-        console.log("able to update component status");
-        dispatch(updateCurrentComponentStatus(chosenStatus));
+    //     console.log("able to update component status");
+    //     dispatch(updateCurrentComponentStatus(chosenStatus));
 
-        // get workorder id
-        let workorderId;
-        try {
-            const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
-            workorderId = response.data.id;
-        } catch(e) {
-            console.error(e);
-            console.log('cannot find current workorder');
-        }
+    //     // get workorder id
+    //     let workorderId;
+    //     try {
+    //         const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
+    //         workorderId = response.data.id;
+    //     } catch(e) {
+    //         console.error(e);
+    //         console.log('cannot find current workorder');
+    //     }
 
-        const payload = {
-            workorder_id: workorderId,
-            component_type: currentComponentName
-        }
-        if (chosenStatus === 'green') {
-            // only pass this param if pass
-            payload.status = true;
-        }
+    //     const payload = {
+    //         workorder_id: workorderId,
+    //         component_type: currentComponentName
+    //     }
+    //     if (chosenStatus === 'green') {
+    //         // only pass this param if pass
+    //         payload.status = true;
+    //     }
 
-        let response;
-        try {
-            response = await $axios.post('components', payload);
-            if (!response.data.success) {
-                return;
-            }
-            const { id: component_id } = response.data.data;
-            response = await $axios.post('images/batch-create', {
-                component_id,
-                images: currentComponent.images
-            })
-            console.log({response});
-        } catch (e) {
-            console.error(e);
+    //     let response;
+    //     try {
+    //         response = await $axios.post('components', payload);
+    //         if (!response.data.success) {
+    //             return;
+    //         }
+    //         const { id: component_id } = response.data.data;
+    //         response = await $axios.post('images/batch-create', {
+    //             component_id,
+    //             images: currentComponent.images
+    //         })
+    //         console.log({response});
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // }
+
+    const proceedStatus = (() => {
+        console.log(chosenStatus);
+        if (chosenStatus == "green") {
+            navigate('/pass');
+        } 
+        else if (chosenStatus == "red") {
+            navigate('/failreasons');
         }
-    }
+    });
 
     return (
         
@@ -205,7 +224,7 @@ function PhotoReview() {
                             <>
                                 <h4>You have chosen: {chosenStatus.toUpperCase()}</h4>
                                 <Button 
-                                    onClick={postComponentPhotos}
+                                    onClick={proceedStatus}
                                     colour="blue" 
                                     variant="outline" 
                                     size="md"

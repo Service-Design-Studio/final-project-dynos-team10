@@ -70,9 +70,6 @@ function Router() {
             <Route path="/qc-entry" element={<QCEntry/>} /> */}
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
-            <Route path="/failreasons" element={<FailReasons/>} />
-            <Route path="/qrscanner" element={<QRScanner/>} />
-            <Route path="/pass" element={<Pass/>} />
 
             <Route
                 path="/"
@@ -87,7 +84,10 @@ function Router() {
                 <Route path="camera" element={<Camera/>} />
                 <Route path="photo-review" element={<PhotoReview/>} />
                 <Route path="qc-entry" element={<QCEntry/>} />
-                
+                <Route path="/qrscanner" element={<QRScanner/>} />
+                <Route path="/failreasons" element={<FailReasons/>} />
+                <Route path="/pass" element={<Pass/>} />
+
             </Route>
         </Routes>
     )

@@ -16,7 +16,7 @@ import {
   } from "@mantine/core";
 
 // hash map, key -> route, value -> title at header, both are strings
-let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home", "/qrscanner": "QR Scanner"}; 
+let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home", "/qrscanner": "QR Scanner", "/failreasons": "Fail Reasons", "/pass": "Pass"}; 
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
 // Insert navbar and global layouts here
