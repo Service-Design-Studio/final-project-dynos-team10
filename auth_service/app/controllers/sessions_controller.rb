@@ -33,6 +33,11 @@ class SessionsController < ApplicationController
 
     credential = user.credentials.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
 
+    if credential.nil?
+      render json: "Error fetching your credential", status: :unprocessable_entity
+      return
+    end
+
     begin
       webauthn_credential.verify(
         # session["current_authentication"]["challenge"],

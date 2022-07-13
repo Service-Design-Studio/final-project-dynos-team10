@@ -2,19 +2,6 @@ Feature: Components
     I want to select a component from the status of components page to qc
 
     @pending
-    Scenario: going to the status of components page from the home page
-        Given I am on the home page
-        And I click on the qc list button
-        Then I am on the status of components page
-
-    @pending
-    Scenario: going to going to the status of components page from the side bar page
-        Given I am on the side bar page
-        And I click on the qc list button
-        Then I am on the status of components page
-
-
-    @pending
     Scenario: uploading photos to the component "xxx" manual check page
         Given I am on the status of component "xxx" manual check page
         And I click on the upload photo button
