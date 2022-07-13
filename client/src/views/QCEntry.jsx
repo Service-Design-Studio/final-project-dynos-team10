@@ -54,12 +54,21 @@ function QCEntry({}) {
   };
 
   useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      createWorkOrder().then(() => {
-        dispatch(setWorkorderNumber(formValues.serialno));
-        navigate("/component-status");
-      });
-    }
+    (async() => {
+      try {
+        if (Object.keys(formErrors).length === 0 && isSubmit) {
+          const result = await createWorkOrder();
+          console.log({ result });
+          dispatch(setWorkorderNumber(formValues.serialno));
+          navigate("/component-status");
+        }
+      } catch (e) {
+        console.error(e);
+        if (e.response.data.errors.workorder_number) {
+          setFormErrors({serialno: 'workorder number is taken'});
+        }
+      }
+    })();
   }, [formErrors, isSubmit]);
 
   const NextButton = () => {
@@ -82,16 +91,10 @@ function QCEntry({}) {
   };
 
   const createWorkOrder = async () => {
-    try {
-      const result = await $axios.post("workorders", {
-        workorder_number: formValues.serialno,
-        machine_type: formValues.type,
-      });
-      console.log({ result });
-    } catch (e) {
-      console.error(e);
-      alert(e);
-    }
+    return await $axios.post("workorders", {
+      workorder_number: formValues.serialno,
+      machine_type: formValues.type,
+    });
   };
 
   const theme = useMantineTheme();

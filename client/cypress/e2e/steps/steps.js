@@ -2,6 +2,8 @@ import { Given, Then, When, And } from "cypress-cucumber-preprocessor/steps";
 
 import { buildRoute, buildComponentButtonClass } from './steps_helper';
 
+import { v4 as uuidv4 } from 'uuid';
+
 // ROUTING
 Given('I am on the {string} page', (pageDescription) => {
     cy.visit(buildRoute(pageDescription));
@@ -10,11 +12,16 @@ And('I should be on the {string} page', (pageDescription) => {
     cy.url().should('eq', buildRoute(pageDescription));
 });
 
-
-// ----------- work_order.feature ------------------
+// general helpers
 Then('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
 })
+Then('I fill in the input field for {string} with unique input', (inputContent) => {
+    const randomString = uuidv4();
+    cy.get(`input[placeholder="${inputContent}"]`).type(randomString);
+})
+
+// ----------- work_order.feature ------------------
 When('I click on the next button', () => {
     cy.intercept('POST', 'workorders').as('createWorkorder');
     cy.get('.submit-workorder-btn').click();
