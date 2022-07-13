@@ -67,22 +67,22 @@ export default function Register() {
             return { pubKeyCredential, userAttributes, challenge };
         } catch (e) {
             console.error(e);
+            return;
         }
     }
 
     const commitRegistration = async (data) => {
         try {
             const {pubKeyCredential, userAttributes, challenge} = data;
-            const result = await $authAxios.post('registration/callback', {
+            return await $authAxios.post('registration/callback', {
                 public_key_credential: pubKeyCredential,
                 user_attributes: userAttributes,
                 challenge,
                 credential_nickname: form.values.credentialNickname
             });
-            setSuccessModalOpened(true);
-            return result;
         } catch (e) {
             console.error(e);
+            return;
         }
     }
 
@@ -107,9 +107,7 @@ export default function Register() {
 
         result = await commitRegistration(credentialData);
         console.log({result});
-        if (!successModalOpened) {
-            setSuccessModalOpened(true);
-        }
+        setSuccessModalOpened(true);
     }
 
     return (
