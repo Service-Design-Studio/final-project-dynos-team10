@@ -87,6 +87,7 @@ function Router() {
                 <Route path="camera" element={<Camera/>} />
                 <Route path="photo-review" element={<PhotoReview/>} />
                 <Route path="qc-entry" element={<QCEntry/>} />
+                
             </Route>
         </Routes>
     )

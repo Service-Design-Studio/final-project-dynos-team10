@@ -27,7 +27,7 @@ export const workorderSlice = createSlice({
 
             state.components[componentName] = {
                 images: [],
-                status: 'incomplete'
+                status: 'blue'
             }
         },
         addImageToComponent: (state, action) => {
@@ -41,7 +41,13 @@ export const workorderSlice = createSlice({
         },
         updateCurrentComponentName: (state, action) => {
             state.currentComponentName = action.payload;
+        },
+        updateCurrentComponentStatus: (state, action) => {
+            state.components[state.currentComponentName].status = action.payload;
+            console.log("component name = " + state.currentComponentName);
+            console.log("component status = "+state.components[state.currentComponentName].status);
         }
+
     }
 })
 
@@ -51,7 +57,8 @@ export const {
     addNewComponent,
     addImageToComponent,
     updateCurrentComponentName,
-    removeComponentImageByIndex
+    removeComponentImageByIndex,
+    updateCurrentComponentStatus
 } = workorderSlice.actions;
 
 // GETTERS

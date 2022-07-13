@@ -9,7 +9,7 @@ import SwipeableTextMobileStepper from '../components/PhotoCarousel';
 
 import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
-import { removeComponentImageByIndex, selectCurrentComponent, selectCurrentComponentName, selectWorkorderNumber } from "../store/workorder/workorderSlice";
+import { removeComponentImageByIndex, selectCurrentComponent, selectCurrentComponentName, selectWorkorderNumber, updateCurrentComponentStatus } from "../store/workorder/workorderSlice";
 
 import {
     Container,
@@ -44,6 +44,12 @@ function PhotoReview() {
     }, [currentComponent]);
 
     const deleteActivePhoto = () => {
+
+        if (currentComponent.images.length > 0){
+            console.log("component status = blue")
+            dispatch(updateCurrentComponentStatus("blue"));
+        }
+
         dispatch(removeComponentImageByIndex({
             index: activeStep,
             componentName: currentComponentName
@@ -59,6 +65,10 @@ function PhotoReview() {
 
     const [chosenStatus, setChosenStatus] = useState('');
     const postComponentPhotos = async() => {
+
+        console.log("able to update component status");
+        dispatch(updateCurrentComponentStatus(chosenStatus));
+
         // get workorder id
         let workorderId;
         try {
@@ -73,7 +83,7 @@ function PhotoReview() {
             workorder_id: workorderId,
             component_type: currentComponentName
         }
-        if (chosenStatus === 'pass') {
+        if (chosenStatus === 'green') {
             // only pass this param if pass
             payload.status = true;
         }
@@ -168,7 +178,7 @@ function PhotoReview() {
                         <Grid.Col span={3} align="right" variant="subtle">
                             <button 
                                 className="photo-review-status-btn photo-review-status-btn--fail" 
-                                onClick={() => setChosenStatus('fail')}
+                                onClick={() => setChosenStatus('red')}
                                 style={{backgroundColor: "transparent"}}>
                                 <img src={FailIconSvg} width={55}></img>
                                 <p>Fail</p>
@@ -180,7 +190,7 @@ function PhotoReview() {
                         <Grid.Col span={3} align="left">
                             <button 
                                 className="photo-review-status-btn photo-review-status-btn--pass" 
-                                onClick={() => setChosenStatus('pass')}
+                                onClick={() => setChosenStatus('green')}
                                 style={{backgroundColor: "transparent"}}>
                                 <img src={PassIconSvg} width={55}></img>
                                 <p>Pass</p>

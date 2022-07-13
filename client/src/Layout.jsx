@@ -40,14 +40,15 @@ export default function Layout() {
     useEffect(() => {
         (async() => {
             console.log(`location has changed: ${location.pathname}`);
+            console.log(location.pathname in routeMap);
             if (location.pathname in routeMap) {
-                console.log("visibility = true");
+                console.log("header visibility = true");
                 setVisibility(true);
                 setTitle(routeMap[location.pathname]);
                 return;
             }
             else if (routeHideArr.includes(location.pathname)){
-                console.log("visibility = false")
+                console.log("header visibility = false")
                 setVisibility(false);
                 setTitle(""); // in case navbar still shows, title = ""
                 return;
@@ -88,7 +89,7 @@ export default function Layout() {
                         </div>
 
                         <div style={{paddingRight: "0.6rem"}} > <Button onClick={logout}>Log Out</Button></div>
-                        
+
                     </div>
                 </Header>
 
