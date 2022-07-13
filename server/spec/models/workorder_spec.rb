@@ -42,17 +42,11 @@ RSpec.describe Workorder, :type => :model do
 
   describe '.create_record' do
     context "given workorder number, machine_type" do 
-      it 'creates the workorder with the given arguements' do
-        test_workorder = Workorder.create_record("1",1)
+      it 'creates the workorder with the given arguments' do
+        test_workorder = Workorder.create_record("1","machine_1")
         expect(test_workorder.workorder_number).to eq("1")
         expect(test_workorder.machine_type).to eq("machine_1")
       end
-    end
-  end
-
-  describe '.get_machine_types' do
-    it 'should return all the different machine types' do
-      expect(Workorder.get_machine_types).to match_array([["machine_3", 2], ["machine_1", 0], ["machine_2", 1]])
     end
   end
 
