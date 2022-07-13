@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
-import { $axios } from '../helpers/axiosHelper';
+import { useNavigate, useLocation } from "react-router-dom";
+import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
-  AppShell,
-  Header,
-  Text,
-  MediaQuery,
-  Burger,
   useMantineTheme,
   TextInput,
-  Select,
+  Text,
   Button,
+  Stack,
 } from "@mantine/core";
 
-function QCEntry({ navigation }) {
+function QCEntry({}) {
+  const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formValues, setFormValues] = useState({
-    serialno: "",
-    type: "default",
+  const [formValues, setFormValues] = useState(() => {
+    if (state == null) {
+      return { serialno: "", type: "" };
+    }
+    return { serialno: state.workorder, type: state.machinetype };
   });
+
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -44,10 +43,14 @@ function QCEntry({ navigation }) {
     if (!values.serialno) {
       errors.serialno = "Serial number is required!";
     }
-    if (values.type === "default") {
+    if (!values.type) {
       errors.type = "Type of machine is required!";
     }
     return errors;
+  };
+
+  const handleScanner = () => {
+    navigate("/qrscanner");
   };
 
   useEffect(() => {
@@ -59,13 +62,32 @@ function QCEntry({ navigation }) {
     }
   }, [formErrors, isSubmit]);
 
+  const NextButton = () => {
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+        return (<Button size="md"
+        variant="filled"
+        onClick={handleNextPage}
+        uppercase
+        className="submit-workorder-btn">NEXT</Button>)
+    };
+    return (<Button size="md"
+    variant="filled"
+    onClick={handleNextPage}
+    uppercase
+    className="submit-workorder-btn" 
+    disabled>NEXT</Button>)
+  };
+
   const createWorkOrder = async () => {
     try {
-      const result = await $axios.post('workorders', {
+      const result = await $axios.post("workorders", {
         workorder_number: formValues.serialno,
-        machine_type: formValues.type
+        machine_type: formValues.type,
       });
-      console.log({result});
+      console.log({ result });
     } catch (e) {
       console.error(e);
       alert(e);
@@ -77,41 +99,64 @@ function QCEntry({ navigation }) {
 
   return (
     <div>
+      <Stack spacing={"md"} align="center" justify={"center"}>
+        <Stack
+          spacing={"5"}
+          align="center"
+          justify={"center"}
+          style={{ marginTop: "10%" }}
+        >
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100%", marginTop: "10%"}}>
+          <TextInput
+            placeholder="MACHINE S/N"
+            name="serialno"
+            type="text"
+            value={formValues.serialno}
+            onChange={handleChange}
+            size="sm"
+            style={{ paddingLeft: 12, paddingRight: 12, width: 200 }}
+          />
 
-      <TextInput
-        placeholder="MACHINE S/N"
-        name="serialno"
-        type="text"
-        value={formValues.serialno}
-        onChange={handleChange}
-        size="sm"
-        style= {{paddingLeft: 12, paddingRight: 12, width: 200}}
-      />
+          <Text size="sm" color={"red"}>
+            {formErrors.serialno}
+          </Text>
 
-      <p>{formErrors.serialno}</p>
+        </Stack>
 
-      <Select
-        placeholder="Machine Type"
-        className="machine-type-select"
-        name="type"
-        value={formValues.type}
-        data={[
-          { value: "machine_1", label: "Machine 1" },
-          { value: "machine_2", label: "Machine 2" },
-          { value: "machine_3", label: "Machine 3" },
-        ]}
-        onChange={(e) => setFormValues({ ...formValues, ["type"]: e })}
-      />
+        <Stack spacing={"5"} align="center" justify={"center"}>
+          <TextInput
+            placeholder="MACHINE TYPE"
+            name="type"
+            type="text"
+            value={formValues.type}
+            onChange={handleChange}
+            size="sm"
+            style={{ paddingLeft: 12, paddingRight: 12, width: 200 }}
+          />
 
-      <p>{formErrors.type}</p>
+          <Text size="sm" color={"red"}>
+            {formErrors.type}
+          </Text>
+        </Stack>
+      </Stack>
 
-      <Button size="md" variant="filled" onClick={handleNextPage} uppercase className="submit-workorder-btn">
+      <Stack style={{marginTop: "10%"}} spacing={"md"} align="center" justify={"center"}>
+      <Button size="sm" variant="outline" onClick={handleScanner}>
+        SCAN QR CODE
+      </Button>
+
+  
+      <Button
+        size="md"
+        variant="filled"
+        onClick={handleNextPage}
+        uppercase
+        className="submit-workorder-btn"
+      >
         NEXT
       </Button>
-      </div>
-
+  
+      </Stack>
     </div>
   );
 }

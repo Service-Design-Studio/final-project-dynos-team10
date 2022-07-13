@@ -13,7 +13,6 @@ import {
   Center
 } from "@mantine/core";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { padding } from "@mui/system";
 
 function FailReasons() {
   const navigate = useNavigate();
