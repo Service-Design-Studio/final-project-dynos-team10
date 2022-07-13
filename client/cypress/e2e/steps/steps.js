@@ -175,7 +175,7 @@ Then('I click on the register button, expecting {string}', (expectedOutcome) => 
     cy.get('.register-btn').click(); // click must be BEHIND intercept
 
     if (expectedOutcome === 'success') {
-        cy.wait(3000);
+        cy.wait(2000);
     }
 });
 When('I click on the Log In Now button', () => {
