@@ -8,23 +8,19 @@ import {
   Center
 } from "@mantine/core";
 
-function InputDisplay () {
+function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
-
-    const [value, setValue] = useState("");
-    const [reasons, setReasons] = useState([]);
-  
-    const handleChange = (e) => {
-      setValue(e.currentTarget.value);
-      console.log(e.target);
-    };
-  
-    const handleClick = () => {
+    const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
+    
+    const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
       setValue("");
     };
 
-    const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
+    const handleDisplay = (e) => {
+      setValue(e.currentTarget.value);
+      console.log(e.target);
+    };
 
     return ( 
         <div>
@@ -47,11 +43,13 @@ function InputDisplay () {
         autosize
         size="sm"
         value={value}
-        onChange={handleChange}
+        onChange={handleDisplay}
       />
 
         <Center>
-        <Button size="md" variant="filled" uppercase onClick={handleClick}>
+        <Button size="md" variant="filled" uppercase 
+        onClick={handleEnter}
+        >
           ENTER
         </Button>
         </Center>
