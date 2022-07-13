@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { $axios } from '../helpers/axiosHelper';
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
-  AppShell,
   Header,
-  Text,
   MediaQuery,
   Burger,
   useMantineTheme,
@@ -16,17 +14,17 @@ import {
   Button,
 } from "@mantine/core";
 
-function QCEntry({ navigation }) {
+function QCEntry({}) {
+  const {state} = useLocation()
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
-    serialno: "",
-    type: "default",
+    serialno: state.workorder,
+    type: state.machinetype,
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-
   const handleChange = (e) => {
     console.log(e.target);
     const { name, value } = e.target;
@@ -93,7 +91,6 @@ function QCEntry({ navigation }) {
         </div>
       </Header>
 
-
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100%", marginTop: "10%"}}>
 
       <TextInput
@@ -108,17 +105,14 @@ function QCEntry({ navigation }) {
 
       <p>{formErrors.serialno}</p>
 
-      <Select
-        placeholder="Machine Type"
-        className="machine-type-select"
+      <TextInput
+        placeholder="MACHINE TYPE"
         name="type"
+        type="text"
         value={formValues.type}
-        data={[
-          { value: "machine_1", label: "Machine 1" },
-          { value: "machine_2", label: "Machine 2" },
-          { value: "machine_3", label: "Machine 3" },
-        ]}
-        onChange={(e) => setFormValues({ ...formValues, ["type"]: e })}
+        onChange={handleChange}
+        size="sm"
+        style= {{paddingLeft: 12, paddingRight: 12, width: 200}}
       />
 
       <p>{formErrors.type}</p>

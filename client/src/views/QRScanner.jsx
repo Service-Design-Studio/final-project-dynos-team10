@@ -4,19 +4,13 @@ import { Header, useMantineTheme, Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 function QRScanner() {
-  const [WO, setWO] = useState("");
-  const [machine, setMachine] = useState("");
-  const [done, setDone] = useState("");
   const navigate = useNavigate();
   const theme = useMantineTheme();
 
   const handleResult = (result, error) => {
     if (!!result) {
       const data = result?.text.split(",");
-      setWO(data[0]);
-      setMachine(data[2]);
-      
-      navigate('/qc-entry');
+      navigate('/qc-entry', {state: {workorder: data[0], machinetype: data[2]}});
     }
 
     if (!!error) {
