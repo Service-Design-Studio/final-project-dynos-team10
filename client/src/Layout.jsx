@@ -3,8 +3,11 @@ import { setToken, setIsAuthenticated } from "./store/auth/authSlice";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
+import { FaArrowLeft} from "react-icons/fa";
+import "./views/PhotoReview.css";
 
 import {
+    ActionIcon,
     Header,
     MediaQuery,
     Burger,
@@ -56,19 +59,31 @@ export default function Layout() {
         <>
             {visibility ? 
                 <Header height={70} p="md">
-                    <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
-                    <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                        <Burger
-                            opened={opened}
-                            onClick={() => setOpened((o) => !o)}
-                            size="sm"
-                            color={theme.colors.gray[6]}
-                            mr="xl"
-                            />
-                    </MediaQuery>
+                    <div style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems: "center", height: "100%" }}>
+                        
 
-                    <h1>{title}</h1>
-                    <Button onClick={logout}>Log Out</Button>
+                    
+                        <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
+                            <MediaQuery className=".mantine-oebsnu, mantine-1ghxne6" largerThan="sm" styles={{ display: "none", marginRight: "10px"}}>
+                                <Burger
+                                    opened={opened}
+                                    onClick={() => setOpened((o) => !o)}
+                                    size="sm"
+                                    color={theme.colors.gray[6]}
+                                    mr="xl"
+                                    />
+                            </MediaQuery>
+                        <div> 
+                            <ActionIcon onClick={() => navigate(-1)} style={{backgroundColor: "transparent", marginRight: "1rem"}} ><FaArrowLeft style={{color: "black", fontSize: "1.5rem"}} /></ActionIcon> 
+                        </div>
+
+                        <h2 style={{paddingRight: "1rem"}} >{title}</h2>
+
+                        </div>
+
+                        <div style={{paddingRight: "0.6rem"}} > <Button onClick={logout}>Log Out</Button></div>
+                    
+                   
 
                     </div>
                 </Header>

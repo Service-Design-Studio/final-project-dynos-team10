@@ -1,0 +1,34 @@
+{
+    "user_attributes": {
+        "created_at": null,
+        "id": null,
+        "updated_at": null,
+        "username": "test",
+        "webauthn_id": "abcdefghijkl"
+    },
+    "create_options": {
+        "challenge": "abcdefghijkl",
+        "pubKeyCredParams": [
+            {
+                "alg": -1,
+                "type": "public-key"
+            },
+            {
+                "alg": -2,
+                "type": "public-key"
+            },
+            {
+                "alg": -3,
+                "type": "public-key"
+            }
+        ],
+        "rp": {
+            "name": "Dynostic TSH"
+        },
+        "user": {
+            "displayName": "test",
+            "id": "1234",
+            "name": "test"
+        }
+    }
+}
