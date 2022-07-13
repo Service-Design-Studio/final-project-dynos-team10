@@ -25,7 +25,7 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:3000'
           working-directory: client
-          command: npm run cypress:run
+          command: npm run cypress:run-record
           record: true
         env:
           # pass the Dashboard record key as an environment variable
