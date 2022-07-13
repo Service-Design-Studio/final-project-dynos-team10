@@ -14,6 +14,7 @@ function QRScanner() {
       const data = result?.text.split(",");
       setIsUnmounted(true)
       navigate('/qc-entry', {state: {workorder: data[0], machinetype: data[2]}});
+      window.location.reload();
     }
 
     if (!!error) {
