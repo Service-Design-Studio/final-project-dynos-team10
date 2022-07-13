@@ -45,9 +45,14 @@ export const workorderSlice = createSlice({
         updateCurrentComponentStatus: (state, action) => {
             state.components[state.currentComponentName].status = action.payload;
             console.log("component name = " + state.currentComponentName);
-            console.log("component status = "+state.components[state.currentComponentName].status);
-        }
+            console.log("component status = " + state.components[state.currentComponentName].status);
+        },
+        replaceCurrentComponentImageArray: (state, action) => {
+            console.log("current component name = " + state.currentComponentName);
+            console.log("action payload = " + action.payload);
+            state.components[state.currentComponentName].images = action.payload;
 
+        }
     }
 })
 
@@ -58,7 +63,8 @@ export const {
     addImageToComponent,
     updateCurrentComponentName,
     removeComponentImageByIndex,
-    updateCurrentComponentStatus
+    updateCurrentComponentStatus,
+    replaceCurrentComponentImageArray
 } = workorderSlice.actions;
 
 // GETTERS
