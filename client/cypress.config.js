@@ -8,6 +8,6 @@ module.exports = defineConfig({
       on('file:preprocessor', cucumber());
     },
     specPattern: "cypress/e2e/*.feature",
-    video: false
   },
+  projectId: "mt7wbr"
 });

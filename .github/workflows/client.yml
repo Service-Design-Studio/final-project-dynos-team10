@@ -26,6 +26,10 @@ jobs:
           wait-on: 'http://localhost:3000'
           working-directory: client
           command: npm run cypress:run
+          record: true
+        env:
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-and-deploy:
     needs: cypress-run
     runs-on: ubuntu-latest
