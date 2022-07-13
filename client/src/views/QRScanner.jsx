@@ -6,10 +6,13 @@ import { useNavigate } from "react-router-dom";
 function QRScanner() {
   const navigate = useNavigate();
   const theme = useMantineTheme();
-
+  
+  const[isUnmounted, setIsUnmounted]= useState(false)
+  
   const handleResult = (result, error) => {
     if (!!result) {
       const data = result?.text.split(",");
+      setIsUnmounted(true)
       navigate('/qc-entry', {state: {workorder: data[0], machinetype: data[2]}});
     }
 
@@ -55,7 +58,7 @@ function QRScanner() {
             height: "100%",
           }}
         ></div>
-        
+        {!isUnmounted &&
         <QrReader
           onResult={handleResult}
           scanDelay={2000}
@@ -66,6 +69,7 @@ function QRScanner() {
           }}
           videoContainerStyle={{marginTop:10}}
         />
+      }
       </div>
 
       <Text align="center" style={{ marginTop: 0 }}>
