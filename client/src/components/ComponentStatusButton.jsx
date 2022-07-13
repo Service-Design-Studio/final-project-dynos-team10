@@ -17,7 +17,7 @@ function ComponentStatusButton(props) {
     const computedClassName = componentName.toLowerCase().split(' ').join('-') + '__btn';
 
     const handleClick = () => {
-        dispatch(addNewComponent(componentName));
+        // dispatch(addNewComponent(componentName));
         dispatch(updateCurrentComponentName(componentName));
         if (currentComponentImageCount > 0) {
             navigate('/photo-review');
