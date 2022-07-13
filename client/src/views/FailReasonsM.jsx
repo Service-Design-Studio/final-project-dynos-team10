@@ -13,37 +13,25 @@ import {
   Center
 } from "@mantine/core";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import InputDisplay from "../components/InputDisplay.jsx";
+import { StepContext } from "@mui/material";
 
 function FailReasons() {
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
-
-  const [value, setValue] = useState("");
-  const [reasons, setReasons] = useState([]);
-
-  const handleChange = (e) => {
-    setValue(e.currentTarget.value);
-    console.log(e.target);
-  };
-
-  const handleClick = () => {
-    setReasons((arr) => [...arr, value]);
-    setValue("");
-  };
+  const [next, setNext] = useState(false)
 
   const handleNextPage = () => {
     navigate('/component-status')
   };
 
   const NextButton = () => {
-    if (reasons.length > 0) {
+    if (next) {
         return (<Button onClick={handleNextPage} style={{marginLeft: 10}} size="md" variant="filled" uppercase>NEXT</Button>)
     };
     return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>NEXT</Button>)
   };
 
-  const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
 
   return (
     <div>
@@ -63,36 +51,13 @@ function FailReasons() {
       <Text style={{marginTop: 15}}>Reasons for failing check:</Text>
       </div>
       
+      <InputDisplay/>
 
-      <Paper
-        style={{ margin: 40, padding: 10, marginTop: 0 }}
-        sx={(theme) => ({
-          backgroundColor: theme.colors.gray[0],
-        })}
-        withBorder
-      >
-        <List style={{ margin: 10, marginLeft: 20, marginRight: 20 }}>
-          {listItems}
-        </List>
-      </Paper>
-
-      <Textarea
-        style={{ margin: 40, marginTop: 20 }}
-        placeholder="Type one reason at a time"
-        required
-        autosize
-        size="sm"
-        value={value}
-        onChange={handleChange}
-      />
-
-        <Center>
-        <Button style={{marginRight: 10}} size="md" variant="filled" uppercase onClick={handleClick}>
-          ENTER
-        </Button>
+      <Center>
         <NextButton/>
+      </Center>
+        
 
-        </Center>
     </div>
   );
 }

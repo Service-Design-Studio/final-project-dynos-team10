@@ -7,6 +7,7 @@ import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
 import FailReasons from "./views/FailReasonsM";
 import QRScanner from "./views/QRScanner";
+import Pass from "./views/Pass";
 
 import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
@@ -71,6 +72,7 @@ function Router() {
             <Route path="/login" element={<Login/>} />
             <Route path="/failreasons" element={<FailReasons/>} />
             <Route path="/qrscanner" element={<QRScanner/>} />
+            <Route path="/pass" element={<Pass/>} />
 
             <Route
                 path="/"
