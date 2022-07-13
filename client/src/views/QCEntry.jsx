@@ -25,6 +25,7 @@ function QCEntry({}) {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -55,6 +56,7 @@ function QCEntry({}) {
 
   useEffect(() => {
     (async() => {
+      setIsLoading(true);
       try {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
           const result = await createWorkOrder();
@@ -68,6 +70,7 @@ function QCEntry({}) {
           setFormErrors({serialno: 'workorder number is taken'});
         }
       }
+      setIsLoading(false);
     })();
   }, [formErrors, isSubmit]);
 
@@ -155,6 +158,7 @@ function QCEntry({}) {
         onClick={handleNextPage}
         uppercase
         className="submit-workorder-btn"
+        loading={isLoading}
       >
         NEXT
       </Button>

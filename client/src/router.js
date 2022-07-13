@@ -5,9 +5,7 @@ import App from './App';
 import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
-import FailReasons from "./views/FailReasonsM";
 import QRScanner from "./views/QRScanner";
-import Pass from "./views/Pass";
 
 import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
@@ -17,6 +15,7 @@ import Home from "./views/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlice";
 import { $axios } from "./helpers/axiosHelper";
+import PassFail from "./views/PassFail";
 
 function Router() {
     let location = useLocation();
@@ -85,9 +84,7 @@ function Router() {
                 <Route path="photo-review" element={<PhotoReview/>} />
                 <Route path="qc-entry" element={<QCEntry/>} />
                 <Route path="/qrscanner" element={<QRScanner/>} />
-                <Route path="/failreasons" element={<FailReasons/>} />
-                <Route path="/pass" element={<Pass/>} />
-
+                <Route path="pass-fail" element={<PassFail />} />
             </Route>
         </Routes>
     )

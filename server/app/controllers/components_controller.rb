@@ -11,8 +11,9 @@ class ComponentsController < ApplicationController
         # IF no status param is passed, that means failed (false), ELSE true
         status = !params[:status].nil?
         component_type = params[:component_type]
+        failing_reasons = params[:failing_reasons]
 
-        component_record = Component.create_record workorder_id, component_type, status
+        component_record = Component.create_record workorder_id, component_type, status, failing_reasons
         if component_record.id.nil?
             render json: fail_json(errors: component_record.errors)
             return

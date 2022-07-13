@@ -115,13 +115,14 @@ function PhotoReview() {
     // }
 
     const proceedStatus = (() => {
-        console.log(chosenStatus);
-        if (chosenStatus == "green") {
-            navigate('/pass');
-        } 
-        else if (chosenStatus == "red") {
-            navigate('/failreasons');
-        }
+        // console.log(chosenStatus);
+        // if (chosenStatus == "green") {
+        //     navigate('/pass');
+        // } 
+        // else if (chosenStatus == "red") {
+        //     navigate('/failreasons');
+        // }
+        navigate('/pass-fail', { state: { chosenStatus } });
     });
 
     return (

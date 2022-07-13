@@ -10,7 +10,7 @@ import {
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
-    const listItems = reasons.map((reason) => <List.Item>{reason}</List.Item>);
+    const listItems = reasons.map((reason, index) => <List.Item key={index}>{reason}</List.Item>);
     
     const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
