@@ -6,7 +6,7 @@ import { loadState } from '../browserStorage';
 export const store = configureStore({
     reducer: {
         workorder: workorderReducer,
-        auth: authReducer
+        auth: authReducer,
     },
     devTools: true,
     preloadedState: loadState()

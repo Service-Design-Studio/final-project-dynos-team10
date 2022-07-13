@@ -95,6 +95,7 @@ function Camera() {
                 <Grid.Col span={3} align="center" >
                     <ActionIcon color="dark" variant="transparent">
                         <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
+
                     </ActionIcon>
                 </Grid.Col>
                     

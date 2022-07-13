@@ -171,10 +171,11 @@ Then('I click on the register button, expecting {string}', (expectedOutcome) => 
         req.reply({
             statusCode: 200
         })
-    }).as('registrationCallback');
-    cy.get('.register-btn').click(); // click must be BEHIND intercept
+    })
+    cy.get('.register-btn').click();
     cy.wait('@registration');
     cy.wait(10000);
+    // cy.get('.register-btn').click(); // click must be BEHIND intercept
 });
 When('I click on the Log In Now button', () => {
     cy.get('.redirect-login-btn').click();

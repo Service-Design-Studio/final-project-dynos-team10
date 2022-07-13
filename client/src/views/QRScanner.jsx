@@ -14,7 +14,8 @@ function QRScanner() {
       const data = result?.text.split(",");
       setIsUnmounted(true)
       navigate('/qc-entry', {state: {workorder: data[0], machinetype: data[2]}});
-      window.location.reload();
+      // just comment out if dont want to reload
+      // window.location.reload();
     }
 
     if (!!error) {
@@ -24,19 +25,6 @@ function QRScanner() {
 
   return (
     <div>
-
-      <Header height={70} p="md">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <h1>QR Scanner</h1>
-        </div>
-      </Header>
 
       <div
         style={{
@@ -72,10 +60,6 @@ function QRScanner() {
         />
       }
       </div>
-
-      <Text align="center" style={{ marginTop: 0 }}>
-        Scan QR code
-      </Text>
     </div>
   );
 }

@@ -112,71 +112,66 @@ export default function Register() {
 
     return (
         <>
-            <div>
-                <Space h="1.8rem"/>
-                <Container align="center">
-                    <img src={AppLogo} width="240rem"></img>
-                </Container>
+        <div>
+            <Space h="2.3rem" />
+            <Container align="center">
+                <img src={AppLogo} width="240rem"></img>
+            </Container>
 
-                <Container size={420} my={10}>
-                
-                    <Title
-                        align="center"
-                        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
-                    >
+            <Container size={420} my={10}>
+
+                <Title
+                    align="center"
+                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}>
+                    Register
+                </Title>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    Have an account already?{' '}
+                    <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
+                        Login here
+                    </Anchor>
+                </Text>
+
+                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                    <TextInput
+                        label="Username"
+                        placeholder="Username"
+                        required
+                        {...form.getInputProps('username')} />
+                    <TextInput
+                        label="Credential Nickname"
+                        placeholder="Credential Nickname"
+                        required
+                        {...form.getInputProps('credentialNickname')}
+                        rightSection={<Tooltip
+                            label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
+                            position="bottom"
+                            placement="start"
+                            wrapLines
+                            width={200}
+                        >
+                            <ActionIcon>
+                                <FaQuestionCircle />
+                            </ActionIcon>
+                        </Tooltip>}
+                        mt="md" />
+                    <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
                         Register
-                    </Title>
-                    <Text color="dimmed" size="sm" align="center" mt={5}>
-                        Have an account already?{' '}
-                        <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
-                            Login here
-                        </Anchor>
-                    </Text>
+                    </Button>
+                </Paper>
+            </Container>
 
-                    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                        <TextInput
-                            label="Username"
-                            placeholder="Username"
-                            required
-                            {...form.getInputProps('username')}
-                        />
-                        <TextInput 
-                            label="Credential Nickname" 
-                            placeholder="Credential Nickname" 
-                            required
-                            {...form.getInputProps('credentialNickname')}
-                            rightSection={
-                                <Tooltip
-                                    label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
-                                    position="bottom"
-                                    placement="start"
-                                    wrapLines
-                                    width={200}
-                                >
-                                    <ActionIcon>
-                                        <FaQuestionCircle/>
-                                    </ActionIcon>
-                                </Tooltip>
-                            }
-                            mt="md"
-                        />
-                        <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
-                            Register
-                        </Button>
-                    </Paper>
-                </Container>
-
-            </div>
-            <Modal
-                title="Successful Registration"
-                opened={successModalOpened}
-                withCloseButton={false}
-                centered
-            >
+        </div><Modal
+            title="Successful Registration"
+            opened={successModalOpened}
+            withCloseButton={false}
+            centered
+        >
                 <Button className="redirect-login-btn" onClick={() => navigate('/login')}>
                     Log In Now
                 </Button>
             </Modal>
+            
         </>
     )
 }

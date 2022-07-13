@@ -19,22 +19,6 @@ function ComponentStatus({navigation}) {
 
     return (
         <div>
-      <Header height={70} p="md">
-        <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Burger
-              opened={opened}
-              onClick={() => setOpened((o) => !o)}
-              size="sm"
-              color={theme.colors.gray[6]}
-              mr="xl"
-            />
-          </MediaQuery>
-
-          <h1>1234</h1>
-          {/* <h1>{workorderNumber}</h1> */}
-        </div>
-      </Header>
             
             <div style={{ display: "flex", flexDirection:"row", flexWrap: "wrap", alignItems: "center", justifyContent: "center", height: "100%" }}>
                 {

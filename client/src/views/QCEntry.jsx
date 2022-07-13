@@ -4,9 +4,6 @@ import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
-  Header,
-  MediaQuery,
-  Burger,
   useMantineTheme,
   TextInput,
   Text,
@@ -102,29 +99,6 @@ function QCEntry({}) {
 
   return (
     <div>
-      <Header height={70} p="md">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Burger
-              opened={opened}
-              onClick={() => setOpened((o) => !o)}
-              size="sm"
-              color={theme.colors.gray[6]}
-              mr="xl"
-            />
-          </MediaQuery>
-
-          <h1>QC Entry</h1>
-        </div>
-      </Header>
-
       <Stack spacing={"md"} align="center" justify={"center"}>
         <Stack
           spacing={"5"}

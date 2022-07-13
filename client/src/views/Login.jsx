@@ -2,19 +2,16 @@ import { authenticate } from '../helpers/webAuthHelper';
 import { setToken, selectRegisteredCredentials, setIsAuthenticated, selectIsAuthenticated } from '../store/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { React, useState, useEffect } from 'react';
+import { React, useEffect } from 'react';
 import AppLogo from '../assets/dynostic-logo.svg';
 
 import {
     TextInput,
-    PasswordInput,
-    Checkbox,
     Anchor,
     Paper,
     Title,
     Text,
     Container,
-    Group,
     Button,
     Space
   } from '@mantine/core';
@@ -32,9 +29,10 @@ export default function Login() {
 
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
-        // if (isAuthenticated) {
-        //     navigate('/');
-        // }
+        // exclude dev environment, i.e. dev environment can visit login page to debug
+        if (isAuthenticated && process.env.NODE_ENV !== "development") {
+            navigate('/');
+        }
     }, [])
 
     const form = useForm({
@@ -46,6 +44,31 @@ export default function Login() {
         }
     })
 
+    const requestLogin = async () => {
+        try {
+            return await $authAxios.post('session', {
+                username: form.values.username
+            });
+        } catch(e) {
+            const errors = e.response.data?.errors;
+            if (errors && errors.includes("Username doesn't exist")) {
+                form.setErrors({ username: "Username doesn't exist" });
+            }
+        }
+    }
+
+    const commitLogin = async (pubKeyCredential, challenge) => {
+        try {
+            return await $authAxios.post(`session/callback`, {
+                public_key_credential: pubKeyCredential,
+                username: form.values.username,
+                challenge
+            })
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
 
     const signIn = async () => {
         const validation = form.validate();
@@ -54,20 +77,20 @@ export default function Login() {
             return;
         }
 
-        const username = form.values.username;
-
-        let result = await $authAxios.post('session', {
-            username
-        });
+        let result = await requestLogin();
         console.log({result});
+        if (!result) {
+            return;
+        }
+
         const { challenge } = result.data;
         const pubKeyCredential = await authenticate(challenge, registeredCredentials);
 
-        result = await $authAxios.post(`session/callback`, {
-            public_key_credential: pubKeyCredential,
-            username,
-            challenge
-        })
+        result = await commitLogin(pubKeyCredential, challenge);
+        if (!result) {
+            return;
+        }
+
         const { token } = result.data;
         console.log({token});
 
@@ -80,11 +103,7 @@ export default function Login() {
 
     return (
         <div>
-            {/* <h1>Login</h1>
-            <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-            <button onClick={signIn}>Sign In</button> */}
-
-            <Space h="1.8rem"/>
+            <Space h="2.3rem"/>
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
             </Container>
