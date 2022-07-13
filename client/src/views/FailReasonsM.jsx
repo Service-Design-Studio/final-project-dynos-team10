@@ -19,17 +19,29 @@ import { StepContext } from "@mui/material";
 function FailReasons() {
   const navigate = useNavigate();
   const theme = useMantineTheme();
-  const [next, setNext] = useState(false)
+
+  const [value, setValue] = useState("");
+  const [reasons, setReasons] = useState([]);
+
+  const handleChange = (e) => {
+    setValue(e.currentTarget.value);
+    console.log(e.target);
+  };
+
+  const handleClick = () => {
+    setReasons((arr) => [...arr, value]);
+    setValue("");
+  };
 
   const handleNextPage = () => {
     navigate('/component-status')
   };
 
-  const NextButton = () => {
-    if (next) {
-        return (<Button onClick={handleNextPage} style={{marginLeft: 10}} size="md" variant="filled" uppercase>NEXT</Button>)
+  const UploadButton = () => {
+    if (reasons.length > 0) {
+        return (<Button onClick={handleNextPage} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
     };
-    return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>NEXT</Button>)
+    return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>UPLOAD</Button>)
   };
 
 
@@ -51,10 +63,15 @@ function FailReasons() {
       <Text style={{marginTop: 15}}>Reasons for failing check:</Text>
       </div>
       
-      <InputDisplay/>
+      <InputDisplay 
+      reasons={reasons}
+      value={value}
+      setReasons={setReasons}
+      setValue={setValue}
+      />
 
-      <Center>
-        <NextButton/>
+      <Center style={{marginTop:20, marginRight: 10}}>
+        <UploadButton/>
       </Center>
         
 
