@@ -49,6 +49,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open -e \"TAGS=not @pending\"",
+    "cypress:run-record": "cypress run --record --browser chrome -e TAGS='not @pending'",
     "cypress:run": "cypress run --browser chrome -e TAGS='not @pending'"
   },
   "eslintConfig": {

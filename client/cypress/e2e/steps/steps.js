@@ -165,17 +165,24 @@ Then('I click on the register button, expecting {string}', (expectedOutcome) => 
             fixture: stubbingFixture,
             statusCode
         })
-    });
+    }).as('registration');
     cy.intercept('POST', 'registration/callback', req => {
         // prevent the request from actually reaching the server and stub response with fixture
         req.reply({
             statusCode: 200
         })
-    });
+    }).as('registrationCallback');
     cy.get('.register-btn').click(); // click must be BEHIND intercept
+    cy.wait('@registration');
+    cy.wait(10000);
 });
 When('I click on the Log In Now button', () => {
     cy.get('.redirect-login-btn').click();
+})
+
+// -------------- login.feature ----------------
+Then('I click on the log in button', () => {
+    cy.get('.login-btn').click();
 })
 
 // // ------------- status_of_components.feature ------------------

@@ -67,6 +67,7 @@ export default function Register() {
             return { pubKeyCredential, userAttributes, challenge };
         } catch (e) {
             console.error(e);
+            return;
         }
     }
 
@@ -81,6 +82,7 @@ export default function Register() {
             });
         } catch (e) {
             console.error(e);
+            return;
         }
     }
 
