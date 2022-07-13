@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
-import { $axios } from '../helpers/axiosHelper';
+import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
 import { setWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
@@ -10,21 +9,26 @@ import {
   Burger,
   useMantineTheme,
   TextInput,
-  Select,
+  Text,
   Button,
+  Stack,
 } from "@mantine/core";
 
 function QCEntry({}) {
-  const {state} = useLocation()
+  const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formValues, setFormValues] = useState({
-    serialno: state.workorder,
-    type: state.machinetype,
+  const [formValues, setFormValues] = useState(() => {
+    if (state == null) {
+      return { serialno: "", type: "" };
+    }
+    return { serialno: state.workorder, type: state.machinetype };
   });
+
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+
   const handleChange = (e) => {
     console.log(e.target);
     const { name, value } = e.target;
@@ -42,10 +46,14 @@ function QCEntry({}) {
     if (!values.serialno) {
       errors.serialno = "Serial number is required!";
     }
-    if (values.type === "default") {
+    if (!values.type) {
       errors.type = "Type of machine is required!";
     }
     return errors;
+  };
+
+  const handleScanner = () => {
+    navigate("/qrscanner");
   };
 
   useEffect(() => {
@@ -59,11 +67,11 @@ function QCEntry({}) {
 
   const createWorkOrder = async () => {
     try {
-      const result = await $axios.post('workorders', {
+      const result = await $axios.post("workorders", {
         workorder_number: formValues.serialno,
-        machine_type: formValues.type
+        machine_type: formValues.type,
       });
-      console.log({result});
+      console.log({ result });
     } catch (e) {
       console.error(e);
       alert(e);
@@ -76,7 +84,14 @@ function QCEntry({}) {
   return (
     <div>
       <Header height={70} p="md">
-        <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
           <MediaQuery largerThan="sm" styles={{ display: "none" }}>
             <Burger
               opened={opened}
@@ -91,37 +106,63 @@ function QCEntry({}) {
         </div>
       </Header>
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100%", marginTop: "10%"}}>
+      <Stack spacing={"md"} align="center" justify={"center"}>
+        <Stack
+          spacing={"5"}
+          align="center"
+          justify={"center"}
+          style={{ marginTop: "10%" }}
+        >
 
-      <TextInput
-        placeholder="MACHINE S/N"
-        name="serialno"
-        type="text"
-        value={formValues.serialno}
-        onChange={handleChange}
-        size="sm"
-        style= {{paddingLeft: 12, paddingRight: 12, width: 200}}
-      />
+          <TextInput
+            placeholder="MACHINE S/N"
+            name="serialno"
+            type="text"
+            value={formValues.serialno}
+            onChange={handleChange}
+            size="sm"
+            style={{ paddingLeft: 12, paddingRight: 12, width: 200 }}
+          />
 
-      <p>{formErrors.serialno}</p>
+          <Text size="sm" color={"red"}>
+            {formErrors.serialno}
+          </Text>
 
-      <TextInput
-        placeholder="MACHINE TYPE"
-        name="type"
-        type="text"
-        value={formValues.type}
-        onChange={handleChange}
-        size="sm"
-        style= {{paddingLeft: 12, paddingRight: 12, width: 200}}
-      />
+        </Stack>
 
-      <p>{formErrors.type}</p>
+        <Stack spacing={"5"} align="center" justify={"center"}>
+          <TextInput
+            placeholder="MACHINE TYPE"
+            name="type"
+            type="text"
+            value={formValues.type}
+            onChange={handleChange}
+            size="sm"
+            style={{ paddingLeft: 12, paddingRight: 12, width: 200 }}
+          />
 
-      <Button size="md" variant="filled" onClick={handleNextPage} uppercase className="submit-workorder-btn">
+          <Text size="sm" color={"red"}>
+            {formErrors.type}
+          </Text>
+        </Stack>
+      </Stack>
+
+      <Stack style={{marginTop: "10%"}} spacing={"md"} align="center" justify={"center"}>
+      <Button size="sm" variant="outline" onClick={handleScanner}>
+        SCAN QR CODE
+      </Button>
+
+      <Button
+        size="md"
+        variant="filled"
+        onClick={handleNextPage}
+        uppercase
+        className="submit-workorder-btn"
+      >
         NEXT
       </Button>
-      </div>
-
+  
+      </Stack>
     </div>
   );
 }

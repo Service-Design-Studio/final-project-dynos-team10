@@ -1,5 +1,4 @@
 import ComponentStatusButton from "../components/ComponentStatusButton";
-import { FaBars } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { selectWorkorderNumber } from "../store/workorder/workorderSlice";
 import {
