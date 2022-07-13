@@ -73,12 +73,14 @@ export default function Register() {
     const commitRegistration = async (data) => {
         try {
             const {pubKeyCredential, userAttributes, challenge} = data;
-            return await $authAxios.post('registration/callback', {
+            const result = await $authAxios.post('registration/callback', {
                 public_key_credential: pubKeyCredential,
                 user_attributes: userAttributes,
                 challenge,
                 credential_nickname: form.values.credentialNickname
             });
+            setSuccessModalOpened(true);
+            return result;
         } catch (e) {
             console.error(e);
         }
@@ -105,7 +107,9 @@ export default function Register() {
 
         result = await commitRegistration(credentialData);
         console.log({result});
-        setSuccessModalOpened(true);
+        if (!successModalOpened) {
+            setSuccessModalOpened(true);
+        }
     }
 
     return (
