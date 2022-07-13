@@ -3,16 +3,16 @@
     display: flex;
     justify-content: center;
   }
-  .mantine-Container-root > * {
-    margin: 0.6rem;
-  }
-  .photo-review-status-btn {
-    border: none;
-    cursor: pointer;
-    transition: all 0.5s;
-  }
-  .photo-review-status-btn:hover {
-    background-color: transparent;
-    transform: scale(1.1);
-  }
+.mantine-Container-root > * {
+  margin: 0.6rem;
+}
+.photo-review-status-btn {
+  border: none;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.photo-review-status-btn:hover {
+  background-color: transparent;
+  transform: scale(1.1);
+}
   /* ------------------------------ */
