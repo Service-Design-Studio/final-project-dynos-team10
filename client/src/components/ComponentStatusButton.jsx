@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { addNewComponent, updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
 import {Button} from "@mantine/core"
 
@@ -25,15 +25,17 @@ function ComponentStatusButton(props) {
         }
         navigate('/camera');
     }
+    
 
     return (
         <Button 
-        colour="blue" 
-        variant="outline" 
+        color = {workorderComponents[componentName].status}
+        variant="light" 
         className={computedClassName} 
         onClick={handleClick}
-        style={{marginTop: 30, marginInline: 20, width: 120, height: 120}}> 
-        
+        style={{marginTop: 30, marginInline: 20, width: 120, height: 120, borderColor: "#1c7ed6" }} 
+        // border colour from mantine default
+        > 
             <h2>{componentName}</h2>
             </Button>
     )

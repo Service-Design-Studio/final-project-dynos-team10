@@ -2,10 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaArrowRight} from "react-icons/fa";
-import { IoFlash, IoFlashOutline } from "react-icons/io5";
+import { IoFlash, IoFlashOutline } from "react-icons/io5"; // in case got flash option
 import { BsCardImage } from "react-icons/bs";
 
 import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentComponentStatus } from "../store/workorder/workorderSlice";
 import { 
     selectCurrentComponentName,
     addImageToComponent,
@@ -25,6 +26,7 @@ function Camera() {
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentComponent = useSelector(selectCurrentComponent);
     const dispatch = useDispatch();
+
     const count = useMemo(() => {
         return currentComponent.images.length;
     }, [currentComponent]);
@@ -56,9 +58,17 @@ function Camera() {
             alert(`${e.name}`);
             console.error(e);
         }
-    }
+    }  
 
     const takePhoto = async () => {
+        console.log("take photo");
+        console.log(count);
+
+        if (count > -1) {
+            console.log("testttttt pls pass");
+            dispatch(updateCurrentComponentStatus("yellow"))
+        } 
+        
         const imageBitmap = await imageCapture.grabFrame();
         let photo = photoRef.current;
         photo.width = imageBitmap.width;
@@ -75,6 +85,7 @@ function Camera() {
 
     useEffect(() => {
         openCamera();
+  
     }, [videoElement]);
 
     const [canTakePhoto, setCanTakePhoto] = useState(false);
@@ -83,7 +94,7 @@ function Camera() {
             setCanTakePhoto(true);
         }
     }, [imageCapture])
-    
+
     return (
         <div style={{margin: 30}}>
 
@@ -95,7 +106,6 @@ function Camera() {
                 <Grid.Col span={3} align="center" >
                     <ActionIcon color="dark" variant="transparent">
                         <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
-
                     </ActionIcon>
                 </Grid.Col>
                     
