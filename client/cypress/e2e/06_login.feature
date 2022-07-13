@@ -10,7 +10,6 @@ Feature: Logging In
         Then I click on the log in button
         And I should be on the "home" page
     
-    @pending
     Scenario: Log in without username
         Given I am on the "login" page
         Then I click on the log in button
@@ -22,6 +21,6 @@ Feature: Logging In
         Given I am on the "login" page
         Then I fill in the input field for "Username" with "acbdegfhikjl"
         Then I click on the log in button
-        Then I should see "Username could not found"
+        Then I should see "Username could not be found"
         And I should be on the "login" page
     

@@ -174,9 +174,15 @@ Then('I click on the register button, expecting {string}', (expectedOutcome) => 
     }).as('registrationCallback');
     cy.get('.register-btn').click(); // click must be BEHIND intercept
     cy.wait('@registration');
+    cy.wait(10000);
 });
 When('I click on the Log In Now button', () => {
     cy.get('.redirect-login-btn').click();
+})
+
+// -------------- login.feature ----------------
+Then('I click on the log in button', () => {
+    cy.get('.login-btn').click();
 })
 
 // // ------------- status_of_components.feature ------------------

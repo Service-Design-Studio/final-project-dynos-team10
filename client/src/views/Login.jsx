@@ -20,6 +20,7 @@ import {
   } from '@mantine/core';
 
 import { $authAxios } from '../helpers/axiosHelper';
+import { useForm } from '@mantine/form';
 
 export default function Login() {
     const { state } = useLocation();
@@ -29,8 +30,6 @@ export default function Login() {
     const registeredCredentials = useSelector(selectRegisteredCredentials);
     const isAuthenticated = useSelector(selectIsAuthenticated);
 
-    const [username, setUsername] = useState('');
-
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
         // if (isAuthenticated) {
@@ -38,8 +37,25 @@ export default function Login() {
         // }
     }, [])
 
+    const form = useForm({
+        initialValues: {
+            username: ''
+        },
+        validate: {
+            username: (value) => (value.length <= 0 ? 'Username is required' : null)
+        }
+    })
+
 
     const signIn = async () => {
+        const validation = form.validate();
+        if (validation.hasErrors) {
+            // has errors
+            return;
+        }
+
+        const username = form.values.username;
+
         let result = await $authAxios.post('session', {
             username
         });
@@ -88,8 +104,13 @@ export default function Login() {
                 </Text>
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <TextInput label="Username" placeholder="Username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
-                    <Button onClick={signIn} fullWidth mt="xl">
+                    <TextInput
+                        label="Username"
+                        placeholder="Username"
+                        required
+                        {...form.getInputProps('username')}
+                    />
+                    <Button onClick={signIn} fullWidth mt="xl" className="login-btn">
                         Log In
                     </Button>
                 </Paper>
