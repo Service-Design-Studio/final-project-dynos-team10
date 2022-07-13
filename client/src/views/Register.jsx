@@ -21,6 +21,7 @@ import {
   Modal
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useEffect } from 'react';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -99,79 +100,88 @@ export default function Register() {
             return;
         }
 
-        const credentialData = await registerCredential(result.data);
+        const credentialData = await Register.registerCredentialExposed(result.data);
+        // const credentialData = await registerCredential(result.data);
         console.log({credentialData});
-        // if (!credentialData) {
-        //     return;
-        // }
+        if (!credentialData) {
+            return;
+        }
 
         result = await commitRegistration(credentialData);
         console.log({result});
         setSuccessModalOpened(true);
     }
 
+    // TO ALLOW METHOD STUBBING FOR registerCredential()
+    useEffect(() => {
+        Register.registerCredentialExposed = async (resultData) => {
+            return await registerCredential(resultData);
+        }
+        window.registerComponent = Register;
+    }, [])
+
     return (
-        <>
+        // <div ref={(registerComponent) => {window.registerComponent = registerComponent}}>
         <div>
-            <Space h="2.3rem" />
-            <Container align="center">
-                <img src={AppLogo} width="240rem"></img>
-            </Container>
+            <div>
+                <Space h="2.3rem" />
+                <Container align="center">
+                    <img src={AppLogo} width="240rem"></img>
+                </Container>
 
-            <Container size={420} my={10}>
+                <Container size={420} my={10}>
 
-                <Title
-                    align="center"
-                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}>
-                    Register
-                </Title>
-                <Text color="dimmed" size="sm" align="center" mt={5}>
-                    Have an account already?{' '}
-                    <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
-                        Login here
-                    </Anchor>
-                </Text>
-
-                <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                    <TextInput
-                        label="Username"
-                        placeholder="Username"
-                        required
-                        {...form.getInputProps('username')} />
-                    <TextInput
-                        label="Credential Nickname"
-                        placeholder="Credential Nickname"
-                        required
-                        {...form.getInputProps('credentialNickname')}
-                        rightSection={<Tooltip
-                            label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
-                            position="bottom"
-                            placement="start"
-                            wrapLines
-                            width={200}
-                        >
-                            <ActionIcon>
-                                <FaQuestionCircle />
-                            </ActionIcon>
-                        </Tooltip>}
-                        mt="md" />
-                    <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
+                    <Title
+                        align="center"
+                        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}>
                         Register
-                    </Button>
-                </Paper>
-            </Container>
+                    </Title>
+                    <Text color="dimmed" size="sm" align="center" mt={5}>
+                        Have an account already?{' '}
+                        <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
+                            Login here
+                        </Anchor>
+                    </Text>
 
-        </div><Modal
-            title="Successful Registration"
-            opened={successModalOpened}
-            withCloseButton={false}
-            centered
-        >
+                    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                        <TextInput
+                            label="Username"
+                            placeholder="Username"
+                            required
+                            {...form.getInputProps('username')} />
+                        <TextInput
+                            label="Credential Nickname"
+                            placeholder="Credential Nickname"
+                            required
+                            {...form.getInputProps('credentialNickname')}
+                            rightSection={<Tooltip
+                                label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
+                                position="bottom"
+                                placement="start"
+                                wrapLines
+                                width={200}
+                            >
+                                <ActionIcon>
+                                    <FaQuestionCircle />
+                                </ActionIcon>
+                            </Tooltip>}
+                            mt="md" />
+                        <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
+                            Register
+                        </Button>
+                    </Paper>
+                </Container>
+            </div>
+            <Modal
+                title="Successful Registration"
+                opened={successModalOpened}
+                withCloseButton={false}
+                centered
+            >
                 <Button className="redirect-login-btn" onClick={() => navigate('/login')}>
                     Log In Now
                 </Button>
-            </Modal>
-            
-        </>
+            </Modal>     
+        </div>
     )
 }

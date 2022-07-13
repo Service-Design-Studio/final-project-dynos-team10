@@ -15,10 +15,6 @@ And('I should be on the {string} page', (pageDescription) => {
 Then('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
 })
-And('I select some option in select field for machine type', () => {
-    cy.get('input[placeholder="Machine Type"]').click();
-    cy.get('.mantine-Select-item:first').click();
-})
 When('I click on the next button', () => {
     cy.intercept('POST', 'workorders').as('createWorkorder');
     cy.get('.submit-workorder-btn').click();
@@ -171,11 +167,31 @@ Then('I click on the register button, expecting {string}', (expectedOutcome) => 
         req.reply({
             statusCode: 200
         })
-    })
+    }).as('registrationCallback');
+    
+    cy.window().then(win => {
+        cy.stub(win.registerComponent, 'registerCredentialExposed', () => {
+            return new Promise((resolve, reject) => {
+                const credentialDataDouble = {
+                    challenge: '1234',
+                    pubKeyCredential: {},
+                    userAttributes: {
+                        "created_at": null,
+                        "id": null,
+                        "updated_at": null,
+                        "username": "test",
+                        "webauthn_id": "abcdefghijkl"
+                    }
+                }
+                resolve(credentialDataDouble);
+            })
+        })
+    });
+
+    // click must be BEHIND intercept
     cy.get('.register-btn').click();
     cy.wait('@registration');
-    cy.wait(10000);
-    // cy.get('.register-btn').click(); // click must be BEHIND intercept
+    cy.wait('@registrationCallback');
 });
 When('I click on the Log In Now button', () => {
     cy.get('.redirect-login-btn').click();
