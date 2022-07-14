@@ -215,6 +215,46 @@ When('I click on the Log In Now button', () => {
 Then('I click on the log in button', () => {
     cy.get('.login-btn').click();
 })
+Then('I click on the log in button, expecting {string}', (expectedOutcome) => {
+    let stubbingFixture, statusCode;
+    switch(expectedOutcome) {
+        case "success":
+            // for successful login, we stub the FIRST request, and not request for credentials
+            // hence we throw a network error and STOP all subsequent lines in the click handler
+            stubbingFixture = 'login/successful.json';
+            statusCode = 200;
+            break;
+        case "username does not exist":
+            stubbingFixture = 'login/username-unknown.json';
+            statusCode = 422;
+            break;
+    }
+
+    cy.intercept('POST', 'session', req => {
+        req.reply({
+            fixture: stubbingFixture,
+            statusCode
+        })
+    }).as('session');
+    cy.intercept('POST', 'session/callback', req => {
+        req.reply({
+            statusCode: 200
+        })
+    }).as('sessionCallback');
+    
+    cy.window().then(win => {
+        cy.stub(win.loginComponent, 'authenticateExposed', () => {
+            return new Promise((resolve, reject) => {
+                const pubKeyCredentialDouble = {};
+                resolve(pubKeyCredentialDouble);
+            })
+        })
+    });
+
+    cy.get('.login-btn').click();
+    cy.wait('@session');
+    cy.wait('@sessionCallback');
+})
 
 // // ------------- status_of_components.feature ------------------
 Then('the component {string} button colour should be {string}', (componentName, color) => {
