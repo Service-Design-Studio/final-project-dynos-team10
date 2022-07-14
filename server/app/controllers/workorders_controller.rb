@@ -3,7 +3,12 @@ class WorkordersController < ApplicationController
     def index
         workorder_number = params[:workorder_number]
         unless workorder_number.nil?
-            render json: success_json(Workorder.find_one_by_workorder_number(workorder_number))
+            workorder_record = Workorder.find_one_by_workorder_number(workorder_number)
+            if workorder_record.nil?
+                render json: fail_json(errors: workorder_record.errors, data: workorder_record), status: :unprocessable_entity
+            else
+                render json: success_json(workorder_record)
+            end
             return
         end
         all_workorders = Workorder.find_all
