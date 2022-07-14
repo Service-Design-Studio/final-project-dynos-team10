@@ -5,4 +5,3 @@ Feature: New Work Order with QR Code
     Scenario: Starting a new work order with a QR code
         Given I am on the "qc entry" page
         Then I click on the Scan QR Code button
-        

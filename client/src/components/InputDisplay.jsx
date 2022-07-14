@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
+    const dispatch = useDispatch();
   
     const handleDelete = (i) => {
       console.log('index is' + i);
@@ -35,7 +36,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
       </Box>
     </Container>
 
-    <ClearIcon className="delete-failing-reasons-btn" style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
+    <ClearIcon className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`} style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
     
     </Group>
     );
@@ -62,6 +63,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
           backgroundColor: theme.colors.gray[0],
         })}
         withBorder
+        className="reasons-list"
       >
           {listItems}
 

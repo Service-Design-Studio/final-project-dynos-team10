@@ -283,6 +283,17 @@ When('I click on the close icon', () => {
 Then('I should see {string} failing reasons', (number) => {
     cy.get('.reasons-list').children().should('have.length', +number);
 })
+And('I delete {string} failing reasons', (number) => {
+    for (let i = 0; i < number; i++) {
+        // for testing, always delete the first item in the list
+        cy.get('.delete-failing-reasons-btn--0').click(); 
+    }
+})
+
+// -------------- qr_work_order.feature --------------
+Then('I click on the Scan QR Code button', () => {
+    cy.get('.qr-scanner-btn').click();
+});
 
 // // Scenario: component xxx failing manual check
 // Given('the fail button of component {string} turns {string}', (componentName,green) => {

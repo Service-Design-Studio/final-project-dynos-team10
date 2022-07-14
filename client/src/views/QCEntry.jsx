@@ -160,7 +160,7 @@ function QCEntry({}) {
       </Stack>
 
       <Stack style={{marginTop: "10%"}} spacing={"md"} align="center" justify={"center"}>
-      <Button size="sm" variant="outline" onClick={handleScanner}>
+      <Button className="qr-scanner-btn" size="sm" variant="outline" onClick={handleScanner}>
         SCAN QR CODE
       </Button>
 
