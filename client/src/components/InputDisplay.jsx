@@ -5,12 +5,28 @@ import {
   Button,
   List,
   Paper,
-  Center
+  Center,
+
 } from "@mantine/core";
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
-    const listItems = reasons.map((reason, index) => <List.Item key={index}>{reason}</List.Item>);
+  
+
+    const listItems = reasons.map((reason, index) =>
+    <div> 
+    <List.Item key={index}>
+      {reason}
+    </List.Item>
+    <ClearIcon style={{fontSize: 20, color: "black", alignItems:"right"}} onClick={handleDelete}/>
+    </div>
+    );
+
+    const handleDelete = () => {
+      reason.splice(elementindex, elementindex+1)
+    };
     
     const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
