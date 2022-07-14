@@ -59,7 +59,6 @@ export default function PassFail() {
         } catch(e) {
             console.error(e);
             console.log('cannot find current workorder');
-            return;
         }
 
         const payload = {
@@ -162,7 +161,7 @@ export default function PassFail() {
                 }}
                 
                 >
-                <Text>Upload Successful</Text>
+                <Text size="lg" align="center" style={{margin: 20}}>Upload Successful</Text>
                 </Modal>
 
                 </div>
