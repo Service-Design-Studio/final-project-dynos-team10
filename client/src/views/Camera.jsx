@@ -65,7 +65,6 @@ function Camera() {
         console.log(count);
 
         if (count > -1) {
-            console.log("testttttt pls pass");
             dispatch(updateCurrentComponentStatus("yellow"))
         } 
         

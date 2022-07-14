@@ -40,7 +40,6 @@ export default function Layout() {
     useEffect(() => {
         (async() => {
             console.log(`location has changed: ${location.pathname}`);
-            console.log(location.pathname in routeMap);
             if (location.pathname in routeMap) {
                 console.log("header visibility = true");
                 setVisibility(true);
