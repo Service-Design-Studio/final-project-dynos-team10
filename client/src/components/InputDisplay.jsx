@@ -6,6 +6,7 @@ import {
   List,
   Paper,
   Center,
+  Group,
 
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -15,17 +16,21 @@ import { Container } from "@mui/system";
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
   
-    const handleDelete = () => {
-      console.log('deleting')
+    const handleDelete = (i) => {
+      console.log('index is' + i);
+      console.log("deleting" + i);
+      setReasons((arr) => [...arr.slice(0, i), ...arr.slice(i+1)]);
     };
 
     const listItems = reasons.map((reason, index) =>
-    <div style={{display: "inline", flexDirection:"row", flexWrap: "nowrap"}}> 
-    <List.Item key={index}>
-      {reason}
-    </List.Item>
-    <ClearIcon style={{fontSize: 10, color: "black", alignItems:"right", alignContent:"right" }} onClick={handleDelete}/>
-    </div>
+    <Group grow> 
+    <Container size="10">
+      <List.Item key={index}>
+        {reason}
+      </List.Item>
+    </Container>
+    <ClearIcon className="delete-failing-reasons-btn" style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
+    </Group>
     );
     
     const handleEnter = () => {
@@ -35,7 +40,6 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     const handleDisplay = (e) => {
       setValue(e.currentTarget.value);
-      console.log(e.target);
     };
 
     return ( 
