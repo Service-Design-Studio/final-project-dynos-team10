@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken, setIsAuthenticated } from "./store/auth/authSlice";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { FaArrowLeft} from "react-icons/fa";
 import "./views/PhotoReview.css";
+import { selectCurrentComponent } from "./store/workorder/workorderSlice";
 
 import {
     ActionIcon,
@@ -16,7 +17,7 @@ import {
   } from "@mantine/core";
 
 // hash map, key -> route, value -> title at header, both are strings
-let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home", "/qrscanner": "QR Scanner", "/failreasons": "Fail Reasons", "/pass": "Pass"}; 
+let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home", "/qrscanner": "QR Scanner"}; 
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
 // Insert navbar and global layouts here
@@ -25,6 +26,7 @@ export default function Layout() {
     const [opened, setOpened] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const currentComponentStatus = useSelector(selectCurrentComponent);
 
     // location.pathname is a string of current route
     let location = useLocation();
@@ -51,6 +53,10 @@ export default function Layout() {
                 setVisibility(false);
                 setTitle(""); // in case navbar still shows, title = ""
                 return;
+            }
+            else if (location.pathname == "/pass-fail") {
+                setVisibility(true);
+                setTitle("QC Status")
             }
         })();
     }, [location])

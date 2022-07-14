@@ -30,37 +30,28 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     const listItems = reasons.map((reason, index) =>
 
-<<<<<<< HEAD
       <Paper
         shadow="xs"
-        style={{padding: 7,
-                marginTop: 5, 
+        style={{marginTop: 10, 
+                marginBottom: 10,
                 display: "flex", 
                 justifyContent: "space-between", 
                 marginRight: "20%", 
                 width: "100%" }}
         key={index}
-        >
-
-        <Paper
-          style={{
-          width: "100%" }}
-        > 
-          <Text style={{width: "300px"}} >{reason}</Text> 
-        </Paper>
+      >
+        <div style={{width: "90%", overflowWrap: "break-word"}} >
+          <Text style={{ padding: 5, marginLeft: "0.5rem"}} >{reason}</Text> 
+        </div>
+       
         
         <ClearIcon 
           className="delete-failing-reasons-btn" 
-          style={{fontSize: 20, color: "black", marginLeft: 50, alignItems: "center"}} 
+          style={{fontSize: 20, color: "black", padding: 7}} 
           onClick={() => handleDelete(index)}/>
+
       </Paper>
 
-
-=======
-    <ClearIcon className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`} style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
-    
-    </Group>
->>>>>>> c8616f87cb67718eaa89b40e9946b0884311a51e
     );
     
     const handleEnter = () => {
@@ -79,52 +70,39 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     return ( 
         <div>
-<<<<<<< HEAD
+
+          <Text weight={500} style={{ marginTop: 20,  textAlign: "center"}}>Reasons for failing check:</Text>
+
           <Paper p="md"
-            style={{ margin: 40, padding: 10, marginTop: 0 }}
-            sx={(theme) => ({
-              backgroundColor: theme.colors.gray[0],
-            })}
+            style={{ margin: 30, padding: 10, marginTop: 10 }}
+            sx={(theme) => ({backgroundColor: theme.colors.gray[0],})}
             withBorder
           >
             <Text>{listItems}</Text>
           </Paper>
-=======
-        <Paper
-        style={{ margin: 40, padding: 10, marginTop: 0 }}
-        sx={(theme) => ({
-          backgroundColor: theme.colors.gray[0],
-        })}
-        withBorder
-        className="reasons-list"
-      >
-          {listItems}
 
-      </Paper>
->>>>>>> c8616f87cb67718eaa89b40e9946b0884311a51e
+          <Textarea
+            style={{ margin: 30 }}
+            placeholder="Type one reason at a time"
+            required
+            autosize
+            size="sm"
+            value={value}
+            onChange={handleDisplay}
+          />
 
-      <Textarea
-        style={{ margin: 40, marginTop: 20 }}
-        placeholder="Type one reason at a time"
-        required
-        autosize
-        size="sm"
-        value={value}
-        onChange={handleDisplay}
-      />
-
-        <Center>
-        <Button
-          size="md"
-          variant="filled"
-          uppercase 
-          onClick={handleEnter}
-          className="enter-reason-btn"
-        >
-          ENTER
-        </Button>
-        </Center>
-s
+          <Center>
+            <Button
+              size="md"
+              variant="filled"
+              uppercase 
+              onClick={handleEnter}
+              className="enter-reason-btn"
+            >
+              ENTER
+            </Button>
+          </Center>
+          
         </div>
      );
 }

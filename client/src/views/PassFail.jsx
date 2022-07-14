@@ -120,8 +120,8 @@ export default function PassFail() {
                         <Text align="center" size="md" style={{marginTop: 5, marginBottom:20}}>(Manual Check)</Text>
                     </> :
                     <>
-                        <Text style={{marginTop: 15}}>Reasons for failing check:</Text>
                         <HighlightOffIcon style={{ fontSize: 100, color: "red", alignItems: "center" }}></HighlightOffIcon>
+                        <Text weight="bold" align="center" size="xl" style={{marginTop: 15}} >Failed</Text>
                     </>
                 }
             </div>
@@ -149,7 +149,7 @@ export default function PassFail() {
                         Upload
                     </Button> 
                 </Center> :
-                <Center style={{marginTop:20, marginRight: 10}}>
+                <Center style={{marginTop:15, marginRight: 10}}>
                     <UploadButton />
                 </Center>
             }
