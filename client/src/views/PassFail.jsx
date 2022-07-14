@@ -9,7 +9,8 @@ import InputDisplay from "../components/InputDisplay.jsx";
 import {
     Button,
     Text,
-    Center
+    Center,
+    Modal
 } from "@mantine/core";
 import { 
     selectCurrentComponent, 
@@ -34,10 +35,12 @@ export default function PassFail() {
 
     const [value, setValue] = useState("");
     const [reasons, setReasons] = useState([]);
+    const[opened, setOpened] = useState(false);
 
     const handleNextPage = () => {
         navigate('/component-status');
     };
+
     const UploadButton = () => {
         if (reasons.length > 0) {
             return (<Button onClick={postComponentPhotos} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
@@ -94,6 +97,7 @@ export default function PassFail() {
         const URL_array = response.data.result.map(image => image.public_url);
         console.log(URL_array);
         dispatch(replaceCurrentComponentImageArray(URL_array));
+        setOpened(true);
     }
 
 
@@ -148,6 +152,17 @@ export default function PassFail() {
                     <UploadButton/>
                 </Center>
             }
-        </div>
+                <Modal
+                opened={opened}
+                onClose={() =>{ 
+                    setOpened(false)
+                }}
+                
+                >
+                <Text>Upload Successful</Text>
+                </Modal>
+
+                </div>
+                            
     )
 }
