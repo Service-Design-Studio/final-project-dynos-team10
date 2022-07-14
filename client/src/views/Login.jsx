@@ -90,7 +90,7 @@ export default function Login() {
         }
 
         const { challenge } = result.data;
-        const pubKeyCredential = await authenticate(challenge, registeredCredentials);
+        const pubKeyCredential = await Login.authenticateExposed(challenge, registeredCredentials);
 
         result = await commitLogin(pubKeyCredential, challenge);
         if (!result) {
@@ -108,6 +108,13 @@ export default function Login() {
         // on successful login, redirect
         navigate(state?.from.pathname || '/');
     }
+
+    useEffect(() => {
+        Login.authenticateExposed = async (challenge, registeredCredentials) => {
+            return await authenticate(challenge, registeredCredentials);
+        }
+        window.loginComponent = Login;
+    }, [])
 
     return (
         <div>

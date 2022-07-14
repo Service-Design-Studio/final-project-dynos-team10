@@ -69,12 +69,13 @@ function QCEntry({}) {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
           const result = await createWorkOrder();
           console.log({ result });
-          dispatch(setWorkorderNumber(formValues.serialno));
+          // dispatch(setWorkorderNumber(formValues.serialno));
           dispatch(resetWorkorderValues({
             componentsReset: {},
             workorderNumberReset: '',
             currentComponentNameReset: ''
           }));
+          dispatch(setWorkorderNumber(formValues.serialno));
           navigate("/component-status");
         }
       } catch (e) {
@@ -160,7 +161,7 @@ function QCEntry({}) {
       </Stack>
 
       <Stack style={{marginTop: "10%"}} spacing={"md"} align="center" justify={"center"}>
-      <Button size="sm" variant="outline" onClick={handleScanner}>
+      <Button className="qr-scanner-btn" size="sm" variant="outline" onClick={handleScanner}>
         SCAN QR CODE
       </Button>
 

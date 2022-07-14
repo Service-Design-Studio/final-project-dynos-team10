@@ -29,6 +29,8 @@ export default function Register() {
     const registeredCredentials = useSelector(selectRegisteredCredentials);
     const accessToken = useSelector(selectToken);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [successModalOpened, setSuccessModalOpened] = useState(false);
 
     const form = useForm({
@@ -88,15 +90,18 @@ export default function Register() {
     }
 
     const registerUser = async() => {
+        setIsLoading(true);
         const validation = form.validate();
         if (validation.hasErrors) {
             // has errors
+            setIsLoading(false);
             return;
         }
         
         let result = await requestRegistration();
         console.log({result});
         if (!result) {
+            setIsLoading(false);
             return;
         }
 
@@ -104,11 +109,13 @@ export default function Register() {
         // const credentialData = await registerCredential(result.data);
         console.log({credentialData});
         if (!credentialData) {
+            setIsLoading(false);
             return;
         }
 
         result = await commitRegistration(credentialData);
         console.log({result});
+        setIsLoading(false);
         setSuccessModalOpened(true);
     }
 
@@ -121,7 +128,6 @@ export default function Register() {
     }, [])
 
     return (
-        // <div ref={(registerComponent) => {window.registerComponent = registerComponent}}>
         <div>
             <div>
                 <Space h="2.3rem" />
@@ -166,7 +172,7 @@ export default function Register() {
                                 </ActionIcon>
                             </Tooltip>}
                             mt="md" />
-                        <Button onClick={registerUser} className="register-btn" fullWidth mt="xl">
+                        <Button loading={isLoading} onClick={registerUser} className="register-btn" fullWidth mt="xl">
                             Register
                         </Button>
                     </Paper>

@@ -30,6 +30,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     const listItems = reasons.map((reason, index) =>
 
+<<<<<<< HEAD
       <Paper
         shadow="xs"
         style={{padding: 7,
@@ -55,6 +56,11 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
       </Paper>
 
 
+=======
+    <ClearIcon className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`} style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
+    
+    </Group>
+>>>>>>> c8616f87cb67718eaa89b40e9946b0884311a51e
     );
     
     const handleEnter = () => {
@@ -73,6 +79,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     return ( 
         <div>
+<<<<<<< HEAD
           <Paper p="md"
             style={{ margin: 40, padding: 10, marginTop: 0 }}
             sx={(theme) => ({
@@ -82,6 +89,19 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
           >
             <Text>{listItems}</Text>
           </Paper>
+=======
+        <Paper
+        style={{ margin: 40, padding: 10, marginTop: 0 }}
+        sx={(theme) => ({
+          backgroundColor: theme.colors.gray[0],
+        })}
+        withBorder
+        className="reasons-list"
+      >
+          {listItems}
+
+      </Paper>
+>>>>>>> c8616f87cb67718eaa89b40e9946b0884311a51e
 
       <Textarea
         style={{ margin: 40, marginTop: 20 }}
