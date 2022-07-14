@@ -47,8 +47,12 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
       />
 
         <Center>
-        <Button size="md" variant="filled" uppercase 
-        onClick={handleEnter}
+        <Button
+          size="md"
+          variant="filled"
+          uppercase 
+          onClick={handleEnter}
+          className="enter-reason-btn"
         >
           ENTER
         </Button>

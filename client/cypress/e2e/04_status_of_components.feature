@@ -1,60 +1,38 @@
 Feature: Components
-    I want to select a component from the status of components page to qc
+    I want to select a component from the status of components page and upload its status to the database
 
-    @pending
-    Scenario: uploading photos to the component "xxx" manual check page
-        Given I am on the status of component "xxx" manual check page
-        And I click on the upload photo button
-        Then my camera should open
-        And the pass button turns green
-        And the fail button turns red
+    Scenario: pass/fail status not saved before clicking upload button
+        Given I am on the photo review page of component "xxx"
+        And I click on the pass button
+        And I click on the proceed button
+        Then I should see "Passed"
+        When I go to the "status of components" page with saved progress
+        Then the component "xxx" button colour should be "yellow"
 
     @pending
     Scenario: component xxx passing manual check
-        Given the pass button turns green
-        And the fail button turns red
-        Then I click on the pass button
-        Then I am on the manual status pass page
-        And the done button turns blue
-        Then I am on the status of components page
-        And the component "xxx" button colour turns green
-
+        Given I am on the photo review page of component "xxx"
+        And I click on the pass button
+        And I click on the proceed button
+        Then I should see "Passed"
+        When I click on the upload button
+        Then I should see "Photo(s) successfully uploaded"
+        When I click on the next icon with saved progress
+        Then the component "xxx" button colour should be "green" 
+        
     @pending
     Scenario: component xxx failing manual check
-        Given the pass button turns green
-        And the fail button turns red
-        Then I click on the fail button
-        Then I am on the manual status fail page
-        Then I fill in the input field for "reasons for failing check" with "sample"
-        Then the done button turns blue
-        Then I am on the status of components page
-        And the component "xxx" button colour turns red
+        Given I am on the photo review page of component "xxx"
+        And I click on the fail button
+        And I click on the proceed button
+        Then I should see "Reasons for failing check"
+        When I enter in some failing reasons
+        And I click on the upload button
+        Then I should see "Photo(s) successfully uploaded"
+        When I click on the next icon with saved progress
+        Then the component "xxx" button colour should be "red" 
 
-    @pending
     Scenario: exiting component xxx check before submitting all photos of Component xxx
-        Given I have taken multiple photos of component "xxx"
-        And I am on the photo review page
-        #And I do not click on the upload button
-		#dont say And I press the "back" button bc he may exit the app
-        Then the component "xxx" button colour turns yellow
-
-    @pending
-    Scenario: Label passing AI imaging check
-        Given I am on the status of labels pass page
-        And I click done button
-        Then I am on the status of components page
-        And the "label" component button colour turns green
-
-    @pending
-    Scenario: Label failing AI imaging check true negative
-        Given I am on the status of labels fail page
-        And I click done button
-        Then I am on the status of components page
-        And the "label" component button colour turns red
-
-    @pending
-    Scenario: Label failing AI imaging check false negative
-        Given I am on the status of labels fail page
-        And I click check manually button
-        Then I am on the status of labels (Manual check) page
-        And the "label" component button colour turns yellow
+        Given I am on the photo review page of component "xxx"
+        When I go to the "status of components" page with saved progress
+        Then the component "xxx" button colour should be "yellow"
