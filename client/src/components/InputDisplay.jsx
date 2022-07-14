@@ -16,18 +16,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
-    const listItems = reasons.map((reason, index) => <List.Item key={index}>{reason}</List.Item>);
     const dispatch = useDispatch();
     const handleDelete = () => {
       console.log('deleting')
     };
-
-    <div style={{display: "inline", flexDirection:"row", flexWrap: "nowrap"}}> 
-    <List.Item key={index}>
-      {reason}
-    </List.Item>
-    <ClearIcon style={{fontSize: 10, color: "black", alignItems:"right", alignContent:"right" }} onClick={handleDelete}/>
-    </div>
+    const listItems = reasons.map((reason, index) => {
+      return (
+        <div style={{display: "inline", flexDirection:"row", flexWrap: "nowrap"}}> 
+          <List.Item key={index}>
+            {reason}
+          </List.Item>
+          <ClearIcon style={{fontSize: 10, color: "black", alignItems:"right", alignContent:"right" }} onClick={handleDelete}/>
+        </div>
+      )
+    });
 
     const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
