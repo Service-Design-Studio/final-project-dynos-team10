@@ -52,7 +52,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
         })}
         withBorder
       >
-        <List style={{ margin: 10, marginLeft: 20, marginRight: 20 }}>
+        <List className="reasons-list" style={{ margin: 10, marginLeft: 20, marginRight: 20 }}>
           {listItems}
         </List>
       </Paper>

@@ -17,18 +17,16 @@ Feature: Components
         When I go to the "status of components" page with saved progress
         Then the component "xxx" button colour should be "yellow"
 
-    @pending
     Scenario: component xxx passing manual check
         Given I am on the photo review page of component "xxx"
         And I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
         When I click on the upload button
-        Then I should see "Photo(s) successfully uploaded"
-        When I click on the next icon with saved progress
+        Then I should see "Upload Successful"
+        When I click on the close icon
         Then the component "xxx" button colour should be "green" 
         
-    @pending
     Scenario: component xxx failing manual check
         Given I am on the photo review page of component "xxx"
         And I click on the fail button
@@ -36,8 +34,8 @@ Feature: Components
         Then I should see "Reasons for failing check"
         When I enter in some failing reasons
         And I click on the upload button
-        Then I should see "Photo(s) successfully uploaded"
-        When I click on the next icon with saved progress
+        Then I should see "Upload Successful"
+        When I click on the close icon
         Then the component "xxx" button colour should be "red" 
 
     Scenario: exiting component xxx check before submitting all photos of Component xxx

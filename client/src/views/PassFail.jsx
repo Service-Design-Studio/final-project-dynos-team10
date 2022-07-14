@@ -43,7 +43,7 @@ export default function PassFail() {
 
     const UploadButton = () => {
         if (reasons.length > 0) {
-            return (<Button onClick={postComponentPhotos} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
+            return (<Button className="upload-btn" onClick={postComponentPhotos} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
         };
         return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>UPLOAD</Button>)
     };
@@ -54,6 +54,7 @@ export default function PassFail() {
         let workorderId;
         try {
             const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
+            console.log({response});
             workorderId = response.result.id;
         } catch(e) {
             console.error(e);
@@ -144,6 +145,7 @@ export default function PassFail() {
                         size="md" 
                         variant="filled" 
                         uppercase
+                        className="upload-btn"
                     >
                         Upload
                     </Button> 
@@ -155,7 +157,8 @@ export default function PassFail() {
                 <Modal
                 opened={opened}
                 onClose={() =>{ 
-                    setOpened(false)
+                    setOpened(false);
+                    navigate('/component-status');
                 }}
                 
                 >
