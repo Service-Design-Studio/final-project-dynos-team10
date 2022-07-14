@@ -229,6 +229,7 @@ function PhotoReview() {
                                     colour="blue" 
                                     variant="outline" 
                                     size="md"
+                                    className="proceed-btn"
                                 >
                                     Proceed
                                 </Button>

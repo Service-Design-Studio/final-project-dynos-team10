@@ -58,6 +58,7 @@ export default function PassFail() {
         } catch(e) {
             console.error(e);
             console.log('cannot find current workorder');
+            return;
         }
 
         const payload = {

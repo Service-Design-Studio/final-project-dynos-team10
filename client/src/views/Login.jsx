@@ -2,7 +2,7 @@ import { authenticate } from '../helpers/webAuthHelper';
 import { setToken, selectRegisteredCredentials, setIsAuthenticated, selectIsAuthenticated } from '../store/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 import AppLogo from '../assets/dynostic-logo.svg';
 
 import {
@@ -26,6 +26,8 @@ export default function Login() {
     const dispatch = useDispatch();
     const registeredCredentials = useSelector(selectRegisteredCredentials);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+
+    const [loginLoading, setLoginLoading] = useState(false);
 
     useEffect(() => {
         // on mounted, if already authenticated, go to homepage
@@ -71,15 +73,19 @@ export default function Login() {
 
 
     const signIn = async () => {
+        setLoginLoading(true);
+
         const validation = form.validate();
         if (validation.hasErrors) {
             // has errors
+            setLoginLoading(false);
             return;
         }
 
         let result = await requestLogin();
         console.log({result});
         if (!result) {
+            setLoginLoading(false);
             return;
         }
 
@@ -88,6 +94,7 @@ export default function Login() {
 
         result = await commitLogin(pubKeyCredential, challenge);
         if (!result) {
+            setLoginLoading(false);
             return;
         }
 
@@ -96,6 +103,7 @@ export default function Login() {
 
         dispatch(setToken(token));
         dispatch(setIsAuthenticated(true));
+        setLoginLoading(false);
 
         // on successful login, redirect
         navigate(state?.from.pathname || '/');
@@ -129,7 +137,7 @@ export default function Login() {
                         required
                         {...form.getInputProps('username')}
                     />
-                    <Button onClick={signIn} fullWidth mt="xl" className="login-btn">
+                    <Button onClick={signIn} fullWidth mt="xl" className="login-btn" loading={loginLoading}>
                         Log In
                     </Button>
                 </Paper>

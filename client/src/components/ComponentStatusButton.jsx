@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
-import { addNewComponent, updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
+import { updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
 import {Button} from "@mantine/core"
 
 function ComponentStatusButton(props) {
@@ -17,7 +17,6 @@ function ComponentStatusButton(props) {
     const computedClassName = componentName.toLowerCase().split(' ').join('-') + '__btn';
 
     const handleClick = () => {
-        // dispatch(addNewComponent(componentName));
         dispatch(updateCurrentComponentName(componentName));
         if (currentComponentImageCount > 0) {
             navigate('/photo-review');

@@ -1,12 +1,27 @@
 import { Given, Then, When, And } from "cypress-cucumber-preprocessor/steps";
 
-import { buildRoute, buildComponentButtonClass } from './steps_helper';
+import { buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive } from './steps_helper';
 
 import { v4 as uuidv4 } from 'uuid';
 
 // ROUTING
 Given('I am on the {string} page', (pageDescription) => {
     cy.visit(buildRoute(pageDescription));
+});
+Then('I go to the {string} page', (pageDescription) => {
+    cy.visit(buildRoute(pageDescription));
+});
+When('I go to the {string} page with saved progress', (pageDescription) => {
+    cy.saveLocalStorage();
+    cy.wait(2000);
+
+    cy.visit(buildRoute(pageDescription), {
+        onBeforeLoad(win) {
+            const KEY = 'redux';
+            const previousState = win.localStorage.getItem(KEY);
+            win.localStorage.setItem(KEY, previousState);
+        }
+    });
 });
 And('I should be on the {string} page', (pageDescription) => {
     cy.url().should('eq', buildRoute(pageDescription));
@@ -20,15 +35,15 @@ Then('I fill in the input field for {string} with unique input', (inputContent) 
     const randomString = uuidv4();
     cy.get(`input[placeholder="${inputContent}"]`).type(randomString);
 })
+Then('I should see {string}', (text) => {
+    cy.get('body').contains(text);
+})
 
 // ----------- work_order.feature ------------------
 When('I click on the next button', () => {
     cy.intercept('POST', 'workorders').as('createWorkorder');
     cy.get('.submit-workorder-btn').click();
     cy.wait('@createWorkorder');
-})
-Then('I should see {string}', (text) => {
-    cy.get('body').contains(text);
 })
 
 
@@ -102,14 +117,6 @@ Then('I should see all my photos in the carousel', () => {
 And('I should see the {string} icon', (iconType) => {
     cy.get(`.photo-review-status-btn--${iconType}`).should('exist');
 })
-// And('I click on the "upload" button', () => {
-    
-// });
-// Then('I see a prompt "successfully uploaded"',() => {
-// });
-// And('I am on the manual check page',  () => {
-//     cy.visit(DEV_SERVER_URL);
-// })
 
 // Feature: delete photo
 // I want to delete photo(s) from Photo Review page
@@ -210,51 +217,42 @@ Then('I click on the log in button', () => {
 })
 
 // // ------------- status_of_components.feature ------------------
-// //Scenario: uploading photos to the component "xxx" manual check page
-// Given('I am on the status of component {string} manual check page', (componentName) => {
-//     cy.visit(buildRoute('status of component {string} manual check'));
-//     const componentButtonClass = buildComponentButtonClass(componentName);
-//     cy.get(componentButtonClass).click();
+Then('the component {string} button colour should be {string}', (componentName, color) => {
+    const componentButtonClass = buildComponentButtonClass(componentName);
+    let backgroundColor;
+    switch (color) {
+        case 'red':
+            backgroundColor = 'rgb(255, 245, 245)';
+            break;
+        case 'green':
+            backgroundColor = 'rgb(235, 251, 238)';
+            break;
+        case 'yellow':
+            backgroundColor = 'rgb(255, 249, 219)';
+            break;
+    }
+    cy.get(componentButtonClass).should('have.css', 'background-color', backgroundColor);
+})
+And('I click on the pass button', () => {
+    cy.get('.photo-review-status-btn--pass').click();
+})
+And('I click on the fail button', () => {
+    cy.get('.photo-review-status-btn--fail').click();
+})
+And('I click on the proceed button', () => {
+    cy.get('.proceed-btn').click();
+})
+// And('I click on the upload button', () => {
+    
 // })
-// And('I click on the upload photo button', () => {
-//     cy.get('.upload-photo-btn').click();
-// })
-// And('my camera should open',() => {
-//         cy.get('.camera').should('exist');
-// })
-// And('the pass button turns {string}',(colour) => {
-//     cy.get('pass-btn').should('have.class', `.${colour}__btn`)
-// });
-// And('the fail button turns {string}',(colour) => {
-//     cy.get('fail-btn').should('have.class', `.${colour}__btn`)
-// });
-
-// // Scenario: component xxx passing manual check
-// Given('the pass button of component {string} turns {string}', (componentName,green) => {
-//     cy.visit(buildRoute('status of component {string} manual check clicked'));
-//     const componentButtonClass = buildComponentButtonClass(componentName);
-//     cy.get('pass-btn').should('have.class', `.${green}__btn`);
-// })
-// And('the fail button turns {string}', (red) => {
-//     cy.get('fail-btn').should('have.class', `.${red}__btn`);
-// })
-// Then('I click on the pass button', () => {
-//     cy.wait(2000);
-//     cy.get('.pass-btn').click();
-// })
-// Then('I am on the manual status pass page',() => {
-//     cy.visit(buildRoute('manual status pass'));
-// })
-// And('the done button turns {string}',(blue) => {
-//     cy.get('done-btn').should('have.class', `.${blue}__btn`);
-// })
-// Then('I am on the status of components page', () => {
-//     cy.visit(buildRoute('status of components'));
-// })
-// And('the component {string} button turns {string}}',(componentName,colour) => {
-//     const componentButtonClass = buildComponentButtonClass(componentName);
-//     cy.get(componentButtonClass).should('have.class', `.${colour}__btn`)
-// })
+When('I enter in some failing reasons', () => {
+    const failingReasonsTextAreaPlaceholder = 'Type one reason at a time';
+    const randomNum = generateRandIntEndsInclusive(1, 5);
+    for (let i = 0; i < randomNum; i++) {
+        cy.get(`textarea[placeholder="${failingReasonsTextAreaPlaceholder}"]`).type(`reason ${i}`);
+        cy.get('.enter-reason-btn').click();
+    }
+})
 
 // // Scenario: component xxx failing manual check
 // Given('the fail button of component {string} turns {string}', (componentName,green) => {
