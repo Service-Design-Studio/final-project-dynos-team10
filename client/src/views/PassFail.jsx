@@ -149,7 +149,7 @@ export default function PassFail() {
                     </Button> 
                 </Center> :
                 <Center style={{marginTop:20, marginRight: 10}}>
-                    <UploadButton/>
+                    <UploadButton />
                 </Center>
             }
                 <Modal

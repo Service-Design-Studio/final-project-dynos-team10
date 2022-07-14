@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useMantineTheme,
   Textarea,
@@ -9,25 +9,26 @@ import {
 
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
-import { Container } from "@mui/system";
+import { addFailReasons } from "../store/workorder/workorderSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
-  
+    const listItems = reasons.map((reason, index) => <List.Item key={index}>{reason}</List.Item>);
+    const dispatch = useDispatch();
     const handleDelete = () => {
       console.log('deleting')
     };
 
-    const listItems = reasons.map((reason, index) =>
     <div style={{display: "inline", flexDirection:"row", flexWrap: "nowrap"}}> 
     <List.Item key={index}>
       {reason}
     </List.Item>
     <ClearIcon style={{fontSize: 10, color: "black", alignItems:"right", alignContent:"right" }} onClick={handleDelete}/>
     </div>
-    );
-    
+
     const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
       setValue("");
@@ -35,8 +36,12 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     const handleDisplay = (e) => {
       setValue(e.currentTarget.value);
-      console.log(e.target);
     };
+
+    useEffect(() => {
+      console.log("reasons = " + reasons);
+      dispatch(addFailReasons(reasons));
+    }, [reasons]);
 
     return ( 
         <div>

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // label: {
 //     images: [],
 //     status: pass/fail/incomplete
+//     failreasons: []
 // }
 
 const initialState = {
@@ -27,7 +28,8 @@ export const workorderSlice = createSlice({
 
             state.components[componentName] = {
                 images: [],
-                status: 'blue'
+                status: 'blue',
+                failreasons: []
             }
         },
         addImageToComponent: (state, action) => {
@@ -44,15 +46,23 @@ export const workorderSlice = createSlice({
         },
         updateCurrentComponentStatus: (state, action) => {
             state.components[state.currentComponentName].status = action.payload;
-            console.log("component name = " + state.currentComponentName);
-            console.log("component status = " + state.components[state.currentComponentName].status);
         },
         replaceCurrentComponentImageArray: (state, action) => {
-            console.log("current component name = " + state.currentComponentName);
-            console.log("action payload = " + action.payload);
             state.components[state.currentComponentName].images = action.payload;
-
+        },
+        addFailReasons: (state, action) => {
+            console.log("component name = " + state.currentComponentName);
+            console.log("action payload = " + action.payload);
+            console.log(state.components[state.currentComponentName].failreasons);
+            state.components[state.currentComponentName].failreasons = action.payload;
+        },
+        resetWorkorderValues: (state, action) => {
+            const {componentsReset, workorderNumberReset, currentComponentNameReset} = action.payload;
+            state.components = componentsReset;
+            state.workorderNumber = workorderNumberReset;
+            state.currentComponentName = currentComponentNameReset;
         }
+
     }
 })
 
@@ -64,7 +74,9 @@ export const {
     updateCurrentComponentName,
     removeComponentImageByIndex,
     updateCurrentComponentStatus,
-    replaceCurrentComponentImageArray
+    replaceCurrentComponentImageArray,
+    addFailReasons,
+    resetWorkorderValues,
 } = workorderSlice.actions;
 
 // GETTERS
