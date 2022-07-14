@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Container } from "@mui/system";
+import { Box } from "@mui/material";
 
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
@@ -24,12 +25,15 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     const listItems = reasons.map((reason, index) =>
     <Group grow> 
+    
     <Container size="10">
-      <List.Item key={index}>
+      <Box key={index}>
         {reason}
-      </List.Item>
+      </Box>
     </Container>
+
     <ClearIcon className="delete-failing-reasons-btn" style={{fontSize: 10, color: "black", marginLeft: 50}} onClick={() => handleDelete(index)}/>
+    
     </Group>
     );
     
@@ -51,9 +55,9 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
         })}
         withBorder
       >
-        <List style={{ margin: 10, marginLeft: 20, marginRight: 20 }}>
+
           {listItems}
-        </List>
+
       </Paper>
 
       <Textarea
