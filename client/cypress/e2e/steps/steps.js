@@ -1,6 +1,6 @@
 import { Given, Then, When, And } from "cypress-cucumber-preprocessor/steps";
 
-import { buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive } from './steps_helper';
+import { buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive, failingReasonsTextAreaPlaceholder } from './steps_helper';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -242,16 +242,46 @@ And('I click on the fail button', () => {
 And('I click on the proceed button', () => {
     cy.get('.proceed-btn').click();
 })
-// And('I click on the upload button', () => {
-    
-// })
+And('I click on the upload button', () => {
+    cy.intercept('GET', 'workorders?workorder_number=', req => {
+        req.reply({
+            fixture: 'pass-fail/query-workorder-id.json'
+        })
+    }).as('workorders');
+    cy.intercept('POST', 'components', req => {
+        req.reply({
+            fixture: 'pass-fail/create-component.json'
+        })
+    }).as('components');
+    cy.intercept('POST', 'images/batch-create', req => {
+        req.reply({
+            fixture: 'pass-fail/image-batch-create.json'
+        })
+    }).as('images-batch-create');
+    cy.get('.upload-btn').click();
+    cy.wait('@workorders');
+    cy.wait('@components');
+    cy.wait('@images-batch-create');
+})
 When('I enter in some failing reasons', () => {
-    const failingReasonsTextAreaPlaceholder = 'Type one reason at a time';
     const randomNum = generateRandIntEndsInclusive(1, 5);
     for (let i = 0; i < randomNum; i++) {
         cy.get(`textarea[placeholder="${failingReasonsTextAreaPlaceholder}"]`).type(`reason ${i}`);
         cy.get('.enter-reason-btn').click();
     }
+})
+When('I enter in {string} failing reasons', (number) => {
+    for (let i = 0; i < +number; i++) {
+        cy.get(`textarea[placeholder="${failingReasonsTextAreaPlaceholder}"]`).type(`reason ${i}`);
+        cy.get('.enter-reason-btn').click();
+    }
+})
+When('I click on the close icon', () => {
+    cy.get('.mantine-Modal-close').click();
+})
+
+Then('I should see {string} failing reasons', (number) => {
+    cy.get('.reasons-list').children().should('have.length', +number);
 })
 
 // // Scenario: component xxx failing manual check

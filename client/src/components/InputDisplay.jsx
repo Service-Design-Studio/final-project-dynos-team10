@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useMantineTheme,
   Textarea,
@@ -12,6 +12,9 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import { Container } from "@mui/system";
 import { Box } from "@mui/material";
+import { addFailReasons } from "../store/workorder/workorderSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
@@ -46,6 +49,11 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
       setValue(e.currentTarget.value);
     };
 
+    useEffect(() => {
+      console.log("reasons = " + reasons);
+      dispatch(addFailReasons(reasons));
+    }, [reasons]);
+
     return ( 
         <div>
         <Paper
@@ -55,7 +63,6 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
         })}
         withBorder
       >
-
           {listItems}
 
       </Paper>

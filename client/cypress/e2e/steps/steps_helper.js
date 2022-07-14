@@ -32,4 +32,6 @@ function generateRandIntEndsInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export { DEV_SERVER_URL, buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive }
+const failingReasonsTextAreaPlaceholder = 'Type one reason at a time';
+
+export { DEV_SERVER_URL, buildRoute, buildComponentButtonClass, generateRandIntEndsInclusive, failingReasonsTextAreaPlaceholder }
