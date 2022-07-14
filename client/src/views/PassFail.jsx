@@ -96,7 +96,7 @@ export default function PassFail() {
         const URL_array = response.data.result.map(image => image.public_url);
         console.log(URL_array);
         dispatch(replaceCurrentComponentImageArray(URL_array));
-        setOpened(true)
+        setOpened(true);
     }
 
 
@@ -153,7 +153,10 @@ export default function PassFail() {
             }
                 <Modal
                 opened={opened}
-                onClose={() => setOpened(false)}
+                onClose={() =>{ 
+                    setOpened(false)
+                }}
+                
                 >
                 <Text>Upload Successful</Text>
                 </Modal>

@@ -9,24 +9,24 @@ import {
 
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
+import { Container } from "@mui/system";
 
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
   
+    const handleDelete = () => {
+      console.log('deleting')
+    };
 
     const listItems = reasons.map((reason, index) =>
-    <div> 
+    <div style={{display: "inline", flexDirection:"row", flexWrap: "nowrap"}}> 
     <List.Item key={index}>
       {reason}
     </List.Item>
-    <ClearIcon style={{fontSize: 20, color: "black", alignItems:"right"}} onClick={handleDelete}/>
+    <ClearIcon style={{fontSize: 10, color: "black", alignItems:"right", alignContent:"right" }} onClick={handleDelete}/>
     </div>
     );
-
-    const handleDelete = () => {
-      reason.splice(elementindex, elementindex+1)
-    };
     
     const handleEnter = () => {
       setReasons((arr) => [...arr, value]);
