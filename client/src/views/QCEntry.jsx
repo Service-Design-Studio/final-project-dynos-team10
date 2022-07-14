@@ -69,12 +69,13 @@ function QCEntry({}) {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
           const result = await createWorkOrder();
           console.log({ result });
-          dispatch(setWorkorderNumber(formValues.serialno));
+          // dispatch(setWorkorderNumber(formValues.serialno));
           dispatch(resetWorkorderValues({
             componentsReset: {},
             workorderNumberReset: '',
             currentComponentNameReset: ''
           }));
+          dispatch(setWorkorderNumber(formValues.serialno));
           navigate("/component-status");
         }
       } catch (e) {
