@@ -1,10 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken, setIsAuthenticated } from "./store/auth/authSlice";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FaArrowLeft} from "react-icons/fa";
 import "./views/PhotoReview.css";
+import { selectWorkorderNumber } from "./store/workorder/workorderSlice";
 
 import {
     ActionIcon,
@@ -17,11 +17,19 @@ import {
     Stack,
     Menu,
     Center,
-    Container
+    Container,
+    Text
   } from "@mantine/core";
 
 // hash map, key -> route, value -> title at header, both are strings
-let routeMap = {"/qc-entry": "QC Entry", "/component-status" :  "Machine 123", "/": "Home", "/qrscanner": "QR Scanner", "/failreasons": "Fail Reasons", "/pass": "Pass"}; 
+const routeMapStatic = {
+    "/qc-entry": "QC Entry",
+    "/": "Home",
+    "/qrscanner": "QR Scanner",
+    "/failreasons": "Fail Reasons",
+    "/pass": "Pass",
+    '/qc-list': 'QC List'
+}
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
 // Insert navbar and global layouts here
@@ -32,12 +40,20 @@ export default function Layout() {
     const navigate = useNavigate();
     const [workorders, setWorkorders] = useState([]);
     const [selectedWorkorderNumber, setSelectedWorkorderNumber] = useState('');
+    const currentWorkorderNumber = useSelector(selectWorkorderNumber)
     
 
     // location.pathname is a string of current route
     let location = useLocation();
     const [title, setTitle] = useState("") // set title at header
     const [visibility, setVisibility] = useState(true); // visibility of header
+
+    const routeMap = useMemo(() => {
+        return {
+            ...routeMapStatic,
+            '/component-status': currentWorkorderNumber
+        }
+    }, [currentWorkorderNumber])
 
     const logout = () => {
         dispatch(setToken(''));
@@ -46,21 +62,18 @@ export default function Layout() {
     }
 
     useEffect(() => {
-        (async() => {
-            console.log(`location has changed: ${location.pathname}`);
-            if (location.pathname in routeMap) {
-                console.log("header visibility = true");
-                setVisibility(true);
-                setTitle(routeMap[location.pathname]);
-                return;
-            }
-            else if (routeHideArr.includes(location.pathname)){
-                console.log("header visibility = false")
-                setVisibility(false);
-                setTitle(""); // in case navbar still shows, title = ""
-                return;
-            }
-        })();
+        if (location.pathname in routeMap) {
+            console.log("header visibility = true");
+            setVisibility(true);
+            setTitle(routeMap[location.pathname]);
+            return;
+        }
+        else if (routeHideArr.includes(location.pathname)){
+            console.log("header visibility = false")
+            setVisibility(false);
+            setTitle(""); // in case navbar still shows, title = ""
+            return;
+        }
     }, [location])
 
     const SideBar = () => {
@@ -182,7 +195,7 @@ export default function Layout() {
                             
                             <Container>
                                 <Center>
-                                    <h2 style={{marginLeft: 20}}>{title}</h2>
+                                    <Text size="xl" weight={500} ml="sm">{title}</Text>
                                 </Center>
                             </Container>
 
