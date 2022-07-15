@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import ComponentStatus from './views/ComponentStatus';
 import QCEntry from './views/QCEntry'
-import App from './App';
+import QCList from './views/QCList';
 import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
@@ -41,14 +41,9 @@ function Router() {
             dispatch(setIsAuthenticated(false));
         }
     }
-    
-    // useEffect(() => {
-    //     verifyToken();
-    // }, []);
 
     useEffect(() => {
         (async() => {
-            console.log(`location has changed: ${location.pathname}`);
             if (!publicRoutes.some(pubRouteName => location.pathname.includes(pubRouteName))) {
                 if (process.env.NODE_ENV === "development") {
                     dispatch(setIsAuthenticated(true));
@@ -62,11 +57,6 @@ function Router() {
 
     return (
         <Routes>
-            {/* <Route path="/" element={<App/>} /> 
-            <Route path="/component-status" element={<ComponentStatus/>} />
-            <Route path="/camera" element={<Camera/>} />
-            <Route path="/photo-review" element={<PhotoReview/>} />
-            <Route path="/qc-entry" element={<QCEntry/>} /> */}
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
 
@@ -83,7 +73,8 @@ function Router() {
                 <Route path="camera" element={<Camera/>} />
                 <Route path="photo-review" element={<PhotoReview/>} />
                 <Route path="qc-entry" element={<QCEntry/>} />
-                <Route path="/qrscanner" element={<QRScanner/>} />
+                <Route path="qc-list" element={<QCList/>} />
+                <Route path="qrscanner" element={<QRScanner/>} />
                 <Route path="pass-fail" element={<PassFail />} />
             </Route>
         </Routes>

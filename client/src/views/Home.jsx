@@ -19,11 +19,6 @@ export default function Home() {
 
         navigate('/login');
     }
-    const theme = useMantineTheme();
-    const [opened, setOpened] = useState(false);
-    const handleNextPage = () => {
-      navigate('/qc-entry')
-    };
 
     return (
     <div>
@@ -34,20 +29,21 @@ export default function Home() {
         variant="outline" 
         style={{marginTop: 30, marginInline: 20, height: 75}} 
         leftIcon={<AddBoxRoundedIcon style={{fontSize: 50}}/>}
-        onClick={handleNextPage}
+        onClick={() => navigate('/qc-entry')}
         fullWidth> 
         
-            <h2 style={{color: 'black'}}>New Entry</h2>
-            </Button>
+        <h2 style={{color: 'black'}}>New Entry</h2>
+      </Button>
 
-            <Button 
+      <Button 
         colour="blue" 
         variant="outline" 
         style={{marginTop: 30, marginInline: 20, height: 75}} 
         leftIcon={<DraftsRoundedIcon style={{fontSize: 50}}/>}
-        fullWidth> 
-            <h2 style={{color: 'black'}}>Drafts</h2>
-            </Button>
+        fullWidth
+        onClick={() => navigate('/qc-list')}> 
+        <h2 style={{color: 'black'}}>Drafts</h2>
+      </Button>
 
 </div>
 

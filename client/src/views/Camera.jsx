@@ -83,8 +83,10 @@ function Camera() {
     }
 
     useEffect(() => {
-        openCamera();
-  
+        if (videoElement.current) {
+            // videoElement.current has been null before, causing errors
+            openCamera();
+        }
     }, [videoElement]);
 
     const [canTakePhoto, setCanTakePhoto] = useState(false);
