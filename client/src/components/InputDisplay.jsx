@@ -9,11 +9,11 @@ import {
   Group,
   Box,
   Text,
-  Divider
+  Divider,
+  Grid,
+  ScrollArea
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
-import { Container } from "@mui/system";
-// import { Box } from "@mui/material";
 import { addFailReasons } from "../store/workorder/workorderSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -40,10 +40,17 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
                 width: "100%" }}
         key={index}
       >
-        <div style={{width: "90%", overflowWrap: "break-word"}} >
-          <Text style={{ padding: 5, marginLeft: "0.5rem"}} >{reason}</Text> 
+        <div style={{ overflowWrap: "break-word"}} >
+          <Text
+            size="sm"
+            style={{padding: 5, 
+                    marginLeft: "0.5rem",
+                    overflowWrap: "break-word",
+                    wordBreak: "break-all"}}
+          >
+            {reason}
+          </Text> 
         </div>
-       
         
         <ClearIcon 
           className="delete-failing-reasons-btn" 
@@ -72,37 +79,50 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
         <div>
 
           <Text weight={500} style={{ marginTop: 20,  textAlign: "center"}}>Reasons for failing check:</Text>
-
+{/* 
           <Paper p="md"
             style={{ margin: 30, padding: 10, marginTop: 10 }}
             sx={(theme) => ({backgroundColor: theme.colors.gray[0],})}
             withBorder
           >
             <Text>{listItems}</Text>
-          </Paper>
-
-          <Textarea
-            style={{ margin: 30 }}
-            placeholder="Type one reason at a time"
-            required
-            autosize
-            size="sm"
-            value={value}
-            onChange={handleDisplay}
-          />
-
-          <Center>
-            <Button
-              size="md"
-              variant="filled"
-              uppercase 
-              onClick={handleEnter}
-              className="enter-reason-btn"
-            >
-              ENTER
-            </Button>
-          </Center>
+          </Paper> */}
           
+            <ScrollArea 
+              style={{height: 210,
+                      margin: "2rem", 
+                      marginTop: "0.1rem", 
+                      marginBottom: "1rem", 
+                      padding: 10, 
+                      backgroundColor: theme.colors.gray[0]}} 
+                      type="scroll"
+                      >
+              <Text>{listItems}</Text>
+            </ScrollArea>
+
+          <div style={{display:"flex", justifyContent: "right", marginRight: "2rem", marginLeft: "2rem"}}>
+            <Textarea
+              style={{ width: "100%", marginRight: "0.6rem" }}
+              placeholder="Type one reason at a time"
+              required
+              autosize
+              size="sm"
+              value={value}
+              onChange={handleDisplay}
+            />
+
+            <Center>
+              <Button
+                size="sm"
+                variant="filled"
+                uppercase 
+                onClick={handleEnter}
+                className="enter-reason-btn"
+              >
+                ENTER
+              </Button>
+            </Center>
+          </div>
         </div>
      );
 }

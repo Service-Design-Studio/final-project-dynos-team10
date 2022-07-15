@@ -10,7 +10,7 @@ import {
     Button,
     Text,
     Center,
-    Modal
+    Modal,
 } from "@mantine/core";
 import { 
     selectCurrentComponent, 
@@ -120,8 +120,8 @@ export default function PassFail() {
                         <Text align="center" size="md" style={{marginTop: 5, marginBottom:20}}>(Manual Check)</Text>
                     </> :
                     <>
-                        <HighlightOffIcon style={{ fontSize: 100, color: "red", alignItems: "center" }}></HighlightOffIcon>
-                        <Text weight="bold" align="center" size="xl" style={{marginTop: 15}} >Failed</Text>
+                        <HighlightOffIcon style={{ fontSize: 95, color: "red", alignItems: "center" }}></HighlightOffIcon>
+                        <Text weight="bold" align="center" size="xl" style={{marginTop: 5}} >Failed</Text>
                     </>
                 }
             </div>
