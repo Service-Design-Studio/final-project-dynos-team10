@@ -15,7 +15,9 @@ import {
     Button, 
     Drawer,
     Stack,
-    Menu
+    Menu,
+    Center,
+    Container
   } from "@mantine/core";
 
 // hash map, key -> route, value -> title at header, both are strings
@@ -33,7 +35,7 @@ export default function Layout() {
     let location = useLocation();
     const [title, setTitle] = useState("") // set title at header
     const [visibility, setVisibility] = useState(true); // visibility of header
-    
+
     const logout = () => {
         dispatch(setToken(''));
         dispatch(setIsAuthenticated(false));
@@ -113,6 +115,22 @@ export default function Layout() {
         )
     };
 
+    const BackButton = () => {
+        if (title!=="Home") {
+            return(                             
+            <div> 
+                <ActionIcon 
+                    onClick={() => navigate(-1)} 
+                    style={{backgroundColor: "transparent", marginRight: "1rem"}} >
+                    <FaArrowLeft style={{color: "black", fontSize: "1.5rem"}} 
+                    />
+                </ActionIcon> 
+            </div>
+             );
+
+        };
+    };
+
     return (
         <>
             {visibility ? 
@@ -122,22 +140,22 @@ export default function Layout() {
                     <SideBar/>
                             
                 
-                    <div style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems: "center", height: "100%" }}>
-                        
-                        <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
+                    <div style={{ 
+                            display: "flex", 
+                            flexDirection:"row", 
+                            justifyContent:"space-between", 
+                            alignItems: "center", 
+                            height: "100%" }}
+                    >
   
-
-                            <div> 
-                                <ActionIcon 
-                                    onClick={() => navigate(-1)} 
-                                    style={{backgroundColor: "transparent", marginRight: "1rem"}} >
-                                    <FaArrowLeft style={{color: "black", fontSize: "1.5rem"}} 
-                                    />
-                                </ActionIcon> 
-                            </div>
-
-                            <h2 style={{paddingRight: "1rem"}} >{title}</h2>
+                            <BackButton/>
                             
+                            <Container>
+                                <Center>
+                                    <h2 style={{marginLeft: 20}}>{title}</h2>
+                                </Center>
+                            </Container>
+
                             <MediaQuery>
                                 <Burger
                                     opened={opened}
@@ -145,12 +163,10 @@ export default function Layout() {
                                     size="sm"
                                     color={theme.colors.gray[6]}
                                     mr="sm"
-                                    style={{marginLeft: 160}}
                                     />
                                 
                             </MediaQuery>
                         
-                        </div>
 
                     </div>
                 </Header>
