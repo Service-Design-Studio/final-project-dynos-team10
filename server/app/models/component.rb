@@ -29,4 +29,8 @@ class Component < ApplicationRecord
     def self.get_failing_reason(component_id)
         Component.find_by(id: component_id).failing_reasons
     end
+
+    def self.get_one_images(component_id)
+        Component.find_by(id: component_id).images
+    end
 end

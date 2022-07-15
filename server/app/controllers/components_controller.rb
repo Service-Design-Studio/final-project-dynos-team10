@@ -32,4 +32,9 @@ class ComponentsController < ApplicationController
     def destroy
 
     end
+
+    def get_one_images
+        images = Component.get_one_images params[:id]
+        render json: success_json(images)
+    end
 end

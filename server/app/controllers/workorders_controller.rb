@@ -5,7 +5,12 @@ class WorkordersController < ApplicationController
         unless workorder_number.nil?
             workorder_record = Workorder.find_one_by_workorder_number(workorder_number)
             if workorder_record.nil?
-                render json: fail_json(errors: workorder_record.errors, data: workorder_record), status: :unprocessable_entity
+                begin
+                    errors = workorder_record.errors
+                rescue NoMethodError
+                    errors = "Workorder does not exist"
+                end
+                render json: fail_json(errors: errors, data: workorder_record), status: :unprocessable_entity
             else
                 render json: success_json(workorder_record)
             end
@@ -55,6 +60,11 @@ class WorkordersController < ApplicationController
     end
 
     def get_count
-        Workorder.get_count
+        render json: success_json(Workorder.get_count)
+    end
+
+    def get_one_components
+        components = Workorder.get_one_components params[:id]
+        render json: success_json(components)
     end
 end
