@@ -30,6 +30,9 @@ export default function Layout() {
     const [opened, setOpened] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [workorders, setWorkorders] = useState([]);
+    const [selectedWorkorderNumber, setSelectedWorkorderNumber] = useState('');
+    
 
     // location.pathname is a string of current route
     let location = useLocation();
@@ -95,6 +98,17 @@ export default function Layout() {
                             </Button>}
                     >
                         {/* fill in with work order drafts */}
+                        {/* {
+                            workorders.map(el => {
+                                return (
+                                    <WorkorderButton
+                                        key={el.id}
+                                        workorder={el}
+                                    />
+                                )
+                            })
+                        } */}
+
                         <Button
                         color="dark"
                         variant="subtle"
@@ -130,6 +144,22 @@ export default function Layout() {
 
         };
     };
+
+    // const WorkorderButton = ({ workorder }) => {
+    //     const { workorder_number: workorderNumber } = workorder;
+       
+    //     return (
+    //         <Button color="dark" variant="subtle" onClick={commitSelectedWorkorder} >
+    //             {workorderNumber}
+    //         </Button>
+    //     )
+    // }
+
+    // const commitSelectedWorkorder = () => {
+    //     setSelectedWorkorderNumber(workorderNumber);
+    //     dispatch(startNewWorkorder(selectedWorkorderNumber));
+    //     navigate('/component-status');
+    // }
 
     return (
         <>
