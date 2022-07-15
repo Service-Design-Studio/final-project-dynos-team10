@@ -12,7 +12,10 @@ import {
     MediaQuery,
     Burger,
     useMantineTheme,
-    Button
+    Button, 
+    Drawer,
+    Stack,
+    Menu
   } from "@mantine/core";
 
 // hash map, key -> route, value -> title at header, both are strings
@@ -55,24 +58,74 @@ export default function Layout() {
         })();
     }, [location])
 
+    const SideBar = () => {
+        return(
+        <Drawer 
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Dynostic"
+        padding="md"
+        size="sm"
+        position="right"
+        >
+            <Stack justify="space-between" style={{height: 500}}>
+                <Stack
+                align="flex-start"
+                >                
+                    <Button
+                    color="dark"
+                    variant="subtle"
+                    onClick={() => {
+                        navigate('/qc-entry');
+                        setOpened(false);
+                        }}
+                    >
+                        New Entry
+                    </Button>
+
+                    <Menu 
+                        control={                  
+                            <Button
+                            color="dark"
+                            variant="subtle"
+                            >
+                                Drafts
+                            </Button>}
+                    >
+                        {/* fill in with work order drafts */}
+                        <Button
+                        color="dark"
+                        variant="subtle"
+                        fullWidth>
+                            WO1234
+                        </Button>
+                    </Menu>
+                </Stack>
+
+                <Button 
+                onClick={logout}
+                >
+                Log Out
+                </Button>
+
+            </Stack>
+        </Drawer>
+        )
+    };
+
     return (
         <>
             {visibility ? 
 
                 <Header height={70} p="md">
+
+                    <SideBar/>
+                            
+                
                     <div style={{ display: "flex", flexDirection:"row", justifyContent:"space-between", alignItems: "center", height: "100%" }}>
                         
                         <div style={{ display: "flex", flexDirection:"row", alignItems: "center", height: "100%" }}>
-                            
-                            <MediaQuery>
-                                <Burger
-                                    opened={opened}
-                                    onClick={() => setOpened((o) => !o)}
-                                    size="sm"
-                                    color={theme.colors.gray[6]}
-                                    mr="sm"
-                                    />
-                            </MediaQuery>
+  
 
                             <div> 
                                 <ActionIcon 
@@ -84,10 +137,20 @@ export default function Layout() {
                             </div>
 
                             <h2 style={{paddingRight: "1rem"}} >{title}</h2>
-
+                            
+                            <MediaQuery>
+                                <Burger
+                                    opened={opened}
+                                    onClick={() => setOpened((o) => !o)}
+                                    size="sm"
+                                    color={theme.colors.gray[6]}
+                                    mr="sm"
+                                    style={{marginLeft: 160}}
+                                    />
+                                
+                            </MediaQuery>
+                        
                         </div>
-
-                        <div style={{paddingRight: "0.6rem"}} > <Button onClick={logout}>Log Out</Button></div>
 
                     </div>
                 </Header>
