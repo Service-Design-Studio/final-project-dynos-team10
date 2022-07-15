@@ -5,10 +5,20 @@ class WorkordersController < ApplicationController
         unless workorder_number.nil?
             workorder_record = Workorder.find_one_by_workorder_number(workorder_number)
             if workorder_record.nil?
-                render json: fail_json(errors: workorder_record.errors, data: workorder_record), status: :unprocessable_entity
+                begin
+                    errors = workorder_record.errors
+                rescue NoMethodError
+                    errors = "Workorder does not exist"
+                end
+                render json: fail_json(errors: errors, data: workorder_record), status: :unprocessable_entity
             else
                 render json: success_json(workorder_record)
             end
+            return
+        end
+        page_number = params[:page]
+        unless page_number.nil?
+            render json: success_json(Workorder.find_paginated(page_number))
             return
         end
         all_workorders = Workorder.find_all
@@ -47,5 +57,14 @@ class WorkordersController < ApplicationController
         # @workorder.destroy
         # flash[:success] = "workorder successfully deleted!"
         # # redirect_to workorderzes_url
+    end
+
+    def get_count
+        render json: success_json(Workorder.get_count)
+    end
+
+    def get_one_components
+        components = Workorder.get_one_components params[:id]
+        render json: success_json(components)
     end
 end

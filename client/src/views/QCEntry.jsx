@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
-import { setWorkorderNumber, resetWorkorderValues } from "../store/workorder/workorderSlice";
+import { setWorkorderNumber, startNewWorkorder } from "../store/workorder/workorderSlice";
 import {
   useMantineTheme,
   TextInput,
@@ -54,14 +54,6 @@ function QCEntry({}) {
     navigate("/qrscanner");
   };
 
-  // useEffect(() => {
-  //   dispatch(resetWorkorderValues({
-  //     componentsReset: {},
-  //     workorderNumberReset: '',
-  //     currentComponentNameReset: ''
-  //   }));
-  // }, [isLoading]);
-
   useEffect(() => {
     (async() => {
       setIsLoading(true);
@@ -69,13 +61,7 @@ function QCEntry({}) {
         if (Object.keys(formErrors).length === 0 && isSubmit) {
           const result = await createWorkOrder();
           console.log({ result });
-          // dispatch(setWorkorderNumber(formValues.serialno));
-          dispatch(resetWorkorderValues({
-            componentsReset: {},
-            workorderNumberReset: '',
-            currentComponentNameReset: ''
-          }));
-          dispatch(setWorkorderNumber(formValues.serialno));
+          dispatch(startNewWorkorder(formValues.serialno));
           navigate("/component-status");
         }
       } catch (e) {
