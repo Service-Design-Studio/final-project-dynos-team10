@@ -6,7 +6,10 @@ Rails.application.routes.draw do
 
   get 'verify-jwt', to: 'application#verify_jwt'
 
-  resources :workorders
+  resources :workorders do
+    get '/page/:page', action: :index, on: :collection
+    get '/total', to: 'workorders#get_count', on: :collection
+  end
 
   resources :components
 

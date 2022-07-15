@@ -11,6 +11,11 @@ class WorkordersController < ApplicationController
             end
             return
         end
+        page_number = params[:page]
+        unless page_number.nil?
+            render json: success_json(Workorder.find_paginated(page_number))
+            return
+        end
         all_workorders = Workorder.find_all
         render json: success_json(all_workorders)
     end
@@ -47,5 +52,9 @@ class WorkordersController < ApplicationController
         # @workorder.destroy
         # flash[:success] = "workorder successfully deleted!"
         # # redirect_to workorderzes_url
+    end
+
+    def get_count
+        Workorder.get_count
     end
 end
