@@ -37,6 +37,10 @@ export const workorderSlice = createSlice({
             const { componentName, image } = action.payload;
             state.components[componentName].images.push(image);
         },
+        addImagesArrayToComponent: (state, action) => {
+            const { componentName, images } = action.payload;
+            state.components[componentName].images = images;
+        },
         removeComponentImageByIndex: (state, action) => {
             const { componentName, index } = action.payload;
             state.components[componentName].images.splice(index, 1);
@@ -46,6 +50,10 @@ export const workorderSlice = createSlice({
         },
         updateCurrentComponentStatus: (state, action) => {
             state.components[state.currentComponentName].status = action.payload;
+        },
+        updateComponentStatus: (state, action) => {
+            const { componentName, status } = action.payload;
+            state.components[componentName].status = status;
         },
         replaceCurrentComponentImageArray: (state, action) => {
             state.components[state.currentComponentName].images = action.payload;
@@ -57,12 +65,15 @@ export const workorderSlice = createSlice({
             state.components[state.currentComponentName].failreasons = action.payload;
         },
         resetWorkorderValues: (state, action) => {
-            const {componentsReset, workorderNumberReset, currentComponentNameReset} = action.payload;
-            state.components = componentsReset;
-            state.workorderNumber = workorderNumberReset;
-            state.currentComponentName = currentComponentNameReset;
+            state.components = {};
+            state.workorderNumber = '';
+            state.currentComponentName = '';
+        },
+        startNewWorkorder: (state, action) => {
+            state.components = {};
+            state.workorderNumber = action.payload;
+            state.currentComponentName = '';
         }
-
     }
 })
 
@@ -77,6 +88,9 @@ export const {
     replaceCurrentComponentImageArray,
     addFailReasons,
     resetWorkorderValues,
+    startNewWorkorder,
+    addImagesArrayToComponent,
+    updateComponentStatus
 } = workorderSlice.actions;
 
 // GETTERS
@@ -84,5 +98,6 @@ export const selectWorkorderNumber = (state) => state.workorder.workorderNumber;
 export const selectWorkorderComponents = (state) => state.workorder.components;
 export const selectCurrentComponentName = (state) => state.workorder.currentComponentName;
 export const selectCurrentComponent = state => state.workorder.components[state.workorder.currentComponentName];
+export const selectComponentByName = componentName => state => state.workorder.components[componentName];
 
 export default workorderSlice.reducer;
