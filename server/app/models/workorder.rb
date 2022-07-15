@@ -31,6 +31,10 @@ class Workorder < ApplicationRecord
         Workorder.count
     end
 
+    def self.get_one_components(workorder_id)
+        Workorder.find_by(id: workorder_id).components
+    end
+
     # TODO: test whether this works
     #doesnt work as intended while doing rspec testing
     # def self.get_failing_reasons(workorder_id)
