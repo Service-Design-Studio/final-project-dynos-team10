@@ -28,6 +28,8 @@ import {
 
 import { $axios } from '../helpers/axiosHelper';
 
+let colourToStatus = {"red": "FAIL", "green": "PASS"};
+
 function PhotoReview() {
     const navigate = useNavigate();
 
@@ -72,56 +74,7 @@ function PhotoReview() {
     }
 
     const [chosenStatus, setChosenStatus] = useState('');
-    
-    // const postComponentPhotos = async() => {
-
-    //     console.log("able to update component status");
-    //     dispatch(updateCurrentComponentStatus(chosenStatus));
-
-    //     // get workorder id
-    //     let workorderId;
-    //     try {
-    //         const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
-    //         workorderId = response.data.id;
-    //     } catch(e) {
-    //         console.error(e);
-    //         console.log('cannot find current workorder');
-    //     }
-
-    //     const payload = {
-    //         workorder_id: workorderId,
-    //         component_type: currentComponentName
-    //     }
-    //     if (chosenStatus === 'green') {
-    //         // only pass this param if pass
-    //         payload.status = true;
-    //     }
-
-    //     let response;
-    //     try {
-    //         response = await $axios.post('components', payload);
-    //         if (!response.data.success) {
-    //             return;
-    //         }
-    //         const { id: component_id } = response.data.data;
-    //         response = await $axios.post('images/batch-create', {
-    //             component_id,
-    //             images: currentComponent.images
-    //         })
-    //         console.log({response});
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // }
-
     const proceedStatus = (() => {
-        // console.log(chosenStatus);
-        // if (chosenStatus == "green") {
-        //     navigate('/pass');
-        // } 
-        // else if (chosenStatus == "red") {
-        //     navigate('/failreasons');
-        // }
         navigate('/pass-fail', { state: { chosenStatus } });
     });
 
@@ -223,7 +176,7 @@ function PhotoReview() {
                         chosenStatus &&
                         (
                             <>
-                                <h4>You have chosen: {chosenStatus.toUpperCase()}</h4>
+                                <h4>You have chosen: {colourToStatus[chosenStatus]}</h4>
                                 <Button 
                                     onClick={proceedStatus}
                                     colour="blue" 

@@ -63,15 +63,18 @@ export default function Layout() {
 
     useEffect(() => {
         if (location.pathname in routeMap) {
-            console.log("header visibility = true");
             setVisibility(true);
             setTitle(routeMap[location.pathname]);
             return;
         }
         else if (routeHideArr.includes(location.pathname)){
-            console.log("header visibility = false")
             setVisibility(false);
             setTitle(""); // in case navbar still shows, title = ""
+            return;
+        }
+        else if (location.pathname = "pass-fail"){
+            setVisibility(true);
+            setTitle("Status");
             return;
         }
     }, [location])
@@ -209,7 +212,6 @@ export default function Layout() {
                                     />
                                 
                             </MediaQuery>
-                        
 
                     </div>
                 </Header>
