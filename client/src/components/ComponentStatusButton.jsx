@@ -27,16 +27,18 @@ function ComponentStatusButton(props) {
     
 
     return (
+        workorderComponents[componentName] &&
         <Button 
-        color = {workorderComponents[componentName].status}
-        variant="light" 
-        className={computedClassName} 
-        onClick={handleClick}
-        style={{marginTop: 30, marginInline: 20, width: 120, height: 120, borderColor: "#1c7ed6" }} 
-        // border colour from mantine default
+            color = {workorderComponents[componentName].status}
+            variant="light" 
+            className={computedClassName} 
+            onClick={handleClick}
+            style={{marginTop: 30, marginInline: 20, width: 120, height: 120, borderColor: "#1c7ed6" }} 
+            // border colour from mantine default
         > 
             <h2>{componentName}</h2>
-            </Button>
+        </Button>
+        
     )
 }
 

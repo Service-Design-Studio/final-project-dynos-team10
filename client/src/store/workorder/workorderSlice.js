@@ -7,9 +7,33 @@ import { createSlice } from "@reduxjs/toolkit";
 //     failingReasons: []
 // }
 
+// ----- old interfaces ---------
+/*
+interface Component {
+    images: string[],
+    status: 'green' | 'red' | 'yellow'
+    failingReasons: string[]
+}
+*/
+
+// ------- new interface to be implemented moving forward to help with db operations ----------
+/*
+interface Component {
+    images: Image[],
+    status: 'green' | 'red' | 'yellow'
+    failingReasons: string[],
+    id: number | null, // null to indicate this has not yet been in the DB
+}
+
+interface Image {
+    id: number | null,
+    url: string
+}
+*/
+
 const initialState = {
     workorderNumber: '',
-    components: {},
+    components: {}, // {[componentName: string]: Component}
     currentComponentName: ''
 }
 

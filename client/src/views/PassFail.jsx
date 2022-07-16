@@ -41,10 +41,6 @@ export default function PassFail() {
         setReasons(currentComponent.failingReasons);
     }, [])
 
-    const handleNextPage = () => {
-        navigate('/component-status');
-    };
-
     const UploadButton = () => {
         if (reasons.length > 0) {
             return (<Button className="upload-btn" onClick={postComponentPhotos} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)

@@ -4,7 +4,7 @@ class Workorder < ApplicationRecord
     validates :workorder_number, :machine_type, presence: true
     validates :workorder_number, uniqueness: true
 
-    paginates_per 10
+    paginates_per 5
 
     # creates a new workorder
     def self.create_record(workorder_number, machine_type)
@@ -12,7 +12,7 @@ class Workorder < ApplicationRecord
     end
 
     def self.find_paginated(page_number)
-        Workorder.order(:id).page page_number
+        Workorder.order(id: :desc).page page_number
     end
 
     def self.find_all

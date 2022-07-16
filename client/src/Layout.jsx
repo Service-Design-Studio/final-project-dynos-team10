@@ -4,7 +4,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import { FaArrowLeft} from "react-icons/fa";
 import "./views/PhotoReview.css";
-import { selectWorkorderNumber } from "./store/workorder/workorderSlice";
+import { selectWorkorderNumber, startNewWorkorder } from "./store/workorder/workorderSlice";
 import { $axios } from "./helpers/axiosHelper";
 
 import {
@@ -39,8 +39,8 @@ export default function Layout() {
     const [opened, setOpened] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const [workorders, setWorkorders] = useState([]);
-    const [selectedWorkorderNumber, setSelectedWorkorderNumber] = useState('');
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
 
     useEffect(() => {
@@ -55,8 +55,6 @@ export default function Layout() {
     }, [opened]);
     
 
-    // location.pathname is a string of current route
-    let location = useLocation();
     const [title, setTitle] = useState("") // set title at header
     const [visibility, setVisibility] = useState(true); // visibility of header
 
@@ -74,6 +72,7 @@ export default function Layout() {
     }
 
     useEffect(() => {
+        // location.pathname is a string of current route
         if (location.pathname in routeMap) {
             setVisibility(true);
             setTitle(routeMap[location.pathname]);
@@ -89,7 +88,7 @@ export default function Layout() {
             setTitle("Status");
             return;
         }
-    }, [location])
+    }, [location, routeMap])
 
     const SideBar = () => {
         return(
@@ -136,13 +135,6 @@ export default function Layout() {
                                 )
                             })
                         }
-
-                        <Button
-                        color="dark"
-                        variant="subtle"
-                        fullWidth>
-                            WO1234
-                        </Button>
                     </Menu>
                 </Stack>
 
@@ -177,16 +169,17 @@ export default function Layout() {
         const { workorder_number: workorderNumber } = workorder;
        
         return (
-            <Button color="dark" variant="subtle" onClick={commitSelectedWorkorder} >
+            <Button fullWidth color="dark" variant="subtle" onClick={() => commitSelectedWorkorder(workorderNumber)} >
                 {workorderNumber}
             </Button>
         )
     }
 
-    const commitSelectedWorkorder = () => {
-        setSelectedWorkorderNumber(workorderNumber);
+    const commitSelectedWorkorder = (selectedWorkorderNumber) => {
         dispatch(startNewWorkorder(selectedWorkorderNumber));
-        navigate('/component-status');
+        if (!location.pathname === '/component-status') {
+            navigate('/component-status');
+        }
     }
 
     return (

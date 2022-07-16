@@ -1,6 +1,7 @@
 class WorkordersController < ApplicationController
     # TODO: permit params
     def index
+        # /workorders?workorder_number=
         workorder_number = params[:workorder_number]
         unless workorder_number.nil?
             workorder_record = Workorder.find_one_by_workorder_number(workorder_number)
@@ -16,11 +17,13 @@ class WorkordersController < ApplicationController
             end
             return
         end
+        # /workorders?page=
         page_number = params[:page]
         unless page_number.nil?
             render json: success_json(Workorder.find_paginated(page_number))
             return
         end
+        # /workorders
         all_workorders = Workorder.find_all
         render json: success_json(all_workorders)
     end

@@ -108,7 +108,7 @@ function ComponentStatus() {
             }
             setComponentsReady(true);
         })();
-    }, []);
+    }, [workorderNumber]);
 
     return (
         <>
