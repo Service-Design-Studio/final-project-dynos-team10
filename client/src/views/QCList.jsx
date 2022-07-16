@@ -14,7 +14,7 @@ export default function QCList() {
     const [isLoading, setIsLoading] = useState(false);
     const [modalOpened, setModalOpened] = useState(false);
     const [selectedWorkorderNumber, setSelectedWorkorderNumber] = useState('');
-    const RESULTS_PER_PAGE = 10;
+    const RESULTS_PER_PAGE = 5;
 
     const WorkorderCard = ({ workorder }) => {
         const { workorder_number: workorderNumber } = workorder;

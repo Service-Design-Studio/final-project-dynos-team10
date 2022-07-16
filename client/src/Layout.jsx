@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { FaArrowLeft} from "react-icons/fa";
 import "./views/PhotoReview.css";
 import { selectWorkorderNumber } from "./store/workorder/workorderSlice";
+import { $axios } from "./helpers/axiosHelper";
 
 import {
     ActionIcon,
@@ -40,7 +41,18 @@ export default function Layout() {
     const navigate = useNavigate();
     const [workorders, setWorkorders] = useState([]);
     const [selectedWorkorderNumber, setSelectedWorkorderNumber] = useState('');
-    const currentWorkorderNumber = useSelector(selectWorkorderNumber)
+    const currentWorkorderNumber = useSelector(selectWorkorderNumber);
+
+    useEffect(() => {
+        // whenever the drawer is opened (opened === true), get the latest N drafts
+        // (i.e. 1 page, backend defines how many pages)
+        (async() => {
+            if (opened) {
+                const response = await $axios.get('workorders/page/1');
+                setWorkorders(response.data.result);
+            }
+        })()
+    }, [opened]);
     
 
     // location.pathname is a string of current route
@@ -114,7 +126,7 @@ export default function Layout() {
                             </Button>}
                     >
                         {/* fill in with work order drafts */}
-                        {/* {
+                        {
                             workorders.map(el => {
                                 return (
                                     <WorkorderButton
@@ -123,7 +135,7 @@ export default function Layout() {
                                     />
                                 )
                             })
-                        } */}
+                        }
 
                         <Button
                         color="dark"
@@ -161,21 +173,21 @@ export default function Layout() {
         };
     };
 
-    // const WorkorderButton = ({ workorder }) => {
-    //     const { workorder_number: workorderNumber } = workorder;
+    const WorkorderButton = ({ workorder }) => {
+        const { workorder_number: workorderNumber } = workorder;
        
-    //     return (
-    //         <Button color="dark" variant="subtle" onClick={commitSelectedWorkorder} >
-    //             {workorderNumber}
-    //         </Button>
-    //     )
-    // }
+        return (
+            <Button color="dark" variant="subtle" onClick={commitSelectedWorkorder} >
+                {workorderNumber}
+            </Button>
+        )
+    }
 
-    // const commitSelectedWorkorder = () => {
-    //     setSelectedWorkorderNumber(workorderNumber);
-    //     dispatch(startNewWorkorder(selectedWorkorderNumber));
-    //     navigate('/component-status');
-    // }
+    const commitSelectedWorkorder = () => {
+        setSelectedWorkorderNumber(workorderNumber);
+        dispatch(startNewWorkorder(selectedWorkorderNumber));
+        navigate('/component-status');
+    }
 
     return (
         <>
