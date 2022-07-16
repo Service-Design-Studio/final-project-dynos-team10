@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useDispatch, useSelector } from "react-redux";
@@ -36,6 +36,10 @@ export default function PassFail() {
     const [value, setValue] = useState("");
     const [reasons, setReasons] = useState([]);
     const[opened, setOpened] = useState(false);
+
+    useEffect(() => {
+        setReasons(currentComponent.failingReasons);
+    }, [])
 
     const handleNextPage = () => {
         navigate('/component-status');

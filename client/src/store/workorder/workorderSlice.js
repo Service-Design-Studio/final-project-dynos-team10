@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // label: {
 //     images: [],
 //     status: pass/fail/incomplete
-//     failreasons: []
+//     failingReasons: []
 // }
 
 const initialState = {
@@ -29,7 +29,7 @@ export const workorderSlice = createSlice({
             state.components[componentName] = {
                 images: [],
                 status: 'blue',
-                failreasons: []
+                failingReasons: []
             }
         },
         addImageToComponent: (state, action) => {
@@ -58,11 +58,13 @@ export const workorderSlice = createSlice({
         replaceCurrentComponentImageArray: (state, action) => {
             state.components[state.currentComponentName].images = action.payload;
         },
-        addFailReasons: (state, action) => {
-            console.log("component name = " + state.currentComponentName);
-            console.log("action payload = " + action.payload);
-            console.log(state.components[state.currentComponentName].failreasons);
-            state.components[state.currentComponentName].failreasons = action.payload;
+        addFailingReasons: (state, action) => {
+            const componentName = action.payload.componentName;
+            const failingReasons = action.payload.failingReasons;
+            console.log("component name = " + componentName);
+            console.log("action payload = " + failingReasons);
+            console.log(state.components[componentName].failingReasons);
+            state.components[componentName].failingReasons = failingReasons;
         },
         resetWorkorderValues: (state, action) => {
             state.components = {};
@@ -86,7 +88,7 @@ export const {
     removeComponentImageByIndex,
     updateCurrentComponentStatus,
     replaceCurrentComponentImageArray,
-    addFailReasons,
+    addFailingReasons,
     resetWorkorderValues,
     startNewWorkorder,
     addImagesArrayToComponent,

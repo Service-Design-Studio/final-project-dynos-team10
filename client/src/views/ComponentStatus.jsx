@@ -1,6 +1,6 @@
 import ComponentStatusButton from "../components/ComponentStatusButton";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectWorkorderNumber, addNewComponent, addImagesArrayToComponent, updateComponentStatus } from "../store/workorder/workorderSlice";
+import { selectWorkorderNumber, addNewComponent, addImagesArrayToComponent, updateComponentStatus, addFailingReasons } from "../store/workorder/workorderSlice";
 import { Button, Modal, Text } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { $axios } from '../helpers/axiosHelper';
@@ -17,7 +17,7 @@ function ComponentStatus() {
     const [componentsReady, setComponentsReady] = useState(false);
 
     const processExistingComponent = (componentData) => {
-        const { componentStatus, componentType, images } = componentData;
+        const { componentStatus, componentType, images, componentFailingReasons } = componentData;
         if (!componentnames.includes(componentType)) {
             // this means that a custom component was created by the user for this workorder
             // we need to initialise it, and add the details
@@ -35,6 +35,14 @@ function ComponentStatus() {
             componentName: componentType,
             status: colorStatus
         }))
+
+        if (!componentStatus) {
+            // i.e. it's a red/failed component, add failing reasons
+            dispatch(addFailingReasons({
+                componentName: componentType,
+                failingReasons: componentFailingReasons
+            }));
+        }
     }
 
     useEffect(() => {
@@ -69,12 +77,16 @@ function ComponentStatus() {
                                 url: imageEl.public_url
                             }
                         })
-                        return {
+                        const componentObj = {
                             componentId: el.id,
                             componentType: el.component_type,
                             componentStatus: el.status,
                             images: formattedImages
                         }
+                        if (!el.status) {
+                            componentObj.componentFailingReasons = el.failing_reasons;
+                        }
+                        return componentObj;
                     })
                     componentsWithImages = await Promise.all(items);
                 }

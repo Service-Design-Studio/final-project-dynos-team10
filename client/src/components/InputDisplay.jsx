@@ -14,13 +14,14 @@ import {
   ScrollArea
 } from "@mantine/core";
 import ClearIcon from '@mui/icons-material/Clear';
-import { addFailReasons } from "../store/workorder/workorderSlice";
+import { addFailingReasons, selectCurrentComponentName } from "../store/workorder/workorderSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
     const dispatch = useDispatch();
+    const currentComponentName = useSelector(selectCurrentComponentName);
   
     const handleDelete = (i) => {
       console.log('index is' + i);
@@ -72,7 +73,10 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
 
     useEffect(() => {
       console.log("reasons = " + reasons);
-      dispatch(addFailReasons(reasons));
+      dispatch(addFailingReasons({
+        componentName: currentComponentName,
+        failingReasons: reasons
+      }));
     }, [reasons]);
 
     return ( 
