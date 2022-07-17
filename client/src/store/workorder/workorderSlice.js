@@ -11,7 +11,7 @@ import { createSlice } from "@reduxjs/toolkit";
 /*
 interface Component {
     images: string[],
-    status: 'green' | 'red' | 'yellow'
+    status: 'green' | 'red' | 'yellow' | 'blue'
     failingReasons: string[]
 }
 */
@@ -20,14 +20,14 @@ interface Component {
 /*
 interface Component {
     images: Image[],
-    status: 'green' | 'red' | 'yellow'
+    status: 'green' | 'red' | 'yellow' | 'blue'
     failingReasons: string[],
     id: number | null, // null to indicate this has not yet been in the DB
 }
 
 interface Image {
     id: number | null,
-    url: string
+    src: string
 }
 */
 
@@ -53,13 +53,24 @@ export const workorderSlice = createSlice({
             state.components[componentName] = {
                 images: [],
                 status: 'blue',
-                failingReasons: []
+                failingReasons: [],
+                id: null
             }
         },
+        updateComponentId: (state, action) => {
+            const { componentName, id } = action.payload;
+            if (!(componentName in state.components)) {
+                return;
+            }
+            state.components[componentName].id = id;
+        },
         addImageToComponent: (state, action) => {
-            // action.payload is an object expecting some options that are of the Component "type"
             const { componentName, image } = action.payload;
-            state.components[componentName].images.push(image);
+            const newImage = {
+                id: null,
+                src: image
+            }
+            state.components[componentName].images.push(newImage);
         },
         addImagesArrayToComponent: (state, action) => {
             const { componentName, images } = action.payload;
@@ -107,6 +118,7 @@ export const workorderSlice = createSlice({
 export const { 
     setWorkorderNumber,
     addNewComponent,
+    updateComponentId,
     addImageToComponent,
     updateCurrentComponentName,
     removeComponentImageByIndex,

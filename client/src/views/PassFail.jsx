@@ -82,7 +82,7 @@ export default function PassFail() {
             const { id: component_id } = response.data.result;
             response = await $axios.post('images/batch-create', {
                 component_id,
-                images: currentComponent.images
+                images: currentComponent.images.map(el => el.src)
             })
             console.log({response});
             successfulUpload(response);
@@ -94,7 +94,12 @@ export default function PassFail() {
     const successfulUpload = (response) => {
         dispatch(updateCurrentComponentStatus(state.chosenStatus));
         // store all links into array ( from response.result.)
-        const URL_array = response.data.result.map(image => image.public_url);
+        const URL_array = response.data.result.map(image => {
+            return {
+                id: image.id,
+                src: image.public_url
+            }
+        });
         console.log(URL_array);
         dispatch(replaceCurrentComponentImageArray(URL_array));
         setOpened(true);

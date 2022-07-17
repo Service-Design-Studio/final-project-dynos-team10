@@ -17,7 +17,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { addFailingReasons, selectCurrentComponentName } from "../store/workorder/workorderSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-
 function InputDisplay ( {reasons, value, setReasons, setValue} ) {
     const theme = useMantineTheme();
     const dispatch = useDispatch();

@@ -65,26 +65,6 @@ function SwipeableTextMobileStepper({
   //   setImages();
   // }, [components.images])
 
-  const generateCanvases = () => {
-    return components.images.map((step, index) => {
-      return (
-          <img key={index} src={step}></img>
-          // <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
-          // {
-          //   Math.abs(activeStep - index) <= 2
-          //   ? (
-
-          //     <canvas key={index} ref={(element) => canvasEls.current[index] = element}></canvas> 
-
-          //     // <canvas className={`canvas__${index}`}></canvas>
-          //   )
-          //   : null
-          // }
-      )
-    })
-  }
-
-
   return (
     <Box sx={{ maxWidth: "200%", flexGrow: 1 }}>
 
@@ -95,7 +75,6 @@ function SwipeableTextMobileStepper({
         enableMouseEvents
         className="photo-carousel"
       >
-        {/* {generateCanvases()} */}
         {
           components.images.map((step, index) => (
             <div key={index}>
@@ -109,7 +88,7 @@ function SwipeableTextMobileStepper({
                     overflow: 'hidden',
                     width: '100%',
                   }}
-                  src={step}
+                  src={step.src}
                 />
               ) : null}
             </div>

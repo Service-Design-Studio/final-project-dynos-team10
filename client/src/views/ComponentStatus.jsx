@@ -1,6 +1,13 @@
 import ComponentStatusButton from "../components/ComponentStatusButton";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectWorkorderNumber, addNewComponent, addImagesArrayToComponent, updateComponentStatus, addFailingReasons } from "../store/workorder/workorderSlice";
+import {
+    selectWorkorderNumber,
+    addNewComponent,
+    updateComponentId,
+    addImagesArrayToComponent,
+    updateComponentStatus,
+    addFailingReasons
+} from "../store/workorder/workorderSlice";
 import { Button, Modal, Text } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { $axios } from '../helpers/axiosHelper';
@@ -17,29 +24,40 @@ function ComponentStatus() {
     const [componentsReady, setComponentsReady] = useState(false);
 
     const processExistingComponent = (componentData) => {
-        const { componentStatus, componentType, images, componentFailingReasons } = componentData;
-        if (!componentnames.includes(componentType)) {
+        const { componentId, componentStatus, componentName, images, componentFailingReasons } = componentData;
+        if (!componentnames.includes(componentName)) {
             // this means that a custom component was created by the user for this workorder
             // we need to initialise it, and add the details
-            dispatch(addNewComponent(componentType));
+            dispatch(addNewComponent(componentName));
 
             // TODO: to check this again when feature to create custom components is added
             // the dispatch above is not synchoronous and might affect the following code in this function
         }
+        // since this is an existing component in the DB, we add a non-null ID to it
+        dispatch(updateComponentId({
+            componentName,
+            id: componentId
+        }))
+
         dispatch(addImagesArrayToComponent({
-            componentName: componentType,
-            images: images.map(el => el.url)
+            componentName,
+            images: images.map(el => {
+                return {
+                    id: el.imageId,
+                    src: el.url
+                }
+            })
         }));
         const colorStatus = componentStatus ? 'green' : 'red';
         dispatch(updateComponentStatus({
-            componentName: componentType,
+            componentName,
             status: colorStatus
         }))
 
         if (!componentStatus) {
             // i.e. it's a red/failed component, add failing reasons
             dispatch(addFailingReasons({
-                componentName: componentType,
+                componentName,
                 failingReasons: componentFailingReasons
             }));
         }
@@ -79,7 +97,7 @@ function ComponentStatus() {
                         })
                         const componentObj = {
                             componentId: el.id,
-                            componentType: el.component_type,
+                            componentName: el.component_type,
                             componentStatus: el.status,
                             images: formattedImages
                         }

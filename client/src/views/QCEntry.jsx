@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
-import { setWorkorderNumber, startNewWorkorder } from "../store/workorder/workorderSlice";
+import { startNewWorkorder } from "../store/workorder/workorderSlice";
 import {
   useMantineTheme,
   TextInput,
