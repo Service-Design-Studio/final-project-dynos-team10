@@ -9,21 +9,18 @@ import {
   Text,
   Button,
   Stack,
-  Modal
+  Modal,
+  Center
 } from "@mantine/core";
 import { QrReader } from "react-qr-reader";
 
 function QCEntry({}) {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formValues, setFormValues] = useState(() => {
-    if (state == null) {
-      return { serialno: "", type: "" };
-    }
-    return { serialno: state.workorder, type: state.machinetype };
-  });
+  const [formValues, setFormValues] = useState(
+    { serialno: "", type: "" }
+    );
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -100,14 +97,12 @@ function QCEntry({}) {
 
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-
-  const[isUnmounted, setIsUnmounted]= useState(false)
   
   const handleResult = (result, error) => {
     if (!!result) {
       const data = result?.text.split(",");
-      setIsUnmounted(true)
-      navigate('/qc-entry', {state: {workorder: data[0], machinetype: data[2]}});
+      setFormValues({serialno: data[0], type: data[2]});
+      setOpened(false)
       // just comment out if dont want to reload
       // window.location.reload();
     }
@@ -117,48 +112,56 @@ function QCEntry({}) {
     }
   };
 
+  const QRCode = () => {
+    if (setOpened){
+      return (  
+      <QrReader
+        onResult={handleResult}
+        scanDelay={2000}
+        style={{
+          display: "block",
+          position: "absolute",
+          overflow: "hidden",
+        }}
+      />)
+    }
+  }
+
   return (
     <div>
 
       <Modal
       opened={opened}
       onClose={() => setOpened(false)}
-      title="SCAN QR"
+      title="Scan QR Code"
       >
-      <div
-        style={{
-          overflow: "hidden",
-          position: "relative",  
-          height:400,
-          alignItems:"center"
-        }}
-      >
+
         <div
           style={{
-            top: "0px",
-            left: "0px",
-            zIndex: 1,
-            boxSizing: "border-box",
-            border: "50px solid rgba(0, 0, 0, 0.3)",
-            boxShadow: "rgba(255, 0, 0, 0.5) 0px 0px 0px 5px inset",
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-          }}
-        ></div>
-        {!isUnmounted &&
-        <QrReader
-          onResult={handleResult}
-          scanDelay={2000}
-          style={{
-            display: "block",
-            position: "absolute",
             overflow: "hidden",
+            position: "relative",  
+            height:300,
+            alignItems:"center"
           }}
-          videoContainerStyle={{marginTop:10}}
-        />
-      }
-      </div>
+        >
+          <div
+            style={{
+              top: "0px",
+              left: "0px",
+              zIndex: 1,
+              boxSizing: "border-box",
+              border: "50px solid rgba(0, 0, 0, 0.3)",
+              boxShadow: "rgba(255, 0, 0, 0.5) 0px 0px 0px 5px inset",
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+            }}
+          ></div>
+          
+          <QRCode/>
+
+
+        </div>
       </Modal>
       <Stack spacing={"md"} align="center" justify={"center"}>
         <Stack
