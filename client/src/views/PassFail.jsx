@@ -19,6 +19,8 @@ import {
     updateCurrentComponentStatus,
     replaceCurrentComponentImageArray
 } from "../store/workorder/workorderSlice";
+import { deepCompare } from "../helpers/objectHelper";
+import { buildComponentObjWithImages } from "../helpers/componentsHelper";
 
 export default function PassFail() {
     const { state } = useLocation();
@@ -43,24 +45,24 @@ export default function PassFail() {
 
     const UploadButton = () => {
         if (reasons.length > 0) {
-            return (<Button className="upload-btn" onClick={postComponentPhotos} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
+            return (<Button className="upload-btn" onClick={updateComponentRecord} style={{marginLeft: 10}} size="md" variant="filled" uppercase>UPLOAD</Button>)
         };
         return (<Button style={{marginLeft: 10}} size="md" variant="filled" uppercase disabled>UPLOAD</Button>)
     };
 
-
-    const postComponentPhotos = async() => {
-        // get workorder id
-        let workorderId;
+    const findWorkorderRecord = async() => {
         try {
             const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
             console.log({response});
-            workorderId = response.result.id;
+            return response.result.id;
         } catch(e) {
             console.error(e);
             console.log('cannot find current workorder');
+            return null;
         }
+    }
 
+    const createNewComponent = async(workorderId) => {
         const payload = {
             workorder_id: workorderId,
             component_type: currentComponentName,
@@ -106,6 +108,71 @@ export default function PassFail() {
     }
 
 
+    const updateComponentRecord = async() => {
+        // get workorder id
+        const workorderId = await findWorkorderRecord();
+        if (!workorderId) {
+            return;
+        }
+
+        // POST request, new component
+        if (currentComponent.id === null) {
+            console.log('We are working with a new component');
+            createNewComponent(workorderId);
+            return;
+        }
+
+        // here we deal with EDITING/patch requests
+        let response = await $axios.get(`components/${currentComponent.id}`);
+        const dbComponent = response.data.result;
+        response = await $axios.get(`components/${currentComponent.id}/images`);
+        const dbImages = response.data.result;
+        const dbComponentWithImages = buildComponentObjWithImages(dbComponent, dbImages);
+        // Issue 1: component status only updated after successful upload, so this compare will not detect status changes (yet)
+        // Issue 2: component status changes to yellow when using camera, if got use camera to add photos, then this will detect status change (to yellow), which is not submittable
+        // Issue 3: figure out why "differences" is weird when we delete images, check the images array
+        const differences = deepCompare(dbComponentWithImages, currentComponent);
+        console.log({differences, dbComponentWithImages, currentComponent});
+
+        if (differences.images) {
+            // await this?
+            updateImages(currentComponent.id, dbComponentWithImages.images, currentComponent.images);
+        }
+
+        const payload = {
+            component_id: currentComponent.id
+        }
+        if (differences.failingReasons) {
+            payload.failing_reasons = currentComponent.failingReasons;
+        }
+        if (differences.status) {
+            payload.status = currentComponent.status;
+        }
+        console.log({payload});
+
+        // await $axios.patch(`components/${currentComponent.id}`, payload);
+    }
+
+    const updateImages = async(componentId, oldImages, updatedImages) => {
+        // Note: images can only be added or deleted, they cannot be edited
+        console.log({componentId, oldImages, updatedImages});
+        const newImages = updatedImages.filter(el => el.id === null); 
+        const deletedImages = oldImages.filter(old => {
+            return !updatedImages.find(newEl => newEl.id === old.id);
+        })
+        console.log({newImages, deletedImages});
+
+        // 1) find the new images to add
+        // let response = await $axios.post('images/batch-create', {
+        //     component_id: componentId,
+        //     images: newImages.map(el => el.src)
+        // })
+
+        // 2) find images that are missing from the old images and delete them
+        
+    }
+
+
     return (
         <div>
             <div
@@ -144,7 +211,7 @@ export default function PassFail() {
                 isPass ?
                 <Center>
                     <Button 
-                        onClick={postComponentPhotos} 
+                        onClick={updateComponentRecord} 
                         style={{marginLeft: 10}} 
                         size="md" 
                         variant="filled" 
