@@ -37,7 +37,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
                 display: "flex", 
                 justifyContent: "space-between", 
                 marginRight: "20%", 
-                width: "100%" }}
+                width: "99%" }}
         key={index}
       >
         <div style={{ overflowWrap: "break-word"}} >
