@@ -18,7 +18,8 @@ import {
   Space,
   ActionIcon,
   Tooltip,
-  Modal
+  Modal, 
+  PasswordInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
@@ -135,7 +136,7 @@ export default function Register() {
                     <img src={AppLogo} width="240rem"></img>
                 </Container>
 
-                <Container size={420} my={10}>
+                {/* <Container size={420} my={10}>
 
                     <Title
                         align="center"
@@ -156,27 +157,82 @@ export default function Register() {
                             required
                             {...form.getInputProps('username')} />
                         <TextInput
-                            label="Credential Nickname"
-                            placeholder="Credential Nickname"
+                            label="Password"
+                            placeholder="Password"
                             required
                             {...form.getInputProps('credentialNickname')}
-                            rightSection={<Tooltip
-                                label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
-                                position="bottom"
-                                placement="start"
-                                wrapLines
-                                width={200}
-                            >
-                                <ActionIcon>
-                                    <FaQuestionCircle />
-                                </ActionIcon>
-                            </Tooltip>}
+                            // rightSection={<Tooltip
+                            //     label='A "Credential" is what identifies a login method. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'
+                            //     position="bottom"
+                            //     placement="start"
+                            //     wrapLines
+                            //     width={200}
+                            // >
+                            //     <ActionIcon>
+                            //         <FaQuestionCircle />
+                            //     </ActionIcon>
+                            // </Tooltip>}
                             mt="md" />
+
+                        <TextInput
+                            label="Confirm Password"
+                            placeholder="Confirm Password"
+                            required
+                            {...form.getInputProps('confirm-password')} />
+
+                        <Button loading={isLoading} onClick={registerUser} className="register-btn" fullWidth mt="xl">
+                            Register
+                        </Button>
+                    </Paper>
+                </Container> */}
+
+
+
+                <Container size={420} my={40}>
+                    <Title
+                        align="center"
+                        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+                    >
+                        Register
+                    </Title>
+                    <Text color="dimmed" size="sm" align="center" mt={5}>
+                        Have an account already?{' '}
+                        <Anchor href="#" size="sm" onClick={() => navigate('/login')}>
+                            Login here
+                        </Anchor>
+                    </Text>
+
+                    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+                        <TextInput 
+                            label="Username" 
+                            placeholder="Username" 
+                            required
+                            {...form.getInputProps('username')} />
+                        <PasswordInput 
+                            label="Password" 
+                            placeholder="Password" 
+                            required 
+                            mt="md" 
+                            {...form.getInputProps('password')} />
+                        <PasswordInput 
+                            label="Confirm Password" 
+                            placeholder="Confirm Password" 
+                            required 
+                            mt="md" 
+                            {...form.getInputProps('confirm-password')}/>
+                        {/* <Group position="apart" mt="md">
+                        <Checkbox label="Remember me" />
+                        <Anchor onClick={(event) => event.preventDefault()} href="#" size="sm">
+                            Forgot password?
+                        </Anchor>
+                        </Group> */}
                         <Button loading={isLoading} onClick={registerUser} className="register-btn" fullWidth mt="xl">
                             Register
                         </Button>
                     </Paper>
                 </Container>
+
+
             </div>
             <Modal
                 title="Successful Registration"
