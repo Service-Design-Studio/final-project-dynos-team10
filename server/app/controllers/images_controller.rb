@@ -39,7 +39,8 @@ class ImagesController < ApplicationController
   end
 
   def destroy
-
+    @image = Image.find(params[:id])
+    @image.destroy
   end
 
   # function to BATCH create images
