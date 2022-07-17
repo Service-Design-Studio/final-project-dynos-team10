@@ -54,9 +54,8 @@ function PhotoReview() {
     }, [currentComponent]);
 
     const deleteActivePhoto = () => {
-
-        if (currentComponent.images.length > 0){
-            console.log("component status = blue")
+        if (currentComponent.images.length === 1){
+            console.log("1 image left, changing component status = blue after deletion");
             dispatch(updateCurrentComponentStatus("blue"));
         }
 

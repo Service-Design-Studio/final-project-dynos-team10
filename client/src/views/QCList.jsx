@@ -43,8 +43,10 @@ export default function QCList() {
     
     useEffect(() => {
         (async() => {
+            setIsLoading(true);
             const response = await $axios.get('workorders/total');
             setWorkordersTotal(response.data.result);
+            setIsLoading(false);
         })()
     }, [])
     useEffect(() => {
