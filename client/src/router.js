@@ -5,7 +5,6 @@ import QCList from './views/QCList';
 import Camera from "./views/Camera";
 import PhotoReview from "./views/PhotoReview";
 import Register from "./views/Register";
-import QRScanner from "./views/QRScanner";
 
 import { RequireAuth } from './helpers/auth';
 import Layout from './Layout';
@@ -74,7 +73,6 @@ function Router() {
                 <Route path="photo-review" element={<PhotoReview/>} />
                 <Route path="qc-entry" element={<QCEntry/>} />
                 <Route path="qc-list" element={<QCList/>} />
-                <Route path="qrscanner" element={<QRScanner/>} />
                 <Route path="pass-fail" element={<PassFail />} />
             </Route>
         </Routes>

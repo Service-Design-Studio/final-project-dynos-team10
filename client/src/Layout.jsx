@@ -26,7 +26,6 @@ import {
 const routeMapStatic = {
     "/qc-entry": "QC Entry",
     "/": "Home",
-    "/qrscanner": "QR Scanner",
     "/failreasons": "Fail Reasons",
     "/pass": "Pass",
     '/qc-list': 'QC List',
