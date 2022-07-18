@@ -127,89 +127,55 @@ export default function Login() {
     return (
         <div>
             <Space h="2.3rem"/>
+
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
             </Container>
 
-            
-            {/* <Container size={420} my={10}>
+            <Container style={{ marginTop: 10 }}>
 
                 <Title
                     align="center"
-                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}>
+                    sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+                >
                     Login
                 </Title>
+
                 <Text color="dimmed" size="sm" align="center" mt={5}>
-                        Do not have an account yet?{' '}
+                    Do not have an account yet?{' '}
                     <Anchor href="#" size="sm" onClick={() => navigate('/register')}>
                         Register here
                     </Anchor>
                 </Text>
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                    <TextInput
-                        label="Username"
-                        placeholder="Username"
-                        required
-                        {...form.getInputProps('username')} />
-                    <TextInput
-                        label="Password"
-                        placeholder="Password"
-                        required
+                    <TextInput 
+                        label="Username" 
+                        placeholder="Username" 
+                        required 
+                        {...form.getInputProps('username')}/>
+                    <PasswordInput 
+                        label="Password" 
+                        placeholder="Password" 
+                        required 
                         {...form.getInputProps('password')}
                         rightSection={<Tooltip
                             label=''
                             position="bottom"
                             placement="start"
                             wrapLines
-                            width={200}
-                        >
+                            width={200}>
                             <ActionIcon>
-                                <FaQuestionCircle />
+                                <FaQuestionCircle/>
                             </ActionIcon>
                         </Tooltip>}
-                        mt="md" />
+                        mt="md"/>
                     <Button onClick={signIn} fullWidth mt="xl" className="login-btn" loading={loginLoading}>
                         Sign In
                     </Button>
                 </Paper>
-                </Container> */}
 
-
-
-                <Container size={420} my={40}>
-                    <Title
-                        align="center"
-                        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
-                    >
-                        Login
-                    </Title>
-                    <Text color="dimmed" size="sm" align="center" mt={5}>
-                        Do not have an account yet?{' '}
-                        <Anchor href="#" size="sm" onClick={() => navigate('/register')}>
-                            Register here
-                        </Anchor>
-                    </Text>
-
-                    <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                        <TextInput 
-                            label="Username" 
-                            placeholder="Username" 
-                            required 
-                            {...form.getInputProps('username')}/>
-                        <PasswordInput 
-                            label="Password" 
-                            placeholder="Password" 
-                            required 
-                            mt="md" 
-                            {...form.getInputProps('password')}/>
-                        <Button onClick={signIn} fullWidth mt="xl" className="login-btn" loading={loginLoading}>
-                        Sign in
-                        </Button>
-                    </Paper>
-                </Container>
-
-
+            </Container>
 
         </div>
     )

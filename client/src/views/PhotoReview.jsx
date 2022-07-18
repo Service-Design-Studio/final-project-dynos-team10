@@ -100,14 +100,12 @@ function PhotoReview() {
                     <ActionIcon color="blue" variant="outline" radius="md" size="3rem">
                         <MdLibraryAdd onClick={() => navigate('/camera')} size="1.7rem"/>
                     </ActionIcon>
-                    {/* <Text size="xs" color="blue">Add</Text> */}
                 </Grid.Col>
 
                 <Grid.Col span={1} align="center" >
                     <ActionIcon color="red" variant="outline" radius="md" size="3rem">
                         <IoTrashSharp onClick={deleteActivePhoto} className="photo-review-delete-btn" size="1.7rem" />
                     </ActionIcon>
-                    {/* <Text size="xs" color="red">Delete</Text> */}
                 </Grid.Col>
 
             </Grid>
@@ -160,9 +158,7 @@ function PhotoReview() {
                                 <p>Fail</p>
                             </button>
                         </Grid.Col>
-
                         <Grid.Col span={1} align="center"></Grid.Col>
-                            
                         <Grid.Col span={3} align="left">
                             <button 
                                 className="photo-review-status-btn photo-review-status-btn--pass" 
@@ -179,7 +175,7 @@ function PhotoReview() {
                         chosenStatus &&
                         (
                             <>
-                                <h4>You have chosen: {colourToStatus[chosenStatus]}</h4>
+                                <h4 style={{ marginTop: "0.5rem"}}>You have chosen: {colourToStatus[chosenStatus]}</h4>
                                 <Button 
                                     onClick={proceedStatus}
                                     colour="blue" 
