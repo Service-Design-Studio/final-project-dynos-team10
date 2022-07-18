@@ -37,4 +37,13 @@ class BucketService
       File.unlink("temp.png")
     end
   end
+
+  def delete_file(file_pub_url)
+    # extract file name
+    file_name = file_pub_url.split("/")[4]
+    file = @bucket.file file_name
+    file.delete
+    puts "Deleted #{file.name}"
+  end
+
 end
