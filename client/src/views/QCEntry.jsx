@@ -23,6 +23,7 @@ function QCEntry({}) {
     );
 
   const [formErrors, setFormErrors] = useState({});
+  const [prevValue, setPrevValue] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -99,21 +100,28 @@ function QCEntry({}) {
   const [opened, setOpened] = useState(false);
   
   const handleResult = (result, error) => {
+    console.log(result, error)
     if (!!result) {
-      const data = result?.text.split(",");
-      setFormValues({serialno: data[0], type: data[2]});
-      setOpened(false)
+      if (prevValue !== formValues){
+        const data = result?.text.split(",");
+        setPrevValue(formValues)
+        setFormValues({serialno: data[0], type: data[2]});
+        setOpened(false);
+      }
+      setOpened(false);
+      return;
       // just comment out if dont want to reload
       // window.location.reload();
     }
 
     if (!!error) {
       console.info(error);
+      return;
     }
   };
 
   const QRCode = () => {
-    if (setOpened){
+    if (opened){
       return (  
       <QrReader
         onResult={handleResult}
@@ -158,7 +166,7 @@ function QCEntry({}) {
             }}
           ></div>
           
-          <QRCode/>
+          {opened &&  <QRCode />}
 
 
         </div>
