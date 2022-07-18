@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { FaArrowLeft, FaTrashAlt} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
+import { IoTrashSharp } from "react-icons/io5";
 import { MdLibraryAdd } from "react-icons/md";
 import PassIconSvg from '../assets/pass-icon.svg';
 import FailIconSvg from '../assets/fail-icon.svg';
@@ -23,7 +24,8 @@ import {
     ActionIcon,
     Grid,
     Space,
-    Button
+    Button,
+    Text
   } from "@mantine/core";
 
 import { $axios } from '../helpers/axiosHelper';
@@ -79,52 +81,52 @@ function PhotoReview() {
 
     return (
         
-        <div style={{margin: 30}}>
+        <div style={{margin: 20}}>
 
             {/* top section */}
-            <Space h="xl" />
+            <Space h="lg" />
 
-            <Grid grow align="center">
+            <Grid grow align="center" style={{marginLeft:"1rem", marginRight:"1rem", marginTop: "1rem"}}>
 
-                <Grid.Col span={3} align="center" >
-                    <ActionIcon color="dark" variant="transparent">
-                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
+                <Grid.Col span={1} align="center" >
+                    <ActionIcon color="dark" variant="transparent" size="2.8rem">
+                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "1.8rem"}} />
                     </ActionIcon>
                 </Grid.Col>
                     
-                <Grid.Col span={4}></Grid.Col>
+                <Grid.Col span={3}></Grid.Col>
 
-                <Grid.Col span={2} align="right">
-                    <ActionIcon color="dark" variant="transparent">
-                        <MdLibraryAdd onClick={() => navigate('/camera')} style={{fontSize: "2rem"}} />
+                <Grid.Col span={1} align="right">
+                    <ActionIcon color="blue" variant="outline" radius="md" size="3rem">
+                        <MdLibraryAdd onClick={() => navigate('/camera')} size="1.7rem"/>
                     </ActionIcon>
                 </Grid.Col>
 
-                <Grid.Col span={2} align="center">
-                    <ActionIcon color="dark" variant="transparent">
-                        <FaTrashAlt onClick={deleteActivePhoto} className="photo-review-delete-btn" style={{fontSize: "2rem"}} />
+                <Grid.Col span={1} align="center" >
+                    <ActionIcon color="red" variant="outline" radius="md" size="3rem">
+                        <IoTrashSharp onClick={deleteActivePhoto} className="photo-review-delete-btn" size="1.7rem" />
                     </ActionIcon>
                 </Grid.Col>
 
             </Grid>
             
-            <Space h="xl" />
+            <Space h="xs" />
 
             {/* middle section -> carousel */}
-            <Container px="xs">
+            <Container px="0">
             {
                     !hasImages
                     ?   
                         <Container align="center">
-                        <Button
-                            className="photo-review-camera-btn--secondary"
-                            colour="blue" 
-                            variant="outline" 
-                            style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.2rem"}}
-                            onClick={() => navigate('/camera')}
-                        >
-                        go back to camera
-                    </Button>
+                            <Button
+                                className="photo-review-camera-btn--secondary"
+                                colour="blue" 
+                                variant="outline" 
+                                style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.2rem"}}
+                                onClick={() => navigate('/camera')}
+                            >
+                                go back to camera
+                            </Button>
                     </Container>
                     : <SwipeableTextMobileStepper
                         activeStep={activeStep}
@@ -143,7 +145,7 @@ function PhotoReview() {
             {
                 hasImages &&
                 <div style={{textAlign: 'center'}}>
-                    <h3>Indicate Status to Proceed</h3>
+                    <h3 style={{ marginTop: "0.5rem"}} >Indicate Status to Proceed</h3>
 
                     <Grid grow align="center">
 
@@ -156,9 +158,7 @@ function PhotoReview() {
                                 <p>Fail</p>
                             </button>
                         </Grid.Col>
-
                         <Grid.Col span={1} align="center"></Grid.Col>
-                            
                         <Grid.Col span={3} align="left">
                             <button 
                                 className="photo-review-status-btn photo-review-status-btn--pass" 
@@ -175,7 +175,7 @@ function PhotoReview() {
                         chosenStatus &&
                         (
                             <>
-                                <h4>You have chosen: {colourToStatus[chosenStatus]}</h4>
+                                <h4 style={{ marginTop: "0.5rem"}}>You have chosen: {colourToStatus[chosenStatus]}</h4>
                                 <Button 
                                     onClick={proceedStatus}
                                     colour="blue" 

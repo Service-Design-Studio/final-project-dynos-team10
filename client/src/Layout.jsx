@@ -28,7 +28,8 @@ const routeMapStatic = {
     "/": "Home",
     "/failreasons": "Fail Reasons",
     "/pass": "Pass",
-    '/qc-list': 'QC List'
+    '/qc-list': 'QC List',
+    '/pass-fail': 'Status'
 }
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
@@ -80,11 +81,6 @@ export default function Layout() {
         else if (routeHideArr.includes(location.pathname)){
             setVisibility(false);
             setTitle(""); // in case navbar still shows, title = ""
-            return;
-        }
-        else if (location.pathname = "pass-fail"){
-            setVisibility(true);
-            setTitle("Status");
             return;
         }
     }, [location, routeMap])
