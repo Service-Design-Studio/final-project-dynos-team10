@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { React, useEffect, useState } from 'react';
 import AppLogo from '../assets/dynostic-logo.svg';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 import {
     TextInput,
@@ -13,7 +14,12 @@ import {
     Text,
     Container,
     Button,
-    Space
+    Space,
+    ActionIcon,
+    Tooltip,
+    PasswordInput,
+    Group,
+    Checkbox
   } from '@mantine/core';
 
 import { $authAxios } from '../helpers/axiosHelper';
@@ -39,10 +45,12 @@ export default function Login() {
 
     const form = useForm({
         initialValues: {
-            username: ''
+            username: '',
+            password: ''
         },
         validate: {
-            username: (value) => (value.length <= 0 ? 'Username is required' : null)
+            username: (value) => (value.length <= 0 ? 'Username is required' : null),
+            password: (value) => (value.length <= 0 ? 'Password is required' : null)
         }
     })
 
@@ -119,17 +127,20 @@ export default function Login() {
     return (
         <div>
             <Space h="2.3rem"/>
+
             <Container align="center">
                 <img src={AppLogo} width="240rem"></img>
             </Container>
 
-            <Container size={420} my={20}>
+            <Container style={{ marginTop: 10 }}>
+
                 <Title
                     align="center"
                     sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
-                    >
+                >
                     Login
                 </Title>
+
                 <Text color="dimmed" size="sm" align="center" mt={5}>
                     Do not have an account yet?{' '}
                     <Anchor href="#" size="sm" onClick={() => navigate('/register')}>
@@ -138,16 +149,32 @@ export default function Login() {
                 </Text>
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                    <TextInput
-                        label="Username"
-                        placeholder="Username"
-                        required
-                        {...form.getInputProps('username')}
-                    />
+                    <TextInput 
+                        label="Username" 
+                        placeholder="Username" 
+                        required 
+                        {...form.getInputProps('username')}/>
+                    <PasswordInput 
+                        label="Password" 
+                        placeholder="Password" 
+                        required 
+                        {...form.getInputProps('password')}
+                        rightSection={<Tooltip
+                            label=''
+                            position="bottom"
+                            placement="start"
+                            wrapLines
+                            width={200}>
+                            <ActionIcon>
+                                <FaQuestionCircle/>
+                            </ActionIcon>
+                        </Tooltip>}
+                        mt="md"/>
                     <Button onClick={signIn} fullWidth mt="xl" className="login-btn" loading={loginLoading}>
-                        Log In
+                        Sign In
                     </Button>
                 </Paper>
+
             </Container>
 
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import { FaArrowLeft, FaArrowRight} from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaRegCircle } from "react-icons/fa";
 import { IoFlash, IoFlashOutline } from "react-icons/io5"; // in case got flash option
 import { BsCardImage } from "react-icons/bs";
 
@@ -104,38 +104,49 @@ function Camera() {
 
             <Grid grow align="center">
 
-                <Grid.Col span={3} align="center" >
+                <Grid.Col span={1} align="center">
                     <ActionIcon color="dark" variant="transparent">
-                        <FaArrowLeft onClick={() => navigate('/component-status')} className="back-btn" style={{fontSize: "2rem"}} />
+                        <FaArrowLeft 
+                            onClick={() => navigate('/component-status')} 
+                            className="back-btn" 
+                            style={{fontSize: "2rem"}} />
                     </ActionIcon>
                 </Grid.Col>
                     
                 <Grid.Col span={6}></Grid.Col>
 
-                <Grid.Col span={3} align="center">
+                <Grid.Col span={1} align="center">
                     <ActionIcon color="dark" variant="transparent">
-                        {count > 0 ? <BsCardImage onClick={() => navigate('/photo-review')} style={{fontSize: "2rem"}}/> : null} 
+                        {count > 0 ? 
+                            <BsCardImage 
+                                onClick={() => navigate('/photo-review')} 
+                                style={{fontSize: "2rem"}}
+                                /> 
+                            : null} 
                     </ActionIcon>
                 </Grid.Col>
 
             </Grid>
 
-            <Space h={60}/>
+            <Space h={35}/>
 
             {/* middle section -> video */}
             <Grid grow>
-
-                <Grid.Col span={1}></Grid.Col>
+                {/* <Grid.Col span={1}></Grid.Col> */}
                     
                 <Grid.Col span={10} align="center">
-                    <video style={{width: "100%"}} className="camera" autoPlay ref={videoElement}></video>
+                    <video 
+                        style={{width: "100%"}} 
+                        className="camera" 
+                        autoPlay 
+                        ref={videoElement}>
+                    </video>
                 </Grid.Col>
 
-                <Grid.Col span={1}></Grid.Col>
-                
+                {/* <Grid.Col span={1}></Grid.Col> */}
             </Grid>
 
-            <Space h={60}/>
+            <Space h={35}/>
 
             <div style={{display: "none"}} >
                 <canvas ref={photoRef}></canvas>
@@ -147,18 +158,38 @@ function Camera() {
                 <Grid.Col span={3} align="right">
                     {count > 0 ?
                         <ThemeIcon 
-                            variant="outline" radius="md" size="lg" color="dark" className="counter">
+                            variant="outline" 
+                            radius="md" 
+                            size="lg" 
+                            color="dark" 
+                            className="counter">
                             <span>{count}</span>
-                        </ThemeIcon> : null}
+                        </ThemeIcon> 
+                        : null}
                 </Grid.Col>
                     
                 <Grid.Col span={3} align="center">
-                    <ActionIcon disabled={!canTakePhoto} onClick={takePhoto} className="take-photo-btn" color="dark" size="xl" radius="xl" variant="outline"></ActionIcon>
+                    <ActionIcon 
+                        disabled={!canTakePhoto} 
+                        onClick={takePhoto} 
+                        className="take-photo-btn" 
+                        color="dark" 
+                        size="3.5rem"
+                        radius="xl" 
+                        variant="outline"
+                        >
+                    </ActionIcon>
                 </Grid.Col>
 
                 <Grid.Col span={3} align="left">
                     <ActionIcon color="dark" variant="transparent">
-                        {count > 0 ? <FaArrowRight onClick={() => navigate('/photo-review')} className="to-photo-review-btn" style={{fontSize: "2rem"}}/> : null} 
+                        {count > 0 ? 
+                            <FaArrowRight 
+                                onClick={() => navigate('/photo-review')} 
+                                className="to-photo-review-btn" 
+                                style={{fontSize: "2rem"}}
+                                /> 
+                            : null} 
                     </ActionIcon>
                 </Grid.Col>
 
