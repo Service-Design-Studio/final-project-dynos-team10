@@ -1,7 +1,7 @@
 require "securerandom"
 
 class ImagesController < ApplicationController
-  resources :images, except: :update
+  # resources :images, except: :update
 
   # TODO: Permit params
   def index
@@ -41,9 +41,9 @@ class ImagesController < ApplicationController
   end
 
   def destroy
-    @image = Image.find(params[:id])
-    BUCKET.delete_file(@image.public_url)
-    @image.destroy
+    image = Image.find(params[:id])
+    BUCKET.delete_file(image.public_url)
+    image.destroy
   end
 
   # function to BATCH create images

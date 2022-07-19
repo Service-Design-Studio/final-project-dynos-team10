@@ -41,6 +41,7 @@ RSpec.describe Component, :type => :model do
     comp1 = Component.create_record(work_order.id,"wire",false)
     comp2 = Component.create_record(work_order.id,"wire",false)
     expect(comp2.id.nil?).to be_truthy
+
   end
   # ***** testing of methods *********
 

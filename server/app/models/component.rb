@@ -6,8 +6,7 @@ class Component < ApplicationRecord
     # TODO: validate uniqueness of the above 2 AS a whole unit
     validates :status, inclusion: [true, false] # detection of boolean field presence, different validation because of under the hood ops
 
-    def self.create_record(workorder_id, component_type, status, failing_reasons=[])
-        # byebug
+    def self.create_record(workorder_id, component_type, status, failing_reasons=[""])
         new_component = Component.create(component_type: component_type, status: status, workorder_id: workorder_id, failing_reasons: failing_reasons)
         # if new_component.nil?
         #
