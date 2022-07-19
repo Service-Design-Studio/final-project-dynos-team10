@@ -9,21 +9,23 @@ import {
   Text,
   Button,
   Stack,
+  Modal,
+  Center
+
 } from "@mantine/core";
+import QrReader from 'modern-react-qr-reader';
+// import { QrReader } from "react-qr-reader";
 
 function QCEntry({}) {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formValues, setFormValues] = useState(() => {
-    if (state == null) {
-      return { serialno: "", type: "" };
-    }
-    return { serialno: state.workorder, type: state.machinetype };
-  });
+  const [formValues, setFormValues] = useState(
+    { serialno: "", type: "" }
+    );
 
   const [formErrors, setFormErrors] = useState({});
+  const [prevValue, setPrevValue] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,10 +50,6 @@ function QCEntry({}) {
       errors.type = "Type of machine is required!";
     }
     return errors;
-  };
-
-  const handleScanner = () => {
-    navigate("/qrscanner");
   };
 
   useEffect(() => {
@@ -102,9 +100,47 @@ function QCEntry({}) {
 
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  
+  const handleResult = (result) => {
+    if (result !== null) {
+      if (prevValue !== formValues && opened){
+        console.log(typeof result)
+        console.log(result)
+        const data = result.split(",");
+        setPrevValue(formValues);
+        setFormValues({serialno: data[0], type: data[2]});
+        setOpened(false);
+      }
+
+      setOpened(false);
+      return;
+      // just comment out if dont want to reload
+      // window.location.reload();
+    }
+  };
+
+  const handleError = err => {
+    console.error(err)
+  }
 
   return (
     <div>
+
+      <Modal
+      opened={opened}
+      onClose={() => setOpened(false)}
+      title="Scan QR Code"
+      >
+     
+          <QrReader
+          delay={300}
+          facingMode={"environment"}
+          onError={handleError}
+          onScan={handleResult}
+          style={{ width: '100%' }}
+        />
+
+      </Modal>
       <Stack spacing={"md"} align="center" justify={"center"}>
         <Stack
           spacing={"5"}
@@ -147,7 +183,11 @@ function QCEntry({}) {
       </Stack>
 
       <Stack style={{marginTop: "10%"}} spacing={"md"} align="center" justify={"center"}>
-      <Button className="qr-scanner-btn" size="sm" variant="outline" onClick={handleScanner}>
+      <Button 
+      className="qr-scanner-btn" 
+      size="sm" 
+      variant="outline" 
+      onClick={() => setOpened(true)}>
         SCAN QR CODE
       </Button>
 

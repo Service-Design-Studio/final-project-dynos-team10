@@ -22,7 +22,8 @@ class ComponentsController < ApplicationController
     end
 
     def show
-        Component.find_one params[:id]
+        component = Component.find_one params[:id]
+        render json: success_json(component)
     end
 
     def update
