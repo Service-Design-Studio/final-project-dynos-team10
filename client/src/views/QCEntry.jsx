@@ -119,22 +119,6 @@ function QCEntry({}) {
     }
   };
 
-  // const QRCode = () => {
-  //   if (opened){
-  //     return (  
-      // <QrReader
-      //   onResult={handleResult}
-      //   scanDelay={2000}
-      //   style={{
-      //     display: "block",
-      //     position: "absolute",
-      //     overflow: "hidden",
-      //   }}
-      // />
-      // )
-  //   }
-  // }
-
   const handleError = err => {
     console.error(err)
   }
@@ -147,29 +131,7 @@ function QCEntry({}) {
       onClose={() => setOpened(false)}
       title="Scan QR Code"
       >
-
-        {/* <div
-          style={{
-            overflow: "hidden",
-            position: "relative",  
-            height:300,
-            alignItems:"center"
-          }}
-        > */}
-          {/* <div
-            style={{
-              top: "0px",
-              left: "0px",
-              zIndex: 1,
-              boxSizing: "border-box",
-              border: "50px solid rgba(0, 0, 0, 0.3)",
-              boxShadow: "rgba(255, 0, 0, 0.5) 0px 0px 0px 5px inset",
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-            }}
-          ></div> */}
-          
+     
           <QrReader
           delay={300}
           facingMode={"environment"}
@@ -178,7 +140,6 @@ function QCEntry({}) {
           style={{ width: '100%' }}
         />
 
-        {/* </div> */}
       </Modal>
       <Stack spacing={"md"} align="center" justify={"center"}>
         <Stack
