@@ -11,8 +11,10 @@ import {
   Stack,
   Modal,
   Center
+
 } from "@mantine/core";
-import { QrReader } from "react-qr-reader";
+import QrReader from 'modern-react-qr-reader';
+// import { QrReader } from "react-qr-reader";
 
 function QCEntry({}) {
   const navigate = useNavigate();
@@ -99,40 +101,42 @@ function QCEntry({}) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   
-  const handleResult = (result, error) => {
-    console.log(result, error)
-    if (!!result) {
-      if (prevValue !== formValues){
-        const data = result?.text.split(",");
-        setPrevValue(formValues)
+  const handleResult = (result) => {
+    if (result !== null) {
+      if (prevValue !== formValues && opened){
+        console.log(typeof result)
+        console.log(result)
+        const data = result.split(",");
+        setPrevValue(formValues);
         setFormValues({serialno: data[0], type: data[2]});
         setOpened(false);
       }
+
       setOpened(false);
       return;
       // just comment out if dont want to reload
       // window.location.reload();
     }
-
-    if (!!error) {
-      console.info(error);
-      return;
-    }
   };
 
-  const QRCode = () => {
-    if (opened){
-      return (  
-      <QrReader
-        onResult={handleResult}
-        scanDelay={2000}
-        style={{
-          display: "block",
-          position: "absolute",
-          overflow: "hidden",
-        }}
-      />)
-    }
+  // const QRCode = () => {
+  //   if (opened){
+  //     return (  
+      // <QrReader
+      //   onResult={handleResult}
+      //   scanDelay={2000}
+      //   style={{
+      //     display: "block",
+      //     position: "absolute",
+      //     overflow: "hidden",
+      //   }}
+      // />
+      // )
+  //   }
+  // }
+
+  const handleError = err => {
+    console.error(err)
   }
 
   return (
@@ -144,15 +148,15 @@ function QCEntry({}) {
       title="Scan QR Code"
       >
 
-        <div
+        {/* <div
           style={{
             overflow: "hidden",
             position: "relative",  
             height:300,
             alignItems:"center"
           }}
-        >
-          <div
+        > */}
+          {/* <div
             style={{
               top: "0px",
               left: "0px",
@@ -164,12 +168,17 @@ function QCEntry({}) {
               width: "100%",
               height: "100%",
             }}
-          ></div>
+          ></div> */}
           
-          {opened &&  <QRCode />}
+          <QrReader
+          delay={300}
+          facingMode={"environment"}
+          onError={handleError}
+          onScan={handleResult}
+          style={{ width: '100%' }}
+        />
 
-
-        </div>
+        {/* </div> */}
       </Modal>
       <Stack spacing={"md"} align="center" justify={"center"}>
         <Stack
