@@ -27,11 +27,13 @@ class ComponentsController < ApplicationController
 
     def update
         @component = Component.find(params[:id])
-        if @component.update(params.require(:component).permit(:component_type,:workorder_id,:failing_reasons,:status))
+        if @component.update!(params.require(:component).permit(:component_type,:workorder_id,:status, :failing_reasons))
+            @component.failing_reasons = params["component"][:failing_reasons]
+            @component.save
             render json: success_json(@component)
+
         else
             render json: fail_json(errors: @component.errors, data: @component), status: :unprocessable_entity
-            render :edit
         end
 
     end
