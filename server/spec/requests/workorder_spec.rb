@@ -17,12 +17,6 @@ RSpec.describe "Workorders", type: :request do
                         "result"=>{"workorder_number"=>"15", "machine_type"=>"2", "id"=>workorder.id, "created_at"=>workorder.created_at, "updated_at"=>workorder.updated_at, "user_id"=>nil}}
 
       expect(JSON.parse(response.body)).to include{expected_json}
-
-      # expect(response.)
-      # headers = { "ACCEPT" => "success_json" }
-      # put "/components/", :params => { :component => {:id => "1", :component_type => "label", :workorder_id => "5",:failing_reasons => ["wrong position"],:status => false} }, :headers => headers
-      # expect(response.content_type).to eq("application/json; charset=utf-8")
-      # expect(response).to have_http_status(:updated)
     end
   end
 
