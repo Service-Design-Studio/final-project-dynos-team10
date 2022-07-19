@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_13_190615) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_15_122541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_13_190615) do
     t.bigint "workorder_id"
     t.string "component_type"
     t.boolean "status"
-    t.text "failing_reasons", default: [], array: true
+    t.text "failing_reasons", default: [""], array: true
     t.index ["component_type", "workorder_id"], name: "index_components_on_component_type_and_workorder_id", unique: true
     t.index ["workorder_id"], name: "index_components_on_workorder_id"
   end
@@ -39,6 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_13_190615) do
     t.datetime "updated_at", null: false
     t.string "workorder_number"
     t.string "machine_type"
+    t.bigint "user_id"
   end
 
   add_foreign_key "components", "workorders"

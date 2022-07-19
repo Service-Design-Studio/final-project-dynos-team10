@@ -45,14 +45,13 @@ class WorkordersController < ApplicationController
     end
 
     def update
-        # @workorder = Workorder.find(params[:id])
-        # if @workorder.update(params.require(:workorder).permit(:title, :description))
-        #     flash[:success] = "workorder successfully updated!"
-        #     redirect_to workorder_url(@workorder)
-        # else
-        #     flash.now[:error] = "workorder update failed"
-        #     render :edit
-        # end
+        @workorder = Workorder.find(params[:id])
+        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type))
+            render json: success_json(@workorder)
+        else
+            render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity
+            render :edit
+        end
     end
 
     def destroy
