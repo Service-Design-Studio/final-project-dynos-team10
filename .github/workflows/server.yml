@@ -44,6 +44,8 @@ jobs:
           bundle exec bin/rails db:prepare
           bundle exec bin/rails db:schema:load
           bundle exec bin/rails db:seed --trace
+        env: 
+          STORAGE_BUCKET_NAME: "dynostic-test-bucket"
       # test runners
       - name: Run tests
         run: |-
