@@ -39,7 +39,6 @@ class BucketService
   end
 
   def delete_file(file_pub_url)
-    # extract file name
     file_name = file_pub_url.split("/")[4]
     puts file_name
     file = @bucket.file file_name
