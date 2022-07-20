@@ -9,17 +9,29 @@
 Feature: Components
     I want to select a component from the status of components page and upload its status to the database
 
+    Background: Selecting a workorder and taking some photos for component "xxx"
+        Given I am on the "home" page
+        And I click on the drafts button
+        Then I should be on the "drafts" page
+        When I select the "test" workorder
+        Then I should see "proceed with work order test"
+        When I click on the "Continue" button
+        Then I should be on the "status of components" page
+        And I should see "test"
+        When I click on component "XXX" button
+        And I click on the take photo button "5" times
+        And I click on the right arrow button
+        Then I should be on the "photo review" page
+
     Scenario: pass/fail status not saved before clicking upload button
-        Given I am on the photo review page of component "xxx"
-        And I click on the pass button
+        Given I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
         When I go to the "status of components" page with saved progress
         Then the component "xxx" button colour should be "yellow"
 
     Scenario: component xxx passing manual check
-        Given I am on the photo review page of component "xxx"
-        And I click on the pass button
+        Given I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
         When I click on the upload button
@@ -28,8 +40,7 @@ Feature: Components
         Then the component "xxx" button colour should be "green" 
         
     Scenario: component xxx failing manual check
-        Given I am on the photo review page of component "xxx"
-        And I click on the fail button
+        Given I click on the fail button
         And I click on the proceed button
         Then I should see "Reasons for failing check"
         When I enter in some failing reasons
@@ -39,6 +50,5 @@ Feature: Components
         Then the component "xxx" button colour should be "red" 
 
     Scenario: exiting component xxx check before submitting all photos of Component xxx
-        Given I am on the photo review page of component "xxx"
-        When I go to the "status of components" page with saved progress
+        Given I go to the "status of components" page with saved progress
         Then the component "xxx" button colour should be "yellow"

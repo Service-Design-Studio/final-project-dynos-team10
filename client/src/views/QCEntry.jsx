@@ -72,24 +72,24 @@ function QCEntry({}) {
     })();
   }, [formErrors, isSubmit]);
 
-  const NextButton = () => {
-    setFormErrors(validate(formValues));
-    setIsSubmit(true);
+  // const NextButton = () => {
+  //   setFormErrors(validate(formValues));
+  //   setIsSubmit(true);
 
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-        return (<Button size="md"
-        variant="filled"
-        onClick={handleNextPage}
-        uppercase
-        className="submit-workorder-btn">NEXT</Button>)
-    };
-    return (<Button size="md"
-    variant="filled"
-    onClick={handleNextPage}
-    uppercase
-    className="submit-workorder-btn" 
-    disabled>NEXT</Button>)
-  };
+  //   if (Object.keys(formErrors).length === 0 && isSubmit) {
+  //       return (<Button size="md"
+  //       variant="filled"
+  //       onClick={handleNextPage}
+  //       uppercase
+  //       className="submit-workorder-btn">NEXT</Button>)
+  //   };
+  //   return (<Button size="md"
+  //   variant="filled"
+  //   onClick={handleNextPage}
+  //   uppercase
+  //   className="submit-workorder-btn" 
+  //   disabled>NEXT</Button>)
+  // };
 
   const createWorkOrder = async () => {
     return await $axios.post("workorders", {
@@ -131,14 +131,17 @@ function QCEntry({}) {
       onClose={() => setOpened(false)}
       title="Scan QR Code"
       >
-     
+        {
+          opened &&
           <QrReader
-          delay={300}
-          facingMode={"environment"}
-          onError={handleError}
-          onScan={handleResult}
-          style={{ width: '100%' }}
-        />
+            delay={300}
+            facingMode={"environment"}
+            onError={handleError}
+            onScan={handleResult}
+            style={{ width: '100%' }}
+          />
+        }
+          
 
       </Modal>
       <Stack spacing={"md"} align="center" justify={"center"}>

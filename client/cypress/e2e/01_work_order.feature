@@ -3,7 +3,12 @@ Feature: New Work Order
 
     Scenario: Starting a new work order that already exists
         Given I am on the "qc entry" page
-        Then I fill in the input field for "MACHINE S/N" with "sample"
+        Then I fill in the input field for "MACHINE S/N" with "test"
+        And I fill in the input field for "MACHINE TYPE" with "machine_1"
+        When I click on the next button
+        Then I should be on the "status of components" page
+        When I am on the "qc entry" page
+        Then I fill in the input field for "MACHINE S/N" with "test"
         And I fill in the input field for "MACHINE TYPE" with "machine_1"
         When I click on the next button
         Then I should see "workorder number is taken"
@@ -36,3 +41,7 @@ Feature: New Work Order
         Then I should see "Type of machine is required"
         And I should see "Serial number is required"
         And I should be on the "qc entry" page
+
+    Scenario: SAD PATH: no work order selected
+        Given I am on the "status of components" page
+        Then I should see "Please select a work order"

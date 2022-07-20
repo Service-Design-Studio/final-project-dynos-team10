@@ -38,6 +38,9 @@ Then('I fill in the input field for {string} with unique input', (inputContent) 
 Then('I should see {string}', (text) => {
     cy.get('body').contains(text);
 })
+When('I click on the {string} button', (buttonText) => {
+    cy.contains(buttonText).click();
+})
 
 // ----------- work_order.feature ------------------
 When('I click on the next button', () => {
@@ -49,6 +52,13 @@ When('I click on the next button', () => {
 
 
 // ------------- take_photo.feature ------------------
+And('I click on the drafts button', () => {
+    cy.get('.home__drafts-btn').click();
+})
+When('I select the {string} workorder', (workorderNumber) => {
+    cy.contains(workorderNumber).click();
+})
+
 // Scenario: Opening the camera function
 And('I click on component {string} button', (componentName) => {
     const componentButtonClass = buildComponentButtonClass(componentName);
@@ -59,14 +69,6 @@ Then('my camera should open',() => {
 });
 
 // Scenario: Taking one photo of component xxx
-// Is there a better way to do the below step? It seems to be a combination of other steps
-Given('I am on the camera page of component {string}', (componentName) => {
-    // reused step 1: I am on the {status of components} page
-    cy.visit(buildRoute('status of components'));
-    // reused step 2: I click on component {string} button
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).click();
-})
 And('I click on the take photo button', () => {
     cy.wait(2000);
     cy.get('.take-photo-btn').click();
@@ -85,19 +87,6 @@ When('I click on the take photo button {string} times', (times) => {
         cy.get('.take-photo-btn').click();
     }
 });
-
-// Scenario: Leaving photo review page before uploading all photos of component xxx
-Given('I am on the camera page of component {string}', (componentName) => {
-    cy.visit(buildRoute('take photo'));
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).click();
-    cy.wait(2000);
-    cy.get('.take-photo-btn').click();
-});
-And('I click on the back button', () => {
-    cy.wait(2000);
-    cy.get('.back-btn').click();
-})
 
 // Scenario: Review the photos and upload
 Given('I am on the photo review page of component {string}', (componentName) => {
@@ -121,23 +110,10 @@ And('I should see the {string} icon', (iconType) => {
 // Feature: delete photo
 // I want to delete photo(s) from Photo Review page
 // Scenario: Review the photos and delete
-Given('I am on the photo review page of component {string} with {string} photos', (componentName, numPhotos) => {
-    // reused step 1: I am on the {status of components} page
-    cy.visit(buildRoute('status of components'));
-    // reused step 2: I click on component {string} button
-    const componentButtonClass = buildComponentButtonClass(componentName);
-    cy.get(componentButtonClass).click();
-    // (reused) step 3: Take at multiple photos
-    for (let i = 0; i < +numPhotos; i++) {
-        cy.get('.take-photo-btn').click();
-    }
-    // (reused) step 4: click right arrow to go to photo review
-    cy.get('.to-photo-review-btn').click();
-})
 When('I am viewing a photo', () => {
     
 })
-And('I click on the "delete" button', () => {
+And('I click on the delete button', () => {
     cy.get('.photo-review-delete-btn').click();
 });
 Then('the photo is removed from the carousel', () => {

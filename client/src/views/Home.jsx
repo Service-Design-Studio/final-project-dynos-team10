@@ -41,6 +41,7 @@ export default function Home() {
         style={{marginTop: 30, marginInline: 20, height: 75}} 
         leftIcon={<DraftsRoundedIcon style={{fontSize: 50}}/>}
         fullWidth
+        className="home__drafts-btn"
         onClick={() => navigate('/qc-list')}> 
         <h2 style={{color: 'black'}}>Drafts</h2>
       </Button>

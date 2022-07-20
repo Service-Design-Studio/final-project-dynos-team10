@@ -98,7 +98,7 @@ export default function QCList() {
                     Are you sure you want to proceed with work order
                     <Text component='span' weight={500}> {selectedWorkorderNumber}</Text>?
                 </Text>
-                <Button mt="md" onClick={commitSelectedWorkorder}>Proceed</Button>
+                <Button mt="md" onClick={commitSelectedWorkorder}>Continue</Button>
             </Modal>
         </div>
     )

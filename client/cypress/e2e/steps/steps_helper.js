@@ -7,7 +7,8 @@ const descriptionToRouteMap = {
     'photo review': 'photo-review',
     'qc entry': 'qc-entry',
     'register': 'register',
-    'login': 'login'
+    'login': 'login',
+    'drafts': 'qc-list'
 }
 
 /**

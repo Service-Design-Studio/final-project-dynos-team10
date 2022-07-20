@@ -58,7 +58,7 @@ jobs:
         with:
           browser: chrome
           install-command: npm install --legacy-peer-deps
-          start: npm start
+          start: npm run start:test
           wait-on: 'http://localhost:3000'
           working-directory: client
           command: npm run cypress:run-record
@@ -68,8 +68,6 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # set node_env
-          NODE_ENV: test
   build-and-deploy:
     needs: cypress-run
     runs-on: ubuntu-latest
