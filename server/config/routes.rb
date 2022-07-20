@@ -16,7 +16,8 @@ Rails.application.routes.draw do
     get "images", to: "components#get_one_images", on: :member
   end
 
-  resources :images do
-    post "batch-create", on: :collection
+  resources :images, except: :update do
+    post "batch", to: "images#batch_create", on: :collection
+    delete "batch", to: "images#batch_delete", on: :collection
   end
 end

@@ -21,6 +21,7 @@ import {
 } from "../store/workorder/workorderSlice";
 import { deepCompare } from "../helpers/objectHelper";
 import { buildComponentObjWithImages } from "../helpers/componentsHelper";
+import { cloneDeep } from "lodash";
 
 export default function PassFail() {
     const { state } = useLocation();
@@ -82,7 +83,7 @@ export default function PassFail() {
             }
             console.log({response});
             const { id: component_id } = response.data.result;
-            response = await $axios.post('images/batch-create', {
+            response = await $axios.post('images/batch', {
                 component_id,
                 images: currentComponent.images.map(el => el.src)
             })
@@ -94,16 +95,19 @@ export default function PassFail() {
     }
 
     const successfulUpload = (response) => {
-        dispatch(updateCurrentComponentStatus(state.chosenStatus));
-        // store all links into array ( from response.result.)
-        const URL_array = response.data.result.map(image => {
-            return {
-                id: image.id,
-                src: image.public_url
-            }
-        });
-        console.log(URL_array);
-        dispatch(replaceCurrentComponentImageArray(URL_array));
+        // WE MIGHT NOT THIS AS THIS IS EFFECTIVELY DONE EVERYTIME WE GO TO THE COMPONENT STATUS PAGE
+        // WE SHOULD STREAMLINE STATE UPDATES as much as possible
+
+        // dispatch(updateCurrentComponentStatus(state.chosenStatus));
+        // // store all links into array ( from response.result.)
+        // const URL_array = response.data.result.map(image => {
+        //     return {
+        //         id: image.id,
+        //         src: image.public_url
+        //     }
+        // });
+        // console.log(URL_array);
+        // dispatch(replaceCurrentComponentImageArray(URL_array));
         setOpened(true);
     }
 
@@ -128,29 +132,45 @@ export default function PassFail() {
         response = await $axios.get(`components/${currentComponent.id}/images`);
         const dbImages = response.data.result;
         const dbComponentWithImages = buildComponentObjWithImages(dbComponent, dbImages);
-        // Issue 1: component status only updated after successful upload, so this compare will not detect status changes (yet)
-        // Issue 2: component status changes to yellow when using camera, if got use camera to add photos, then this will detect status change (to yellow), which is not submittable
-        // Issue 3: figure out why "differences" is weird when we delete images, check the images array
-        const differences = deepCompare(dbComponentWithImages, currentComponent);
-        console.log({differences, dbComponentWithImages, currentComponent});
+        // Issue 1 (SOLVED): component status only updated after successful upload, so this compare will not detect status changes (yet)
+        // Issue 2 (SOLVED): component status changes to yellow when using camera, if got use camera to add photos, then this will detect status change (to yellow), which is not submittable
+        // to solve these 2 issues, we do a deep clone of the currentComponent object, and set the status to the current state.chosenStatus (from routing)
+        const currentComponentChanges = cloneDeep(currentComponent);
+        currentComponentChanges.status = state.chosenStatus;
+
+        // Issue 3 (OVERLOOKED): figure out why "differences" is weird when we delete images, check the images array
+        // IS THIS OKAY TO OVERLOOK? BECAUSE our updateImages array does not take the weird missing values from "differences",
+        // but from the sources of truth that is "dbComponentWithImages" and "currentComponentChanges"
+        // we merely use "differences" to detect changes?
+        const differences = deepCompare(dbComponentWithImages, currentComponentChanges);
+        console.log({differences, dbComponentWithImages, currentComponentChanges});
+
+        if (Object.keys(differences).length === 0) {
+            // no differences to be updated found, tell user?
+            console.log('no differences/changes to be committed');
+            return;
+        }
 
         if (differences.images) {
             // await this?
-            updateImages(currentComponent.id, dbComponentWithImages.images, currentComponent.images);
+            updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
         }
 
         const payload = {
-            component_id: currentComponent.id
-        }
-        if (differences.failingReasons) {
-            payload.failing_reasons = currentComponent.failingReasons;
+            component_id: currentComponentChanges.id
         }
         if (differences.status) {
-            payload.status = currentComponent.status;
+            payload.status = currentComponentChanges.status === 'green';
+        }
+        if (differences.failingReasons) {
+            payload.failing_reasons = payload.status ? [] : currentComponentChanges.failingReasons;
         }
         console.log({payload});
 
-        // await $axios.patch(`components/${currentComponent.id}`, payload);
+        const finalUpdateResponse = await $axios.patch(`components/${currentComponentChanges.id}`, payload);
+        console.log({finalUpdateResponse});
+
+        successfulUpload(finalUpdateResponse);
     }
 
     const updateImages = async(componentId, oldImages, updatedImages) => {
@@ -162,14 +182,19 @@ export default function PassFail() {
         })
         console.log({newImages, deletedImages});
 
+        // await these??
+
         // 1) find the new images to add
-        // let response = await $axios.post('images/batch-create', {
-        //     component_id: componentId,
-        //     images: newImages.map(el => el.src)
-        // })
+        await $axios.post('images/batch', {
+            component_id: componentId,
+            images: newImages.map(el => el.src)
+        })
 
         // 2) find images that are missing from the old images and delete them
-        
+        const deleteQueryParams = new URLSearchParams({
+            ids: deletedImages.map(el => el.id)
+        })
+        await $axios.delete(`images/batch?${deleteQueryParams.toString()}`);
     }
 
 

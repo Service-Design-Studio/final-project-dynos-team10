@@ -9,7 +9,7 @@ class BucketService
       project_id: "tsh-qc",
       credentials: "config/service-account-credentials.json"
     )
-    gcs_bucket_name = Rails.env.production? ? "dynostic-server-bucket" : "dynostic-test-bucket"
+    gcs_bucket_name = ENV["STORAGE_BUCKET_NAME"]
     @bucket = storage.bucket gcs_bucket_name
     @public_url_prefix = "storage.googleapis.com"
     @auth_url_prefix = "storage.cloud.google.com"
@@ -44,6 +44,10 @@ class BucketService
     puts file_name
     file = @bucket.file file_name
     puts file
+    if file.nil?
+      puts "Could find file in GCS"
+      return
+    end
     file.delete
     puts "Deleted #{file.name}"
   end

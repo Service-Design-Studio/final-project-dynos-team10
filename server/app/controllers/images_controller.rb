@@ -36,14 +36,15 @@ class ImagesController < ApplicationController
     end
   end
 
-  def update
-
-  end
-
   def destroy
     image = Image.find(params[:id])
     BUCKET.delete_file(image.public_url)
     image.destroy
+    if image.destroyed?
+      render json: success_json(image)
+    else
+      render json: fail_json(errors: 'Could not delete image')
+    end
   end
 
   # function to BATCH create images
@@ -64,6 +65,25 @@ class ImagesController < ApplicationController
       render json: fail_json(data: { image_records: image_records } , errors: errors)
     else
       render json: success_json(image_records)
+    end
+  end
+
+  def batch_delete
+    ids = params[:ids].split(',').map(&:to_i)
+    errors = []
+    ids.each do |id|
+      image = Image.find(id)
+      BUCKET.delete_file(image.public_url)
+      image.destroy
+      unless image.destroyed?
+        errors << image
+      end
+    end
+
+    if errors.length > 0
+      render json: fail_json(errors: errors)
+    else
+      render json: success_json(true)
     end
   end
 end

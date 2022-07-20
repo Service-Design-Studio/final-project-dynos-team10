@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_15_122541) do
     t.bigint "workorder_id"
     t.string "component_type"
     t.boolean "status"
-    t.text "failing_reasons", default: [""], array: true
+    t.text "failing_reasons", default: [], array: true
     t.index ["component_type", "workorder_id"], name: "index_components_on_component_type_and_workorder_id", unique: true
     t.index ["workorder_id"], name: "index_components_on_workorder_id"
   end

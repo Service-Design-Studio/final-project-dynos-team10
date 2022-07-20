@@ -171,6 +171,10 @@ export default function Layout() {
     }
 
     const commitSelectedWorkorder = (selectedWorkorderNumber) => {
+        if (selectedWorkorderNumber === currentWorkorderNumber) {
+            return;
+        }
+
         dispatch(startNewWorkorder(selectedWorkorderNumber));
         if (location.pathname !== '/component-status') {
             navigate('/component-status');

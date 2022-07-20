@@ -18,15 +18,6 @@ RSpec.describe "Images", type: :request do
       expect {
         delete image_path(image), params: { id: image.id }
       }.to change(Image, :count).by(-1)
-
-
-
-
-
     end
-
-
   end
-
-
 end

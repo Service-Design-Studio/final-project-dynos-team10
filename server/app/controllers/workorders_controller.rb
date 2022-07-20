@@ -50,7 +50,6 @@ class WorkordersController < ApplicationController
             render json: success_json(@workorder)
         else
             render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity
-            render :edit
         end
     end
 

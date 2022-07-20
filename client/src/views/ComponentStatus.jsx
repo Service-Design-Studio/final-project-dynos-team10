@@ -53,14 +53,10 @@ function ComponentStatus() {
             componentName,
             status: colorStatus
         }))
-
-        if (!componentStatus) {
-            // i.e. it's a red/failed component, add failing reasons
-            dispatch(addFailingReasons({
-                componentName,
-                failingReasons: componentFailingReasons
-            }));
-        }
+        dispatch(addFailingReasons({
+            componentName,
+            failingReasons: componentFailingReasons
+        }));
     }
 
     useEffect(() => {
@@ -99,10 +95,8 @@ function ComponentStatus() {
                             componentId: el.id,
                             componentName: el.component_type,
                             componentStatus: el.status,
-                            images: formattedImages
-                        }
-                        if (!el.status) {
-                            componentObj.componentFailingReasons = el.failing_reasons;
+                            images: formattedImages,
+                            componentFailingReasons: el.failing_reasons || []
                         }
                         return componentObj;
                     })
