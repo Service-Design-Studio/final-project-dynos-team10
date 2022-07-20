@@ -12,9 +12,45 @@ env:
 jobs:
   cypress-run:
     runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+      RAILS_MASTER_KEY: ${{ secrets.SERVER_MASTER_KEY }}
+      STORAGE_BUCKET_NAME: dynostic-test-bucket
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.110.0
+        with:
+          bundler-cache: true
+          working-directory: server
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config
+          touch service-account-credentials.json
+          cat service-account-credentials.json | base64
+          echo $GCP_CREDENTIALS > service-account-credentials.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Set up test database
+        run: |
+          cd server
+          bundle exec bin/rails db:prepare
+          bundle exec bin/rails db:schema:load
+      - name: Start up Rails App Server
+        run: |
+          cd server
+          bin/rails server
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
@@ -32,6 +68,8 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # set node_env
+          NODE_ENV: test
   build-and-deploy:
     needs: cypress-run
     runs-on: ubuntu-latest
