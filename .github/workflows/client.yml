@@ -50,7 +50,7 @@ jobs:
       - name: Start up Rails App Server
         run: |
           cd server
-          bin/rails server
+          bin/rails server --daemon
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
