@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   CREDENTIAL_MIN_AMOUNT = 1
 
+  has_secure_password
+
   has_many :credentials, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
