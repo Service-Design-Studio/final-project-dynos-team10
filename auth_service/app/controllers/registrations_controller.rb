@@ -79,6 +79,6 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
-    params.require(:user_attributes).permit(:username, :webauthn_id, :id, :created_at, :updated_at, :password)
+    params.require(:user_attributes).permit(:username, :webauthn_id, :id, :created_at, :updated_at, :password, :password_digest)
   end
 end
