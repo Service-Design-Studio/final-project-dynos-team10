@@ -4,7 +4,7 @@ import { selectCurrentUserId, selectToken, saveRegistration } from "../store/aut
 import { $authAxios } from "../helpers/axiosHelper";
 import { register } from "../helpers/webAuthHelper";
 import { useForm } from "@mantine/form";
-import { Button, Card, Container, Group, ScrollArea, Text, TextInput, Loader } from "@mantine/core";
+import { Button, Card, Container, Group, ScrollArea, Text, TextInput, Loader, Center } from "@mantine/core";
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -26,6 +26,10 @@ export default function Profile() {
     })
 
     const getUserData = async () => {
+        if (!userId) {
+            return;
+        }
+
         setIsLoadingUserInfo(true);
         let response = await $authAxios.get(`users/${userId}`, {
             headers: {
@@ -116,36 +120,46 @@ export default function Profile() {
 
     return (
         <Container>
-            <Text weight={500} size="lg">Your Registered Credentials</Text>
-            <Group mb="md" align="flex-end">
-                <TextInput
-                    label="Credential Nickname" 
-                    placeholder="Nickname" 
-                    required
-                    {...form.getInputProps('credentialNickname')}
-                />
-                <Button
-                    onClick={createNewCredential}
-                    loading={isLoading}
-                >
-                    Add Credential
-                </Button>
-            </Group>
-            <ScrollArea style={{ height: .5*window.innerHeight }}>
-                {isLoadingUserInfo ?
-                <Loader size="lg"/> :
-                userCredentials.map(el => 
-                    (
-                        <Card
-                            shadow="sm"
-                            mb="md"
-                            key={el.id}
+            {
+                userId ?
+                <>
+                    <Text weight={500} size="lg">Your Registered Credentials</Text>
+                    <Group mb="md" align="flex-end" noWrap position="apart">
+                        <TextInput
+                            label="Add New Credential" 
+                            placeholder="Credential Nickname" 
+                            required
+                            {...form.getInputProps('credentialNickname')}
+                            sx={{ flexGrow: 1 }}
+                        />
+                        <Button
+                            onClick={createNewCredential}
+                            loading={isLoading}
                         >
-                            <Text>{el.nickname}</Text>
-                        </Card>
-                    )
-                )}
-            </ScrollArea>
+                            Add
+                        </Button>
+                    </Group>
+                    <ScrollArea style={{ height: .5*window.innerHeight }}>
+                        {isLoadingUserInfo ?
+                        <Center>
+                            <Loader size="md"/> 
+                        </Center>
+                        :
+                        userCredentials.map(el => 
+                            (
+                                <Card
+                                    shadow="sm"
+                                    mb="md"
+                                    key={el.id}
+                                >
+                                    <Text>{el.nickname}</Text>
+                                </Card>
+                            )
+                        )}
+                    </ScrollArea>
+                </> :
+                <Text size="xl">You are not logged in!</Text>
+            }
         </Container>
     )
 }

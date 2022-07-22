@@ -45,8 +45,12 @@ export const selectRegisteredCredentials = state => {
     }))
 }
 export const selectCurrentUserId = (state) => {
-    const decoded = decodedToken(state.auth.token);
-    return parseInt(decoded.aud[0], 10)
+    try {
+        const decoded = decodedToken(state.auth.token);
+        return parseInt(decoded.aud[0], 10)
+    } catch (err) {
+        return null;
+    }
 }
 export const selectIsAuthenticated = state => state.auth.isAuthenticated;
 
