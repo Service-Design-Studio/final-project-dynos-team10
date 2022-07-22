@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2022_07_21_085609) do
   create_table "credentials", force: :cascade do |t|
     t.string "external_id"
     t.string "public_key"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "nickname"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

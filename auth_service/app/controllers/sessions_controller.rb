@@ -3,7 +3,14 @@ class SessionsController < ApplicationController
   def create
     # user = User.find_by(username: session_params[:username])
     user = User.find_by(username: params[:username])
-
+    puts "user all"
+    us = User.find_all
+    puts User.all
+    # puts us.username
+    puts "heres my user"
+    puts user.attributes
+    puts "user all"
+    puts User.all
     if user
 
       if params[:authentication_method] == 1
@@ -18,13 +25,14 @@ class SessionsController < ApplicationController
         # end
         render json: get_options
       else
-        # puts "i am checking if the password entered is correct "
-        # puts user.authenticate(params[:password])
+        puts "i am checking if the password entered is correct "
+        puts user.authenticate(params[:password])
         #checks the password. if correct returns the user record else returns false
         render json: user.authenticate(params[:password])
       end
 
     else
+
       # respond_to do |format|
       #   format.json { render json: { errors: ["Username doesn't exist"] }, status: :unprocessable_entity }
       # end

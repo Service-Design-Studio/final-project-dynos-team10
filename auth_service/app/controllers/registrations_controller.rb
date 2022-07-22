@@ -3,9 +3,14 @@ require "json"
 class RegistrationsController < ApplicationController
   def create
 
-    if params[:authentication_method] == 1
+    if params[:authentication_method] == "1"
       user = User.new(username: params[:registration][:username], password: params[:registration][:password])
-      puts "i am registering an webauth"
+      puts user.attributes
+      #password cant remain blank so put a random value here
+      user.password_digest ||= WebAuthn.generate_user_id
+      user.webauthn_id ||= WebAuthn.generate_user_id
+      puts user.attributes
+      # puts "i am registering an webauth"
       create_options = WebAuthn::Credential.options_for_create(
         user: {
           name: params[:registration][:username],
@@ -14,7 +19,7 @@ class RegistrationsController < ApplicationController
       )
 
       if user.valid?
-        puts "user is valid"
+        # puts "user is valid"
 
         # THIS MAINTAINS SESSION STATE
         # session[:current_registration] = { challenge: create_options.challenge, user_attributes: user.attributes }
@@ -27,7 +32,7 @@ class RegistrationsController < ApplicationController
           create_options: create_options
         }
       else
-        puts "user is invalid"
+        # puts "user is invalid"
 
         # respond_to do |format|
         #   format.json { render json: { errors: user.errors.full_messages }, status: :unprocessable_entity }
@@ -35,9 +40,11 @@ class RegistrationsController < ApplicationController
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     else
+      puts "i am creating user using username password"
       user = User.create!(username: params[:registration][:username], password: params[:registration][:password])
       if user.valid?
-        # puts "user is valid and i am reg pass"
+
+        puts "user is valid and i am reg pass"
 
         # THIS MAINTAINS SESSION STATE
         # puts user.attributes
@@ -59,7 +66,7 @@ class RegistrationsController < ApplicationController
 
   def callback
 
-    if params[:authentication_method] == 1
+    if params[:authentication_method] == "1"
       puts params[:authentication_method]
       puts "i am at webauth"
       # webauthn_credential = WebAuthn::Credential.from_create(params)
