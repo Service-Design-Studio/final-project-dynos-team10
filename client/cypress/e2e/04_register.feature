@@ -13,7 +13,7 @@ Feature: Registering as a new user
         When I click on the Log In Now button
         Then I should be on the "login" page
 
-    Scenario: Registering with non-unique username
+    Scenario: SAD PATH: Registering with non-unique username
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"
         Then I fill in the input field for "Credential Nickname" with "test"
@@ -21,14 +21,14 @@ Feature: Registering as a new user
         Then I should see "Username is not unique"
         And I should be on the "register" page
     
-    Scenario: Registering without username
+    Scenario: SAD PATH: Registering without username
         Given I am on the "register" page
         Then I fill in the input field for "Credential Nickname" with "test"
         Then I click on the register button
         Then I should see "Username is required"
         And I should be on the "register" page
 
-    Scenario: Registering without credential nickname
+    Scenario: SAD PATH: Registering without credential nickname
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"
         Then I click on the register button

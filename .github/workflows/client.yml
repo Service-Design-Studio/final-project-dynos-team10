@@ -42,11 +42,12 @@ jobs:
           echo $GCP_CREDENTIALS > service-account-credentials.json
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Set up test database
+      - name: Set up test database and seed
         run: |
           cd server
           bundle exec bin/rails db:prepare
           bundle exec bin/rails db:schema:load
+          bundle exec bin/rails db:seed --trace
       - name: Start up Rails App Server
         run: |
           cd server

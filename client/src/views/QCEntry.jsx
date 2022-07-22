@@ -14,9 +14,8 @@ import {
 
 } from "@mantine/core";
 import QrReader from 'modern-react-qr-reader';
-// import { QrReader } from "react-qr-reader";
 
-function QCEntry({}) {
+function QCEntry() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -139,6 +138,7 @@ function QCEntry({}) {
             onError={handleError}
             onScan={handleResult}
             style={{ width: '100%' }}
+            className="qr-scanner"
           />
         }
           

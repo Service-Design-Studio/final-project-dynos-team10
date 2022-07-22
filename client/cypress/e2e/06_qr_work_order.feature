@@ -4,7 +4,6 @@ Feature: New Work Order with QR Code
     Background: Going to QC Entry Page
         Given I am on the "qc entry" page
 
-    @pending
     Scenario: Starting a new work order with a QR code
         When I click on the Scan QR Code button
         Then the QR scanner should "open"
@@ -18,7 +17,7 @@ Feature: New Work Order with QR Code
         And the input field for "MACHINE TYPE" should be filled
     
     @pending
-    Scenario: Feeding an invalid QR code
+    Scenario: SAD PATH: Feeding an invalid QR code
         When I click on the Scan QR Code button
         And I show an invalid work order QR Code
         Then I should see "QR code is invalid"

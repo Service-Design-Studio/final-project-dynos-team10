@@ -3,84 +3,68 @@ class SessionsController < ApplicationController
   def create
     # user = User.find_by(username: session_params[:username])
     user = User.find_by(username: params[:username])
-    puts "user all"
-    us = User.find_all
-    puts User.all
-    # puts us.username
-    puts "heres my user"
-    puts user.attributes
-    puts "user all"
-    puts User.all
     if user
 
-      if params[:authentication_method] == 1
+      if params[:authentication_method] == "1"
         get_options = WebAuthn::Credential.options_for_get(allow: user.credentials.pluck(:external_id))
-
-        # if(params[:au])
 
         # session[:current_authentication] = { challenge: get_options.challenge, username: session_params[:username] }
 
-        # respond_to do |format|
-        #   format.json { render json: get_options }
-        # end
         render json: get_options
       else
         puts "i am checking if the password entered is correct "
-        puts user.authenticate(params[:password])
         #checks the password. if correct returns the user record else returns false
-        render json: user.authenticate(params[:password])
+        user = user.authenticate(params[:password])
+        unless user
+          render json: { errors: ["Password is incorrect"] }, status: :unprocessable_entity
+          return
+        end
+
+        new_jwt_token = sign_in(user)
+        render json: { status: "ok", token: new_jwt_token }, status: :ok
       end
 
     else
 
-      # respond_to do |format|
-      #   format.json { render json: { errors: ["Username doesn't exist"] }, status: :unprocessable_entity }
-      # end
       render json: { errors: ["Username doesn't exist"] }, status: :unprocessable_entity
     end
   end
 
   def callback
-    if params[:authentication_method] == "1"
+    # webauthn_credential = WebAuthn::Credential.from_get(params)
+    webauthn_credential = WebAuthn::Credential.from_get(params[:public_key_credential])
 
-      # webauthn_credential = WebAuthn::Credential.from_get(params)
-      webauthn_credential = WebAuthn::Credential.from_get(params[:public_key_credential])
+    # user = User.find_by(username: session["current_authentication"]["username"])
+    user = User.find_by(username: params[:username])
 
-      # user = User.find_by(username: session["current_authentication"]["username"])
-      user = User.find_by(username: params[:username])
+    # raise "user #{session["current_authentication"]["username"]} never initiated sign up" unless user
+    raise "user #{params[:username]} never initiated sign up" unless user
 
-      # raise "user #{session["current_authentication"]["username"]} never initiated sign up" unless user
-      raise "user #{params[:username]} never initiated sign up" unless user
+    credential = user.credentials.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
 
-      credential = user.credentials.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
+    if credential.nil?
+      render json: "Error fetching your credential", status: :unprocessable_entity
+      return
+    end
 
-      if credential.nil?
-        render json: "Error fetching your credential", status: :unprocessable_entity
-        return
-      end
+    begin
+      webauthn_credential.verify(
+        # session["current_authentication"]["challenge"],
+        params[:challenge],
+        public_key: credential.public_key,
+        sign_count: credential.sign_count
+      )
 
-      begin
-        webauthn_credential.verify(
-          # session["current_authentication"]["challenge"],
-          params[:challenge],
-          public_key: credential.public_key,
-          sign_count: credential.sign_count
-        )
+      credential.update!(sign_count: webauthn_credential.sign_count)
+      # sign_in(user)
+      new_jwt_token = sign_in(user)
 
-        credential.update!(sign_count: webauthn_credential.sign_count)
-        # sign_in(user)
-        new_jwt_token = sign_in(user)
-
-        # render json: { status: "ok" }, status: :ok
-        render json: { status: "ok", token: new_jwt_token }, status: :ok
-      rescue WebAuthn::Error => e
-        render json: "Verification failed: #{e.message}", status: :unprocessable_entity
-      ensure
-        # session.delete("current_authentication")
-      end
-    else
-      #password login
-      puts "i am at callback loging using pass no action needed"
+      # render json: { status: "ok" }, status: :ok
+      render json: { status: "ok", token: new_jwt_token }, status: :ok
+    rescue WebAuthn::Error => e
+      render json: "Verification failed: #{e.message}", status: :unprocessable_entity
+    ensure
+      # session.delete("current_authentication")
     end
 
   end

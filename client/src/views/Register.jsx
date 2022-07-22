@@ -1,7 +1,7 @@
 import { $authAxios } from '../helpers/axiosHelper';
 import { React, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { setToken, saveRegistration, selectRegisteredCredentials, selectToken } from '../store/auth/authSlice';
+import { useDispatch } from "react-redux";
+import { saveRegistration } from '../store/auth/authSlice';
 import { register } from '../helpers/webAuthHelper';
 import { useNavigate } from 'react-router-dom';
 import AppLogo from '../assets/dynostic-logo.svg';
@@ -20,6 +20,7 @@ import {
   Tooltip,
   Modal, 
   PasswordInput,
+  Group,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
@@ -27,8 +28,6 @@ import { useEffect } from 'react';
 export default function Register() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const registeredCredentials = useSelector(selectRegisteredCredentials);
-    const accessToken = useSelector(selectToken);
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,20 +38,33 @@ export default function Register() {
             username: '',
             password: '',
             confirmPassword: '',
+            credentialNickname: ''
         },
         validate: {
             username: (value) => (value.length <= 0 ? 'Username is required' : null),
-            password: (value) => (value.length <= 0 ? 'Password is required' : null)
+            password: (value) => (value.length <= 0 ? 'Password is required' : null),
+            confirmPassword: (value) => {
+                if (value.length <= 0) {
+                    return 'Please enter your password again';
+                }
+                return value !== form.values.password ? 'Passwords do not match' : null
+            }
         }
     })
 
-    const requestRegistration = async () => {
+    const requestRegistration = async (withWebAuth=false) => {
+        const payload = {
+            registration: {
+                username: form.values.username,
+                password: form.values.password
+            }
+        }
+        if (withWebAuth) {
+            payload.authentication_method = '1';
+        }
+
         try {
-            return await $authAxios.post('registration', {
-                registration: {
-                    username: form.values.username
-                }
-            });
+            return await $authAxios.post('registration', payload);
             
         } catch (e) {
             const errors = e.response.data?.errors;
@@ -91,16 +103,8 @@ export default function Register() {
         }
     }
 
-    const registerUser = async() => {
-        setIsLoading(true);
-        const validation = form.validate();
-        if (validation.hasErrors) {
-            // has errors
-            setIsLoading(false);
-            return;
-        }
-        
-        let result = await requestRegistration();
+    const registrationWithWebAuth = async () => {
+        let result = await requestRegistration(true);
         console.log({result});
         if (!result) {
             setIsLoading(false);
@@ -108,7 +112,6 @@ export default function Register() {
         }
 
         const credentialData = await Register.registerCredentialExposed(result.data);
-        // const credentialData = await registerCredential(result.data);
         console.log({credentialData});
         if (!credentialData) {
             setIsLoading(false);
@@ -117,6 +120,32 @@ export default function Register() {
 
         result = await commitRegistration(credentialData);
         console.log({result});
+    }
+
+    const registrationPasswordOnly = async () => {
+        let result = await requestRegistration(false);
+        console.log({result});
+        if (!result) {
+            setIsLoading(false);
+            return;
+        }
+    }
+
+    const registerUser = async() => {
+        setIsLoading(true);
+        const validation = form.validate();
+        if (validation.hasErrors) {
+            // has errors
+            setIsLoading(false);
+            return;
+        }
+
+        if (form.values.credentialNickname) {
+            await registrationWithWebAuth()
+        } else {
+            await registrationPasswordOnly();
+        }
+        
         setIsLoading(false);
         setSuccessModalOpened(true);
     }
@@ -169,6 +198,30 @@ export default function Register() {
                             required 
                             mt="md" 
                             {...form.getInputProps('confirmPassword')}/>
+                        <TextInput
+                            label={
+                                <Group noWrap>
+                                    <div>
+                                        <Text>Credential Nickname</Text>
+                                        <Text color="grey" component="small" size="xs">For using your device's biometric authentication</Text>
+                                    </div>
+                                    <Tooltip
+                                        label={'A "Credential" is what identifies a login method using your device\'s biometric authentication. Since this is your first sign up, give it a good name such as "face-id" if you are using facial recognition etc.'}
+                                        position="bottom"
+                                        placement="start"
+                                        wrapLines
+                                        width={300}
+                                    >
+                                        <ActionIcon>
+                                            <FaQuestionCircle />
+                                        </ActionIcon>
+                                    </Tooltip>
+                                </Group>
+                            }
+                            placeholder="Credential Nickname"
+                            {...form.getInputProps('credentialNickname')}
+                            mt="md"
+                        />
                         {/* <Group position="apart" mt="md">
                         <Checkbox label="Remember me" />
                         <Anchor onClick={(event) => event.preventDefault()} href="#" size="sm">

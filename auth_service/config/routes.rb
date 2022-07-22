@@ -13,6 +13,6 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [:index, :show, :update] do
-    get ":id/credentials", on: :collection, to: 'users#get_credentials'
+    get "credentials", on: :member, to: 'users#get_credentials'
   end
 end

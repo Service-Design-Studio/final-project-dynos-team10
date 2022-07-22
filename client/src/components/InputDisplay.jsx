@@ -53,7 +53,7 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
         </div>
         
         <ClearIcon 
-          className="delete-failing-reasons-btn" 
+          className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`}
           style={{fontSize: 20, color: "black", padding: 7}} 
           onClick={() => handleDelete(index)}/>
 
@@ -97,10 +97,10 @@ function InputDisplay ( {reasons, value, setReasons, setValue} ) {
                       marginTop: "0.1rem", 
                       marginBottom: "1rem", 
                       padding: 10, 
-                      backgroundColor: theme.colors.gray[0]}} 
+                      backgroundColor: theme.colors.gray[0]}}
                       type="scroll"
                       >
-              <Text>{listItems}</Text>
+              <Text className="reasons-list">{listItems}</Text>
             </ScrollArea>
 
           <div style={{display:"flex", justifyContent: "right", marginRight: "2rem", marginLeft: "2rem"}}>

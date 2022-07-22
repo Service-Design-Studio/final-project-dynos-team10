@@ -17,10 +17,6 @@ class User < ApplicationRecord
 
   def self.find_all
     User.all
-    User.all.each do |item|
-      puts item.username
-    end
-
   end
 
   def self.find_one(user_id)

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlice";
 import { $axios } from "./helpers/axiosHelper";
 import PassFail from "./views/PassFail";
+import Profile from "./views/Profile";
 
 function Router() {
     let location = useLocation();
@@ -74,6 +75,7 @@ function Router() {
                 <Route path="qc-entry" element={<QCEntry/>} />
                 <Route path="qc-list" element={<QCList/>} />
                 <Route path="pass-fail" element={<PassFail />} />
+                <Route path="profile" element={<Profile />}/>
             </Route>
         </Routes>
     )

@@ -1,5 +1,4 @@
 # Creating a (new) credential for an EXISTING user who is logged in
-# TODO: review this controller and its need
 class CredentialsController < ApplicationController
   def create
     current_user = User.find_by(id: params[:user_id])
@@ -22,7 +21,6 @@ class CredentialsController < ApplicationController
   end
 
   def callback
-    # webauthn_credential = WebAuthn::Credential.from_create(params)
     webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
 
     begin

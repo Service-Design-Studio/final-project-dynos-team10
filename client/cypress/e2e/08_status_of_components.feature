@@ -23,7 +23,7 @@ Feature: Components
         And I click on the right arrow button
         Then I should be on the "photo review" page
 
-    Scenario: pass/fail status not saved before clicking upload button
+    Scenario: SAD PATH: pass/fail status not saved before clicking upload button
         Given I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
@@ -49,6 +49,6 @@ Feature: Components
         When I click on the close icon
         Then the component "xxx" button colour should be "red" 
 
-    Scenario: exiting component xxx check before submitting all photos of Component xxx
+    Scenario: SAD PATH: exiting component xxx check before submitting all photos of Component xxx
         Given I go to the "status of components" page with saved progress
         Then the component "xxx" button colour should be "yellow"

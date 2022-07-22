@@ -30,6 +30,7 @@
     "react-scripts": "^5.0.1",
     "react-swipeable-views": "^0.14.0",
     "styled-components": "^5.3.5",
+    "tabler-icons-react": "^1.53.0",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.5.3",
@@ -47,7 +48,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:test": "REACT_APP_IS_TESTING=true react-scripts start", 
+    "start:test": "REACT_APP_IS_TESTING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

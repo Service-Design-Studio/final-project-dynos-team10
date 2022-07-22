@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { React, useEffect, useState } from 'react';
 import AppLogo from '../assets/dynostic-logo.svg';
 import { FaQuestionCircle } from 'react-icons/fa';
+import { FaceId } from 'tabler-icons-react';
 
 import {
     TextInput,
@@ -50,19 +51,30 @@ export default function Login() {
         },
         validate: {
             username: (value) => (value.length <= 0 ? 'Username is required' : null),
-            password: (value) => (value.length <= 0 ? 'Password is required' : null)
         }
     })
 
-    const requestLogin = async () => {
+    const requestLogin = async (withWebAuth=false) => {
+        const payload = {
+            username: form.values.username
+        }
+
+        if (withWebAuth) {
+            payload.authentication_method = '1';
+        } else {
+            payload.password = form.values.password;
+        }
+
         try {
-            return await $authAxios.post('session', {
-                username: form.values.username
-            });
+            return await $authAxios.post('session', payload);
         } catch(e) {
             const errors = e.response.data?.errors;
-            if (errors && errors.includes("Username doesn't exist")) {
-                form.setErrors({ username: "Username doesn't exist" });
+            if (errors) {
+                if (errors.includes("Username doesn't exist")) {
+                    form.setErrors({ username: "Username doesn't exist" });
+                } else if (errors.includes("Password is incorrect")) {
+                    form.setErrors({password: 'Password is incorrect'});
+                }
             }
         }
     }
@@ -79,18 +91,8 @@ export default function Login() {
         }
     }
 
-
-    const signIn = async () => {
-        setLoginLoading(true);
-
-        const validation = form.validate();
-        if (validation.hasErrors) {
-            // has errors
-            setLoginLoading(false);
-            return;
-        }
-
-        let result = await requestLogin();
+    const signInWithWebAuth = async () => {
+        let result = await requestLogin(true);
         console.log({result});
         if (!result) {
             setLoginLoading(false);
@@ -108,6 +110,49 @@ export default function Login() {
 
         const { token } = result.data;
         console.log({token});
+        return token;
+    }
+
+    const signInPasswordOnly = async () => {
+        // here we validate additionally that password field is non-empty
+        if (form.values.password === '') {
+            form.setFieldError('password', 'Password is required');
+            setLoginLoading(false);
+            return;
+        }
+
+        let result = await requestLogin(false);
+        console.log({result});
+        if (!result) {
+            setLoginLoading(false);
+            return;
+        }
+        const { token } = result.data;
+        console.log({token});
+        return token;
+    }
+
+
+    const signIn = async (withWebAuth=false) => {
+        setLoginLoading(true);
+
+        const validation = form.validate();
+        if (validation.hasErrors) {
+            // has errors
+            setLoginLoading(false);
+            return;
+        }
+
+        let token;
+        if (withWebAuth) {
+            token = await signInWithWebAuth();
+        } else {
+            token = await signInPasswordOnly();
+        }
+
+        if (!token) {
+            return;
+        }
 
         dispatch(setToken(token));
         dispatch(setIsAuthenticated(true));
@@ -156,8 +201,7 @@ export default function Login() {
                         {...form.getInputProps('username')}/>
                     <PasswordInput 
                         label="Password" 
-                        placeholder="Password" 
-                        required 
+                        placeholder="Password"
                         {...form.getInputProps('password')}
                         rightSection={<Tooltip
                             label=''
@@ -170,9 +214,14 @@ export default function Login() {
                             </ActionIcon>
                         </Tooltip>}
                         mt="md"/>
-                    <Button onClick={signIn} fullWidth mt="xl" className="login-btn" loading={loginLoading}>
-                        Sign In
-                    </Button>
+                    <Group mt="xl">
+                        <Button onClick={() => signIn(false)} className="login-btn" loading={loginLoading} sx={{flexGrow: 1}}>
+                            Sign In
+                        </Button>
+                        <Button onClick={() => signIn(true)} variant="outline">
+                            <FaceId/>
+                        </Button>
+                    </Group>
                 </Paper>
 
             </Container>

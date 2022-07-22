@@ -9,13 +9,13 @@ Feature: Logging In
         Then I click on the log in button, expecting "success"
         And I should be on the "home" page
     
-    Scenario: Log in without username
+    Scenario: SAD PATH: Log in without username
         Given I am on the "login" page
         Then I click on the log in button
         Then I should see "Username is required"
         And I should be on the "login" page
 
-    Scenario: Log in with invalid username
+    Scenario: SAD PATH: Log in with invalid username
         Given I am on the "login" page
         Then I fill in the input field for "Username" with "acbdegfhikjl"
         Then I click on the log in button, expecting "username does not exist"

@@ -1,9 +1,20 @@
 Feature: Failing Reasons Input
     I want to enter and update a list of failing reasons manually for any component before uploading
 
-    Background: Go to fail page
-        Given I am on the photo review page of component "xxx"
-        And I click on the fail button
+    Background: Selecting a workorder, taking some photos for component "xxx" and about to FAIL the component
+        Given I am on the "home" page
+        And I click on the drafts button
+        Then I should be on the "drafts" page
+        When I select the "test" workorder
+        Then I should see "proceed with work order test"
+        When I click on the "Continue" button
+        Then I should be on the "status of components" page
+        And I should see "test"
+        When I click on component "XXX" button
+        And I click on the take photo button "5" times
+        And I click on the right arrow button
+        Then I should be on the "photo review" page
+        When I click on the fail button
         And I click on the proceed button
         Then I should see "Reasons for failing check"
 

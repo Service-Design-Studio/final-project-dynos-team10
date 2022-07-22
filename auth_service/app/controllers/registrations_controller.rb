@@ -6,8 +6,6 @@ class RegistrationsController < ApplicationController
     if params[:authentication_method] == "1"
       user = User.new(username: params[:registration][:username], password: params[:registration][:password])
       puts user.attributes
-      #password cant remain blank so put a random value here
-      user.password_digest ||= WebAuthn.generate_user_id
       user.webauthn_id ||= WebAuthn.generate_user_id
       puts user.attributes
       # puts "i am registering an webauth"
@@ -21,12 +19,6 @@ class RegistrationsController < ApplicationController
       if user.valid?
         # puts "user is valid"
 
-        # THIS MAINTAINS SESSION STATE
-        # session[:current_registration] = { challenge: create_options.challenge, user_attributes: user.attributes }
-        #
-        # respond_to do |format|
-        #   format.json { render json: create_options }
-        # end
         render json: {
           user_attributes: user.attributes,
           create_options: create_options
@@ -34,70 +26,53 @@ class RegistrationsController < ApplicationController
       else
         # puts "user is invalid"
 
-        # respond_to do |format|
-        #   format.json { render json: { errors: user.errors.full_messages }, status: :unprocessable_entity }
-        # end
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     else
       puts "i am creating user using username password"
-      user = User.create!(username: params[:registration][:username], password: params[:registration][:password])
+      user = User.create!(username: params[:registration][:username], password: params[:registration][:password], webauthn_id: WebAuthn.generate_user_id)
       if user.valid?
 
         puts "user is valid and i am reg pass"
 
-        # THIS MAINTAINS SESSION STATE
-        # puts user.attributes
-        # puts json
         render json: {
           user_attributes: user.attributes
         }
       else
         puts "user is invalid and i am reg pass"
 
-        # respond_to do |format|
-        #   format.json { render json: { errors: user.errors.full_messages }, status: :unprocessable_entity }
-        # end
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
   end
 
+  # this callback is only for registrations with web authentication
   def callback
+    # webauthn_credential = WebAuthn::Credential.from_create(params)
+    webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
+    # user = User.create!(session["current_registration"]["user_attributes"])
+    user = User.create!(user_params)
 
-    if params[:authentication_method] == "1"
-      puts params[:authentication_method]
-      puts "i am at webauth"
-      # webauthn_credential = WebAuthn::Credential.from_create(params)
-      webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
-      # user = User.create!(session["current_registration"]["user_attributes"])
-      user = User.create!(user_params)
+    begin
+      webauthn_credential.verify(params[:challenge])
 
-      begin
-        webauthn_credential.verify(params[:challenge])
+      credential = user.credentials.build(
+        external_id: Base64.strict_encode64(webauthn_credential.raw_id),
+        nickname: params[:credential_nickname],
+        public_key: webauthn_credential.public_key,
+        sign_count: webauthn_credential.sign_count
+      )
 
-        credential = user.credentials.build(
-          external_id: Base64.strict_encode64(webauthn_credential.raw_id),
-          nickname: params[:credential_nickname],
-          public_key: webauthn_credential.public_key,
-          sign_count: webauthn_credential.sign_count
-        )
-
-        if credential.save
-          render json: { status: "ok" }, status: :ok
-        else
-          render json: "Couldn't register your Security Key", status: :unprocessable_entity
-        end
-      rescue WebAuthn::Error => e
-        render json: "Verification failed: #{e.message}", status: :unprocessable_entity
-      ensure
-        # session.delete("current_registration")
+      if credential.save
+        render json: { status: "ok" }, status: :ok
+      else
+        render json: "Couldn't register your Security Key", status: :unprocessable_entity
       end
-    else
-      puts "i am at callback registering using pass no action needed"
-      #create the new user using the attributes (username and password)
-      # user = User.create!(user_params)
+    rescue WebAuthn::Error => e
+      render json: "Verification failed: #{e.message}", status: :unprocessable_entity
+    ensure
+      # session.delete("current_registration")
     end
   end
 

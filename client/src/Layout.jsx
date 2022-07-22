@@ -6,6 +6,8 @@ import { FaArrowLeft} from "react-icons/fa";
 import "./views/PhotoReview.css";
 import { selectWorkorderNumber, startNewWorkorder } from "./store/workorder/workorderSlice";
 import { $axios } from "./helpers/axiosHelper";
+import { FaUserCog } from "react-icons/fa";
+import { Logout } from '@mui/icons-material'
 
 import {
     ActionIcon,
@@ -29,7 +31,8 @@ const routeMapStatic = {
     "/failreasons": "Fail Reasons",
     "/pass": "Pass",
     '/qc-list': 'QC List',
-    '/pass-fail': 'Status'
+    '/pass-fail': 'Status',
+    '/profile': 'Profile'
 }
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
@@ -133,12 +136,24 @@ export default function Layout() {
                     </Menu>
                 </Stack>
 
-                <Button 
-                onClick={logout}
-                >
-                Log Out
-                </Button>
-
+                <Stack>
+                    <Button
+                        variant="light"
+                        onClick={() => {
+                            navigate('/profile');
+                            setOpened(false);
+                        }}
+                        leftIcon={<FaUserCog size={24}/>}
+                    >
+                        Profile
+                    </Button>
+                    <Button 
+                        onClick={logout}
+                        leftIcon={<Logout/>}
+                    >
+                        Log Out
+                    </Button>
+                </Stack>
             </Stack>
         </Drawer>
         )
