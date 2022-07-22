@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Workorders", type: :request do
-  describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
-  end
+  # describe "GET /index" do
+  #   pending "add some examples (or delete) #{__FILE__}"
+  # end
 
   describe "PUT #update" do
     it 'returns updated status after updating the component values' do

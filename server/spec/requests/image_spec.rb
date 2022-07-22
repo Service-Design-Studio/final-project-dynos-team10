@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Images", type: :request do
-  describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
-  end
+  # describe "GET /index" do
+  #   pending "add some examples (or delete) #{__FILE__}"
+  # end
 
   describe "DELETE /destroy" do
 

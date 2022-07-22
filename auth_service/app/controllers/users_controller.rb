@@ -19,4 +19,5 @@ class UsersController < ApplicationController
     credentials = User.find_one_credentials params[:id]
     render json: success_json(credentials)
   end
+
 end

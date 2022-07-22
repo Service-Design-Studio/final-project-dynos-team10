@@ -1,13 +1,15 @@
 class User < ApplicationRecord
   CREDENTIAL_MIN_AMOUNT = 1
 
+  has_secure_password
+
   has_many :credentials, dependent: :destroy
 
   validates :username, presence: true, uniqueness: true
 
-  after_initialize do
-    self.webauthn_id ||= WebAuthn.generate_user_id
-  end
+  # after_initialize do
+  #   self.webauthn_id ||= WebAuthn.generate_user_id
+  # end
 
   def can_delete_credentials?
     credentials.size > CREDENTIAL_MIN_AMOUNT
@@ -15,6 +17,10 @@ class User < ApplicationRecord
 
   def self.find_all
     User.all
+    User.all.each do |item|
+      puts item.username
+    end
+
   end
 
   def self.find_one(user_id)
@@ -24,4 +30,8 @@ class User < ApplicationRecord
   def self.find_one_credentials(user_id)
     self.find_one(user_id).credentials
   end
+
+  # def show_attributes
+  #
+  # end
 end

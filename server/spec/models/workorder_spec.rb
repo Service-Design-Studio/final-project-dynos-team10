@@ -58,7 +58,7 @@ RSpec.describe Workorder, :type => :model do
       end
     end
   end
-#doesnt work as intended
+
   # describe '.get_failing_reasons' do
   #   context "given workorder id" do 
   #     it 'returns the failing reasons with that workorder id' do

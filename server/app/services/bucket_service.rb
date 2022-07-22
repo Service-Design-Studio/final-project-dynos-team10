@@ -39,16 +39,15 @@ class BucketService
   end
 
   def delete_file(file_pub_url)
+    #filename is the filename eg xxx.png
     file_name = file_pub_url.split("/")[4]
-    puts file_name
+    # file is object retrieved from google cloud bucket storage
     file = @bucket.file file_name
-    puts file
     if file.nil?
       puts "Could find file in GCS"
       return
     end
     file.delete
-    puts "Deleted #{file.name}"
   end
 
 end

@@ -10,12 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_28_180352) do
+ActiveRecord::Schema.define(version: 2022_07_21_085609) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "credentials", force: :cascade do |t|
     t.string "external_id"
     t.string "public_key"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "nickname"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -29,6 +32,7 @@ ActiveRecord::Schema.define(version: 2022_06_28_180352) do
     t.string "webauthn_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "password_digest", null: false
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
