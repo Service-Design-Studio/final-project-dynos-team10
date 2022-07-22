@@ -41,7 +41,7 @@ class SessionsController < ApplicationController
   end
 
   def callback
-    if params[:authentication_method] == 1
+    if params[:authentication_method] == "1"
 
       # webauthn_credential = WebAuthn::Credential.from_get(params)
       webauthn_credential = WebAuthn::Credential.from_get(params[:public_key_credential])
