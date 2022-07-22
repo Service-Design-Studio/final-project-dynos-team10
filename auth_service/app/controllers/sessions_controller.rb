@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
   end
 
   def callback
-    if params[:authentication_method]
+    if params[:authentication_method] == 1
 
       # webauthn_credential = WebAuthn::Credential.from_get(params)
       webauthn_credential = WebAuthn::Credential.from_get(params[:public_key_credential])
@@ -72,10 +72,7 @@ class SessionsController < ApplicationController
       end
     else
       #password login
-      user = User.find_by(username: params[:username])
-      raise "user #{params[:username]} never initiated sign up" unless user
-
-
+      puts "i am at callback loging using pass no action needed"
     end
 
   end

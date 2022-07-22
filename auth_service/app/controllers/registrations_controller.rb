@@ -88,7 +88,7 @@ class RegistrationsController < ApplicationController
         # session.delete("current_registration")
       end
     else
-      puts "i am at callback registering using pass "
+      puts "i am at callback registering using pass no action needed"
       #create the new user using the attributes (username and password)
       # user = User.create!(user_params)
     end
