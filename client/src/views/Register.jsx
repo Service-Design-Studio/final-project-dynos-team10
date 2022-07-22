@@ -201,7 +201,7 @@ export default function Register() {
                         <TextInput
                             label={
                                 <Group noWrap>
-                                    <div>
+                                    <div style={{ flexGrow: 1 }}>
                                         <Text>Credential Nickname</Text>
                                         <Text color="grey" component="small" size="xs">For using your device's biometric authentication</Text>
                                     </div>

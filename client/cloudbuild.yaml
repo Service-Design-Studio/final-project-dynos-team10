@@ -11,3 +11,4 @@ steps:
   args: ['run', 'deploy', 'dynostic-client', '--image', 'gcr.io/tsh-qc/dynostic-client-img', '--region', 'asia-southeast1', '--platform', 'managed']
 images:
 - gcr.io/tsh-qc/dynostic-client-img
+timeout: 900s

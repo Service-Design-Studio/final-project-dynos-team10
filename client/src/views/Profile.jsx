@@ -4,7 +4,7 @@ import { selectCurrentUserId, selectToken, saveRegistration } from "../store/aut
 import { $authAxios } from "../helpers/axiosHelper";
 import { register } from "../helpers/webAuthHelper";
 import { useForm } from "@mantine/form";
-import { Button, Card, Container, Group, ScrollArea, Text, TextInput } from "@mantine/core";
+import { Button, Card, Container, Group, ScrollArea, Text, TextInput, Loader } from "@mantine/core";
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ export default function Profile() {
     const [username, setUsername] = useState('');
     const [userCredentials, setUserCredentials] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(false);
 
     const form = useForm({
         initialValues: {
@@ -25,12 +26,14 @@ export default function Profile() {
     })
 
     const getUserData = async () => {
+        setIsLoadingUserInfo(true);
         let response = await $authAxios.get(`users/${userId}`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
         });
         const user = response.data.result;
+        console.log({user});
         setUsername(user.username);
 
         response = await $authAxios.get(`users/${userId}/credentials`, {
@@ -41,6 +44,7 @@ export default function Profile() {
         const savedCredentials = response.data.result;
         console.log({savedCredentials});
         setUserCredentials(savedCredentials);
+        setIsLoadingUserInfo(false);
     }
 
     const requestNewCredential = async () => {
@@ -98,6 +102,7 @@ export default function Profile() {
         result = await commitCredential(credentialData);
         console.log({result});
         setIsLoading(false);
+        getUserData();
     }
 
     useEffect(() => {
@@ -111,7 +116,7 @@ export default function Profile() {
 
     return (
         <Container>
-            <Text weight={500} size="lg">Your registered Credentials</Text>
+            <Text weight={500} size="lg">Your Registered Credentials</Text>
             <Group mb="md" align="flex-end">
                 <TextInput
                     label="Credential Nickname" 
@@ -119,17 +124,24 @@ export default function Profile() {
                     required
                     {...form.getInputProps('credentialNickname')}
                 />
-                <Button onClick={createNewCredential}>Add Credential</Button>
+                <Button
+                    onClick={createNewCredential}
+                    loading={isLoading}
+                >
+                    Add Credential
+                </Button>
             </Group>
             <ScrollArea style={{ height: .5*window.innerHeight }}>
-                {userCredentials.map((nickname, i) => 
+                {isLoadingUserInfo ?
+                <Loader size="lg"/> :
+                userCredentials.map(el => 
                     (
                         <Card
                             shadow="sm"
                             mb="md"
-                            key={i}
+                            key={el.id}
                         >
-                            <Text>{nickname}</Text>
+                            <Text>{el.nickname}</Text>
                         </Card>
                     )
                 )}
