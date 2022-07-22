@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
 
     if user
 
-      if params[:authentication_method]
+      if params[:authentication_method] == 1
         get_options = WebAuthn::Credential.options_for_get(allow: user.credentials.pluck(:external_id))
 
         # if(params[:au])

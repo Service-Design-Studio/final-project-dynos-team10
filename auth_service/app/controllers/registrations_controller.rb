@@ -2,9 +2,9 @@ require "json"
 # registering a NEW user and credentials (on callback)
 class RegistrationsController < ApplicationController
   def create
-    user = User.new(username: params[:registration][:username], password: params[:registration][:password])
 
-    if params[:authentication_method]
+    if params[:authentication_method] == 1
+      user = User.new(username: params[:registration][:username], password: params[:registration][:password])
       puts "i am registering an webauth"
       create_options = WebAuthn::Credential.options_for_create(
         user: {
@@ -35,11 +35,13 @@ class RegistrationsController < ApplicationController
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end
     else
+      user = User.create!(username: params[:registration][:username], password: params[:registration][:password])
       if user.valid?
-        puts "user is valid and i am reg pass"
+        # puts "user is valid and i am reg pass"
 
         # THIS MAINTAINS SESSION STATE
-        puts user.attributes
+        # puts user.attributes
+        # puts json
         render json: {
           user_attributes: user.attributes
         }
@@ -57,7 +59,9 @@ class RegistrationsController < ApplicationController
 
   def callback
 
-    if params[:authentication_method]
+    if params[:authentication_method] == 1
+      puts params[:authentication_method]
+      puts "i am at webauth"
       # webauthn_credential = WebAuthn::Credential.from_create(params)
       webauthn_credential = WebAuthn::Credential.from_create(params[:public_key_credential])
       # user = User.create!(session["current_registration"]["user_attributes"])
@@ -84,8 +88,9 @@ class RegistrationsController < ApplicationController
         # session.delete("current_registration")
       end
     else
+      puts "i am at callback registering using pass "
       #create the new user using the attributes (username and password)
-      user = User.create!(user_params)
+      # user = User.create!(user_params)
     end
   end
 
