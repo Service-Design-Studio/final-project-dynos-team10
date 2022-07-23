@@ -22,7 +22,7 @@ function ComponentStatusButton(props) {
             navigate('/photo-review');
             return;
         }
-        navigate('/camera');
+        navigate('/options');
     }
     
 
