@@ -8,6 +8,7 @@ import { BsCameraFill, BsPencilSquare } from "react-icons/bs";
 import PassIconSvg from '../assets/pass-icon.svg';
 import FailIconSvg from '../assets/fail-icon.svg';
 import SwipeableTextMobileStepper from '../components/PhotoCarousel';
+import ReportFailReasons from "../components/ReportFailReasons";
 
 import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -37,8 +38,9 @@ import { $axios } from '../helpers/axiosHelper';
 let colourToStatus = {"red": "FAIL", "green": "PASS"};
 
 function StatusReport() {
+    
     const navigate = useNavigate();
-    const [report, editReport] = useState(false);
+    const [editReport, setEditReport] = useState(false);
 
     const [activeStep, setActiveStep] = useState(0);
     const handleNext = () => {
@@ -58,6 +60,10 @@ function StatusReport() {
     const workorderComponents = useSelector(selectWorkorderComponents);
 
     console.log(workorderComponents[currentComponentName].status);
+    console.log(workorderComponents[currentComponentName].failingReasons);
+    const isPass = useMemo(() => {
+        return workorderComponents[currentComponentName].status === 'green';
+    }, [])
 
     const hasImages = useMemo(() => {
         return currentComponent.images.length > 0;
@@ -93,12 +99,12 @@ function StatusReport() {
 
             <Stack spacing="xs">
                 {
-                    !report ?
+                    !editReport ?
                     <h2 
                         style={{
                             textTransform: "capitalize", 
                             margin: "auto"}}> 
-                        {currentComponentName}: {workorderComponents.status} 
+                        {currentComponentName}: {colourToStatus[workorderComponents[currentComponentName].status]}
                     </h2>
                     :
                     <div style={{display: "flex", justifyContent:"space-evenly"}}>
@@ -152,49 +158,8 @@ function StatusReport() {
                     }
                 </Container>
 
-
-                <Paper shadow="sm" p="xs" withBorder>
-
-                    <div 
-                        style={{
-                            display: "flex", 
-                            justifyContent:"space-between", 
-                            alignItems:"center"}}>
-                        <Text color="red" weight="Bold" style={{marginLeft: "0.5rem"}}>Fail Reason(s)</Text>
-                        <Button 
-                            component="a" 
-                            href="#" 
-                            variant="light" 
-                            // onClick={() => navigate('/camera')} 
-                            leftIcon={<BsPencilSquare size={18}/>}
-                            >
-                            Change Status
-                        </Button>
-                    </div>
-                    
-                    <ScrollArea 
-                        style={{height: 120,
-                                margin: "2rem", 
-                                marginTop: "0.1rem", 
-                                marginBottom: "1rem", 
-                                padding: 10}}
-                                type="scroll"
-                                >
-                    </ScrollArea>
-                </Paper>
-
-                <Stack align="center" spacing="xs">
-                    {/* {
-                    
-                        workorderComponents[currentComponentName].status === "green" ?
-                        <img src={PassIconSvg} width={75} style={{margin:"auto"}}></img>
-                        :
-                        <Paper shadow="sm" p="sm" withBorder></Paper>
-                    } */}
-
-                    
-                    {
-                        !report ?
+                {
+                        !editReport ?
                         null
                         :
                         <Button 
@@ -202,20 +167,36 @@ function StatusReport() {
                             href="#" 
                             variant="light" 
                             // onClick={() => navigate('/camera')} 
+                            style={{
+                                margin: "2rem", 
+                                marginTop: "0.5rem", 
+                                marginBottom: "0.5rem"}}
                             leftIcon={<BsPencilSquare size={18}/>}
-                            
                             >
                             Change Status
                         </Button>
 
                     }
-                </Stack>
 
                 {
-                    !report ? 
+                    !isPass && 
+                    <ReportFailReasons 
+                        failingReasons={workorderComponents[currentComponentName].failingReasons}
+                        editReport={editReport}
+                        />
+                }
+
+                {
+                    isPass && 
+                    <img src={PassIconSvg} width={75} style={{margin:"auto"}}></img>
+                }
+
+
+                {
+                    !editReport ? 
                     <Button 
                         variant="filled"
-                        onClick={() => editReport(true)} 
+                        onClick={() => setEditReport(true)} 
                         style={{
                             margin: "2rem", 
                             marginTop: "0.5rem", 
@@ -225,7 +206,7 @@ function StatusReport() {
                     :
                     <Button 
                         variant="outline" 
-                        onClick={() => editReport(false)}
+                        onClick={() => setEditReport(false)}
                         style={{
                             margin: "2rem", 
                             marginTop: "0.5rem", 
