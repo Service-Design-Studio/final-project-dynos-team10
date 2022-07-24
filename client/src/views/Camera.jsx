@@ -64,7 +64,7 @@ function Camera() {
         console.log("take photo");
         console.log(count);
 
-        if (count > -1) {
+        if (count > -1 && !['green', 'red'].includes(currentComponent.status)) {
             dispatch(updateCurrentComponentStatus("yellow"))
         } 
         
@@ -119,7 +119,13 @@ function Camera() {
                     <ActionIcon color="dark" variant="transparent">
                         {count > 0 ? 
                             <BsCardImage 
-                                onClick={() => navigate('/photo-review')} 
+                                onClick={() => {
+                                    console.log("camera page check status: "+currentComponent.status)
+                                    if (['green', 'red'].includes(currentComponent.status)){
+                                        navigate('/status-report');
+                                    } else {
+                                        navigate('/photo-review');
+                                    }}}
                                 style={{fontSize: "2rem"}}
                                 /> 
                             : null} 
@@ -185,7 +191,12 @@ function Camera() {
                     <ActionIcon color="dark" variant="transparent">
                         {count > 0 ? 
                             <FaArrowRight 
-                                onClick={() => navigate('/photo-review')} 
+                                onClick={() => {
+                                    if (['green', 'red'].includes(currentComponent.status)){
+                                        navigate('/status-report');
+                                    } else {
+                                        navigate('/photo-review');
+                                    }}}
                                 className="to-photo-review-btn" 
                                 style={{fontSize: "2rem"}}
                                 /> 

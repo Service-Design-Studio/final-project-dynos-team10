@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
-import { updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
+import { 
+    updateCurrentComponentName, 
+    selectWorkorderComponents, 
+    selectCurrentComponent 
+} from '../store/workorder/workorderSlice';
 import {Button} from "@mantine/core"
 
 function ComponentStatusButton(props) {
@@ -10,21 +14,29 @@ function ComponentStatusButton(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const workorderComponents = useSelector(selectWorkorderComponents);
+    const currentComponent = useSelector(selectCurrentComponent);
     const currentComponentImageCount = useMemo(() => {
         return workorderComponents[componentName]?.images.length || 0;
+    }, [workorderComponents]);
+    
+    const currentStatusSubmitted = useMemo(() => {
+        return ['green', 'red'].includes(workorderComponents[componentName].status);
     }, [workorderComponents]);
 
     const computedClassName = componentName.toLowerCase().split(' ').join('-') + '__btn';
 
     const handleClick = () => {
         dispatch(updateCurrentComponentName(componentName));
-        if (currentComponentImageCount > 0) {
+        console.log(workorderComponents[componentName].status);
+        if (currentComponentImageCount > 0 && !currentStatusSubmitted) {
             navigate('/photo-review');
+            return;
+        } else if (currentStatusSubmitted) {
+            navigate('/status-report');
             return;
         }
         navigate('/camera');
     }
-    
 
     return (
         workorderComponents[componentName] &&

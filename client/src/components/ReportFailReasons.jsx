@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
 import { updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
 
-import { FaArrowLeft } from "react-icons/fa";
-import { IoTrashSharp } from "react-icons/io5";
-import { MdLibraryAdd } from "react-icons/md";
-import { BsCameraFill, BsPencilSquare } from "react-icons/bs";
 import ClearIcon from '@mui/icons-material/Clear';
 import {
+    useMantineTheme,
     Button,
     Paper,
     Text, 
@@ -17,22 +14,22 @@ import {
     NativeSelect
 } from "@mantine/core"
 import { useListState } from '@mantine/hooks';
-import { blue } from '@mui/material/colors';
 
-function ReportFailReasons({failingReasons, editReport}) {
-    console.log(failingReasons);
-    const [reasons, handlers] = useListState(failingReasons);
+function ReportFailReasons({editReport, reasons, setReasons}) {
+    const theme = useMantineTheme();
     const [value, setValue] = useState('');
 
+    // const [reasons, setReasons] = useListState(failingReasons);
+    
       // add one or more items to the end of the list
     const append = (reason) => {
         if (!reasons.includes(reason)){
-            handlers.append(reason);
+            setReasons.append(reason);
         }
     }
 
     // remove items at given positions
-    const remove = (index) => handlers.remove(index);
+    const remove = (index) => setReasons.remove(index);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -57,8 +54,7 @@ function ReportFailReasons({failingReasons, editReport}) {
                 style={{padding: 5, 
                         marginLeft: "0.5rem",
                         overflowWrap: "break-word",
-                        wordBreak: "break-all"}}
-            >
+                        wordBreak: "break-all"}}>
                 {reason}
             </Text> 
             </div>
@@ -70,7 +66,6 @@ function ReportFailReasons({failingReasons, editReport}) {
                         style={{fontSize: 20, color: "black", padding: 7}} 
                         onClick={() => remove(index)}/>
             }
-
 
         </Paper>
         
@@ -99,12 +94,11 @@ function ReportFailReasons({failingReasons, editReport}) {
                         searchable
                         nothingFound="No options"
                         data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings']}
-                        maxDropdownHeight={180}
+                        maxdropdownheight={180}
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
                     />
             }
 
-            
             
             <ScrollArea 
                 style={{
@@ -115,7 +109,7 @@ function ReportFailReasons({failingReasons, editReport}) {
                     padding: 2}}
                     type="scroll"
                     >
-                <Text className="reasons-list" >{listItems}</Text>
+                <Text className="reasons-list">{listItems}</Text>
             </ScrollArea>
         </Paper>
         
