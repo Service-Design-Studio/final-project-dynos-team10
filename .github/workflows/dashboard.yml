@@ -1,0 +1,56 @@
+name: Dashboard App Run Tests
+
+on:
+  push:
+    paths:
+    - "dashboard/**"
+
+env:
+  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  SERVICE_NAME: dynostic-dashboard
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          browser: chrome
+          install-command: npm install
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
+          working-directory: dashboard
+          command: npm run cypress:run-record
+          record: true
+        env:
+          # pass the Cypress Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # build-and-deploy:
+  #   needs: cypress-run
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   # Add "id-token" with the intended permissions.
+  #   permissions:
+  #     contents: 'read'
+  #     id-token: 'write'
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     # Alternative option - authentication via credentials json
+  #     - id: 'auth'
+  #       uses: google-github-actions/auth@v0.7.3
+  #       with:
+  #         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+  #     - name: Set up Cloud SDK
+  #       uses: google-github-actions/setup-gcloud@v0.6.0
+  #     # Build and push image to Google Container Registry
+  #     - name: Build
+  #       run: |-
+  #         cd dashboard &&
+  #         gcloud builds submit
