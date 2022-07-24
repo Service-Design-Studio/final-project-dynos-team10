@@ -1,6 +1,7 @@
 class Component < ApplicationRecord
     has_many :images
     belongs_to :workorder
+    has_one :component_type
     validates :component_type, :workorder_id, presence: true
     validates :component_type, uniqueness: { scope: :workorder_id}
     # TODO: validate uniqueness of the above 2 AS a whole unit
