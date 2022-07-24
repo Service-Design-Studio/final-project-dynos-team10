@@ -30,8 +30,8 @@ class WorkordersController < ApplicationController
 
     def create
         workorder_number = params[:workorder_number]
-        machine_type = params[:machine_type]
-        workorder_record = Workorder.create_record workorder_number, machine_type
+        machine_type_id = params[:machine_type_id]
+        workorder_record = Workorder.create_record workorder_number, machine_type_id
         if workorder_record.id.nil?
             render json: fail_json(errors: workorder_record.errors, data: workorder_record), status: :unprocessable_entity
             return
@@ -46,7 +46,7 @@ class WorkordersController < ApplicationController
 
     def update
         @workorder = Workorder.find(params[:id])
-        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type))
+        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id))
             render json: success_json(@workorder)
         else
             render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity
