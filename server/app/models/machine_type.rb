@@ -1,0 +1,2 @@
+class MachineType < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class ComponentType < ApplicationRecord
+end

@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_15_122541) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_24_050437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "component_types", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "type"
+  end
 
   create_table "components", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -32,6 +38,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_15_122541) do
     t.string "auth_url", limit: 1024
     t.bigint "component_id"
     t.index ["component_id"], name: "index_images_on_component_id"
+  end
+
+  create_table "machine_types", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "workorders", force: :cascade do |t|

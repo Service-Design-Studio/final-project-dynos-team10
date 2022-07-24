@@ -1,0 +1,2 @@
+class MachineTypeController < ApplicationController
+end
