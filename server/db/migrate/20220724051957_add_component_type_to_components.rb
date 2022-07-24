@@ -1,5 +1,5 @@
 class AddComponentTypeToComponents < ActiveRecord::Migration[7.0]
   def change
-    add_reference :component_types, :component
+    add_belongs_to :components, :component_type
   end
 end

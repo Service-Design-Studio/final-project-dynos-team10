@@ -1,5 +1,5 @@
 class AddTypeToComponentTypes < ActiveRecord::Migration[7.0]
   def change
-    add_column :component_types, :type, :string
+    add_column :component_types, :type, :string, null: false
   end
 end

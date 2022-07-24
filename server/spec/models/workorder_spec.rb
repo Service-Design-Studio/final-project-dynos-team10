@@ -54,6 +54,7 @@ RSpec.describe Workorder, :type => :model do
     context "given workorder number" do 
       it 'returns the workorder with that workorder number' do
         workorder = Workorder.create_record("1", 1)
+        puts workorder.attributes
         expect(Workorder.find_one_by_workorder_number(workorder.workorder_number)).to eq(workorder)
       end
     end

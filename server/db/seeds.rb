@@ -10,7 +10,7 @@ workorders =[{:workorder_number => "WO1", :machine_type => "machine_1"},
              {:workorder_number => "WO2", :machine_type => "machine_2"},
              {:workorder_number => "test", :machine_type => "machine_1"}]
 
-components = [{:workorder_id => 1, :status => false, :component_type => "component_1"},
+components = [{:workorder_id => 1, :status => false, :component_type.type => "component_1"},
               {:workorder_id => 1, :status => false, :component_type => "component_2", :failing_reasons => ["Wrong position"]},
               {:workorder_id => 2, :status => true, :component_type => "component_1"},
               {:workorder_id => 2, :status => true, :component_type => "component_2"},

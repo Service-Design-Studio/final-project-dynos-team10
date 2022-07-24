@@ -10,26 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_24_052224) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_24_191852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "component_types", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "type"
-    t.bigint "component_id"
-    t.index ["component_id"], name: "index_component_types_on_component_id"
+    t.string "type_name", null: false
+    t.bigint "workorder_id"
+    t.index ["workorder_id"], name: "index_component_types_on_workorder_id"
   end
 
   create_table "components", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "workorder_id"
-    t.string "component_type"
     t.boolean "status"
     t.text "failing_reasons", default: [], array: true
-    t.index ["component_type", "workorder_id"], name: "index_components_on_component_type_and_workorder_id", unique: true
+    t.bigint "component_type_id"
+    t.index ["component_type_id"], name: "index_components_on_component_type_id"
     t.index ["workorder_id"], name: "index_components_on_workorder_id"
   end
 
@@ -45,17 +45,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_24_052224) do
   create_table "machine_types", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type_name", null: false
+    t.bigint "workorder_id"
+    t.index ["workorder_id"], name: "index_machine_types_on_workorder_id"
   end
 
   create_table "workorders", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "workorder_number"
-    t.string "machine_type"
     t.bigint "user_id"
+    t.bigint "machine_type_id"
+    t.index ["machine_type_id"], name: "index_workorders_on_machine_type_id"
   end
 
-  add_foreign_key "component_types", "components"
+  add_foreign_key "components", "component_types"
   add_foreign_key "components", "workorders"
   add_foreign_key "images", "components"
 end
