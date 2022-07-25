@@ -94,7 +94,7 @@ function ReportFailReasons({editReport, reasons, setReasons}) {
                         searchable
                         nothingFound="No options"
                         data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings']}
-                        maxdropdownheight={180}
+                        maxdropdownheight={160}
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
                     />
             }

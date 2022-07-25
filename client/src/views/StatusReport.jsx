@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import { FaArrowLeft } from "react-icons/fa";
@@ -12,9 +13,7 @@ import ReportFailReasons from "../components/ReportFailReasons";
 import { cloneDeep } from "lodash";
 import { deepCompare } from "../helpers/objectHelper";
 import { buildComponentObjWithImages } from "../helpers/componentsHelper";
-
 import './PhotoReview.css';
-import { useDispatch, useSelector } from "react-redux";
 import { 
     removeComponentImageByIndex, 
     selectCurrentComponent, 
@@ -37,8 +36,7 @@ import {
     Modal,
     Center
   } from "@mantine/core";
-  import { useListState } from '@mantine/hooks';
-  
+import { useListState } from '@mantine/hooks';
 import { $axios } from '../helpers/axiosHelper';
 import { current } from "@reduxjs/toolkit";
 
@@ -55,15 +53,14 @@ function StatusReport() {
     const currentComponent = useSelector(selectCurrentComponent);
     const workorderComponents = useSelector(selectWorkorderComponents);
     
-    const [editReport, setEditReport] = useState(false);
-    const [reasons, setReasons] = useListState(currentComponent.failingReasons);
-    const [chosenStatus, setChosenStatus] = useState(currentComponent.status);
-    const [opened, setOpened] = useState(false);
-    const [openedNoChanges, setOpenedNoChanges] = useState(false);
+    const [editReport, setEditReport] = useState(false); // view vs edit mode for report
+    const [reasons, setReasons] = useListState(currentComponent.failingReasons); // failing reasons
+    const [chosenStatus, setChosenStatus] = useState(currentComponent.status); // current status (locally)
+    const [opened, setOpened] = useState(false); // modal if successful
+    const [openedNoChanges, setOpenedNoChanges] = useState(false); // modal if no changes
 
-    // const params = useParams()
+    // if go the camera from report and navigate back to report -> stay in edit mode
     useEffect(() => {
-        // console.log(searchparams.get('editMode'))
         setEditReport(searchparams.get('editMode'));
     }, [searchparams]);
     
@@ -102,6 +99,7 @@ function StatusReport() {
         carouselKey === 0 ? setCarouselKey(1) : setCarouselKey(0);
     }
 
+    // save button disabled if no fail reasons
     const UploadButton = () => {
         if (chosenStatus === 'red' && reasons.length === 0) {
             return (
@@ -155,7 +153,6 @@ function StatusReport() {
         await $axios.delete(`images/batch?${deleteQueryParams.toString()}`);
     }
 
-
     // taken from PassFail.jsx
 
     const findWorkorderRecord = async() => {
@@ -169,7 +166,6 @@ function StatusReport() {
             return null;
         }
     }
-
 
     const successfulUpload = (response) => {
         // open modal
@@ -369,7 +365,7 @@ function StatusReport() {
                     setOpenedNoChanges(false);
                 }}
                 >
-                <Text size="lg" align="center" style={{margin: 20}}>No changed detected!</Text>
+                <Text size="lg" align="center" style={{margin: 20}}>No changes detected!</Text>
                 <Center><Button onClick={() => navigate('/component-status')}>Go Components List</Button></Center>
             </Modal>
 
