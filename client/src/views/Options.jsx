@@ -7,10 +7,22 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useNavigate } from "react-router-dom";
 import {useState} from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentComponentStatus } from "../store/workorder/workorderSlice";
+import { 
+    selectCurrentComponentName,
+    addImageToComponent,
+    selectCurrentComponent
+} from "../store/workorder/workorderSlice";
+
 
 function Options() {
     const navigate= useNavigate();
     const [opened, setOpened] = useState();
+
+    const currentComponentName = useSelector(selectCurrentComponentName);
+    const currentComponent = useSelector(selectCurrentComponent);
+    const dispatch = useDispatch();
 
     const [pictures, setPictures] = useState([]);
 
@@ -18,8 +30,10 @@ function Options() {
         const reader = new FileReader();
         reader.onloadend = () => {
             const base64String = reader.result
-                .replace('data:', '')
-                .replace(/^.+,/, '');
+            dispatch(addImageToComponent({
+                componentName: currentComponentName,
+                image: base64String
+            }));
             setPictures(oldArray => [...oldArray, base64String])
             // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
         };
@@ -32,18 +46,11 @@ function Options() {
         
         file.forEach(i=>{
             getBase64(i)
+ 
         });
 
+        navigate('/photo-review')
         };
-    //    const pics = file.map(data => (
-    //         URL.createObjectURL(data)
-    //     ))
-        // console.log(pics)
-        // file.forEach(i => {
-        //     console.log(i)
-        //     setPictures([...pictures, URL.createObjectURL(i)]);
-        // })
-
 
     return ( 
         <div>
