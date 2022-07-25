@@ -9,7 +9,6 @@
     "@mantine/core": "^4.2.10",
     "@mantine/form": "^4.2.10",
     "@mantine/hooks": "^4.2.10",
-    "@mantine/next": "^4.2.10",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.7",
     "@reduxjs/toolkit": "^1.8.2",
