@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import { FaArrowLeft } from "react-icons/fa";
 import { IoTrashSharp } from "react-icons/io5";
@@ -34,7 +34,8 @@ import {
     Stack,
     Paper,
     ScrollArea,
-    Modal
+    Modal,
+    Center
   } from "@mantine/core";
   import { useListState } from '@mantine/hooks';
   
@@ -45,17 +46,27 @@ let colourToStatus = {"red": "FAIL", "green": "PASS"};
 
 function StatusReport() {
 
+    const { state } = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [searchparams] = useSearchParams();
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
     const workorderComponents = useSelector(selectWorkorderComponents);
-
+    
     const [editReport, setEditReport] = useState(false);
     const [reasons, setReasons] = useListState(currentComponent.failingReasons);
     const [chosenStatus, setChosenStatus] = useState(currentComponent.status);
     const [opened, setOpened] = useState(false);
+    const [openedNoChanges, setOpenedNoChanges] = useState(false);
+
+    // const params = useParams()
+    useEffect(() => {
+        // console.log(searchparams.get('editMode'))
+        setEditReport(searchparams.get('editMode'));
+    }, [searchparams]);
+    
 
     const [activeStep, setActiveStep] = useState(0);
     const handleNext = () => {
@@ -91,6 +102,35 @@ function StatusReport() {
         carouselKey === 0 ? setCarouselKey(1) : setCarouselKey(0);
     }
 
+    const UploadButton = () => {
+        if (chosenStatus === 'red' && reasons.length === 0) {
+            return (
+                <Button 
+                    className="save-btn"
+                    variant="outline" 
+                    disabled
+                    style={{
+                        margin: "2rem", 
+                        marginTop: "0.5rem", 
+                        marginBottom: "0.5rem"}}>
+                    Save
+                </Button>)
+        } else {
+            return (
+                <Button 
+                    className="save-btn"
+                    variant="outline" 
+                    onClick={updateComponentRecord}
+                    style={{
+                        margin: "2rem", 
+                        marginTop: "0.5rem", 
+                        marginBottom: "0.5rem"}}>
+                    Save
+                </Button>)
+        }
+    };
+
+
     const updateImages = async(componentId, oldImages, updatedImages) => {
         // Note: images can only be added or deleted, they cannot be edited
         console.log({componentId, oldImages, updatedImages});
@@ -115,10 +155,8 @@ function StatusReport() {
         await $axios.delete(`images/batch?${deleteQueryParams.toString()}`);
     }
 
-    const successfulUpload = (response) => {
-        // taken from PassFail.jsx 
-        setOpened(true);
-    }
+
+    // taken from PassFail.jsx
 
     const findWorkorderRecord = async() => {
         try {
@@ -130,6 +168,12 @@ function StatusReport() {
             console.log('cannot find current workorder');
             return null;
         }
+    }
+
+
+    const successfulUpload = (response) => {
+        // open modal
+        setOpened(true);
     }
 
     const updateComponentRecord = async() => {
@@ -162,12 +206,13 @@ function StatusReport() {
         if (Object.keys(differences).length === 0) {
             // no differences to be updated found, tell user?
             console.log('no differences/changes to be committed');
+            setOpenedNoChanges(true);
             return;
         }
 
         if (differences.images) {
             // await this?
-            updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
+            await updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
         }
 
         const payload = {
@@ -275,7 +320,6 @@ function StatusReport() {
                             >
                             Change Status
                         </Button>
-
                     }
 
                 {
@@ -304,15 +348,7 @@ function StatusReport() {
                             Edit
                         </Button>
                     :
-                        <Button 
-                            variant="outline" 
-                            onClick={updateComponentRecord}
-                            style={{
-                                margin: "2rem", 
-                                marginTop: "0.5rem", 
-                                marginBottom: "0.5rem"}}>
-                            Save
-                        </Button>
+                        <UploadButton/>
                 }
 
             </Stack>
@@ -324,7 +360,17 @@ function StatusReport() {
                     navigate('/component-status');
                 }}
                 >
-                <Text size="lg" align="center" style={{margin: 20}}>Update Successful</Text>
+                <Text  style={{margin: 20}}>Update Successful</Text>
+            </Modal>
+
+            <Modal
+                opened={openedNoChanges}
+                onClose={() =>{ 
+                    setOpenedNoChanges(false);
+                }}
+                >
+                <Text size="lg" align="center" style={{margin: 20}}>No changed detected!</Text>
+                <Center><Button onClick={() => navigate('/component-status')}>Go Components List</Button></Center>
             </Modal>
 
         </div>
