@@ -16,11 +16,8 @@ import { selectToken, setIsAuthenticated, setToken } from "./store/auth/authSlic
 import { $axios } from "./helpers/axiosHelper";
 import PassFail from "./views/PassFail";
 import Profile from "./views/Profile";
-<<<<<<< HEAD
 import StatusReport from "./views/StatusReport";
-=======
 import Options from "./views/Options";
->>>>>>> 6f422b065fa7674c5c556e9c534e6a12adb1fbcb
 
 function Router() {
     let location = useLocation();
@@ -81,11 +78,8 @@ function Router() {
                 <Route path="qc-list" element={<QCList/>} />
                 <Route path="pass-fail" element={<PassFail />} />
                 <Route path="profile" element={<Profile />}/>
-<<<<<<< HEAD
                 <Route path="status-report" element={<StatusReport/>}/>
-=======
                 <Route path="options" element={<Options />}/>
->>>>>>> 6f422b065fa7674c5c556e9c534e6a12adb1fbcb
             </Route>
         </Routes>
     )

@@ -212,7 +212,7 @@ function StatusReport() {
 
         if (differences.images) {
             // await this?
-            await updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
+            updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
         }
 
         const payload = {
