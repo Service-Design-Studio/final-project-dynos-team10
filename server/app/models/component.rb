@@ -9,8 +9,6 @@ class Component < ApplicationRecord
 
     def self.create_record(workorder_id, component_type_id, status, failing_reasons=[""])
         new_component = Component.create(status: status, workorder_id: workorder_id, failing_reasons: failing_reasons,component_type_id: component_type_id)
-        # component_type.creare
-        # comp_type = ComponentType.create(type_name: component_type,component_id: new_component.id,workorder_id:workorder_id)
         # return new_component
         # if new_component.nil?
         #
@@ -39,9 +37,10 @@ class Component < ApplicationRecord
 
     def self.create_components_for_workorder(workorder_id)
         work_order = Workorder.find_by(id:workorder_id)
-        all_comp_types = get_all_component_types_for_machine_type(work_order.machine_type_id)
+        all_comp_types = ComponentType.get_all_component_types_for_machine_type(work_order.machine_type_id)
         all_comp_types.each do |comp_type|
             Component.create_record(work_order.id,comp_type.id,false)
         end
+        Component.where(workorder_id:work_order.id)
     end
 end
