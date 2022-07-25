@@ -36,4 +36,12 @@ class Component < ApplicationRecord
     def self.get_one_images(component_id)
         Component.find_by(id: component_id).images
     end
+
+    def self.create_components_for_workorder(workorder_id)
+        work_order = Workorder.find_by(id:workorder_id)
+        all_comp_types = get_all_component_types_for_machine_type(work_order.machine_type_id)
+        all_comp_types.each do |comp_type|
+            Component.create_record(work_order.id,comp_type.id,false)
+        end
+    end
 end
