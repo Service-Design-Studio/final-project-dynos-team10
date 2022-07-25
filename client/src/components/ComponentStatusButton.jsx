@@ -35,7 +35,7 @@ function ComponentStatusButton(props) {
             navigate('/status-report');
             return;
         }
-        navigate('/camera');
+        navigate('/options');
     }
 
     return (
