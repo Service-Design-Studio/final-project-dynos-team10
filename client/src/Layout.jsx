@@ -32,7 +32,7 @@ const routeMapStatic = {
     "/pass": "Pass",
     '/qc-list': 'QC List',
     '/pass-fail': 'Status',
-    '/profile': 'Profile'
+    '/profile': 'Profile',
 }
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
@@ -64,7 +64,8 @@ export default function Layout() {
     const routeMap = useMemo(() => {
         return {
             ...routeMapStatic,
-            '/component-status': currentWorkorderNumber
+            '/component-status': currentWorkorderNumber,
+            '/status-report' : currentWorkorderNumber
         }
     }, [currentWorkorderNumber])
 

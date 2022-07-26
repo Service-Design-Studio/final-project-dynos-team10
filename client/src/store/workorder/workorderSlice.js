@@ -96,8 +96,6 @@ export const workorderSlice = createSlice({
         addFailingReasons: (state, action) => {
             const componentName = action.payload.componentName;
             const failingReasons = action.payload.failingReasons;
-            console.log("component name = " + componentName);
-            console.log("action payload = " + failingReasons);
             console.log(state.components[componentName].failingReasons);
             state.components[componentName].failingReasons = failingReasons;
         },
