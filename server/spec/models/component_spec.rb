@@ -17,9 +17,9 @@ RSpec.describe Component, :type => :model do
   #   expect(component).to_not be_valid
   # end
 
-  it "is not valid without a workorder_id" do
-    component = Component.create_record(nil,"label",false)
-  end
+  # it "is not valid without a workorder_id" do
+  #   component = Component.create_record(nil,"label",false)
+  # end
 
   # it { should validate_uniqueness_of(:component_type).scoped_to(:workorder_id).ignoring_case_sensitivity}
 
@@ -37,19 +37,25 @@ RSpec.describe Component, :type => :model do
   end
 
   it "should not allow to have more than 1 component to be have the same workorder id and same component_types " do
-    work_order = Workorder.create_record("10",1)
-    comp1 = Component.create_record(work_order.id,"wire",false)
-    comp2 = Component.create_record(work_order.id,"wire",false)
+    machine_type = MachineType.create_record("m10")
+    component_type = ComponentType.create_record("zzzz")
+    ComponentType.add_machine_type(machine_type.id,component_type.id)
+    work_order = Workorder.create_record("W10",machine_type.id)
+    component = Component.create_record(work_order.id, component_type.id, false)
+    comp2 = Component.create_record(work_order.id, component_type.id,false)
     expect(comp2.id.nil?).to be_truthy
 
   end
   # ***** testing of methods *********
 
   describe '.find_one' do
-    context "given component id" do 
+    context "given component id" do
       it 'returns the component with that component_id' do
-        workorder = Workorder.create_record("1", 1)
-        component = Component.create_record(workorder.id,"label",false)
+        machine_type = MachineType.create_record("m10")
+        component_type = ComponentType.create_record("zzzz")
+        ComponentType.add_machine_type(machine_type.id,component_type.id)
+        work_order = Workorder.create_record("W10",machine_type.id)
+        component = Component.create_record(work_order.id, component_type.id, false)
         # byebug
         expect(Component.find_one(component.id)).to eq(component)
       end
@@ -57,12 +63,16 @@ RSpec.describe Component, :type => :model do
   end
 
   describe '.create_record' do
-    context "given workorder id, component_type and status" do 
+    context "given workorder id, component_type and status" do
       it 'creates the component with the given arguements' do
-        test_component = Component.create_record("1","label",false)
-        expect(test_component.workorder_id).to equal(1)
-        expect(test_component.component_type).to eq("label")
-        expect(test_component.status).to be_falsy
+        machine_type = MachineType.create_record("m10")
+        component_type = ComponentType.create_record("zzzz")
+        ComponentType.add_machine_type(machine_type.id,component_type.id)
+        work_order = Workorder.create_record("W10",machine_type.id)
+        component = Component.create_record(work_order.id, component_type.id, false)
+        expect(component.workorder_id).to equal(work_order.id)
+        expect(component.component_type_id).to eq(component_type.id)
+        expect(component.status).to be_falsy
       end
     end
   end
@@ -76,11 +86,17 @@ RSpec.describe Component, :type => :model do
 
   describe '.find_all_by_workorder_id' do
     it 'should return all the component objects belonging to one workorder' do
-      workorder = Workorder.create_record("2",1)
-      c1 = Component.create_record(workorder.id,"wire",false)
-      c2 = Component.create_record(workorder.id,"component_3",false)
+      machine_type = MachineType.create_record("m10")
+      component_type1 = ComponentType.create_record("zzzz")
+      component_type2 = ComponentType.create_record("ssss")
+      ComponentType.add_machine_type(machine_type.id,component_type1.id)
+      ComponentType.add_machine_type(machine_type.id,component_type2.id)
+      work_order = Workorder.create_record("W10",machine_type.id)
+      component1 = Component.create_record(work_order.id, component_type1.id, false)
+      component2 = Component.create_record(work_order.id, component_type2.id, false)
+
       # byebug
-      expect(Component.find_all_by_workorder_id(workorder.id)).to match_array([c1,c2])
+      expect(Component.find_all_by_workorder_id(work_order.id)).to match_array([component1,component2])
     end
   end
 end

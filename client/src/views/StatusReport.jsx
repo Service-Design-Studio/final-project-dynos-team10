@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import OptionsModal from "../components/OptionsModal";
 
 import { FaArrowLeft } from "react-icons/fa";
 import { IoTrashSharp } from "react-icons/io5";
@@ -44,7 +45,7 @@ let colourToStatus = {"red": "FAIL", "green": "PASS"};
 
 function StatusReport() {
 
-    const { state } = useLocation();
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [searchparams] = useSearchParams();
@@ -58,6 +59,7 @@ function StatusReport() {
     const [chosenStatus, setChosenStatus] = useState(currentComponent.status); // current status (locally)
     const [opened, setOpened] = useState(false); // modal if successful
     const [openedNoChanges, setOpenedNoChanges] = useState(false); // modal if no changes
+    const [optionsModal, setOptionsModal] = useState(false)
 
     // if go the camera from report and navigate back to report -> stay in edit mode
     useEffect(() => {
@@ -237,6 +239,14 @@ function StatusReport() {
     return (
         
         <div style={{margin: 20}}>
+            {
+                optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
 
             <Stack spacing="xs">
                 {
@@ -253,7 +263,7 @@ function StatusReport() {
                         component="a" 
                         href="#" 
                         variant="outline" 
-                        onClick={() => navigate('/camera')} 
+                        onClick={() => setOptionsModal(true)} 
                         leftIcon={<BsCameraFill size={18}/>}>
                         Add Photo
                     </Button>

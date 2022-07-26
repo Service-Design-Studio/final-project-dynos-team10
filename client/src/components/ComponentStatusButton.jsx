@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
 import { 
@@ -7,9 +7,12 @@ import {
     selectCurrentComponent 
 } from '../store/workorder/workorderSlice';
 import {Button} from "@mantine/core"
+import OptionsModal from "../components/OptionsModal";
+
 
 function ComponentStatusButton(props) {
     const componentName = props.component;
+    const [optionsModal, setOptionsModal] = useState(false)
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,18 +31,27 @@ function ComponentStatusButton(props) {
     const handleClick = () => {
         dispatch(updateCurrentComponentName(componentName));
         // console.log(workorderComponents[componentName].status);
-        if (currentComponentImageCount > 0 && !currentStatusSubmitted) {
-            navigate('/photo-review');
+        if (currentComponentImageCount >= 0 && !currentStatusSubmitted) {
+            setOptionsModal(true)
             return;
         } else if (currentStatusSubmitted) {
             navigate('/status-report');
             return;
         }
-        navigate('/options');
     }
 
     return (
-        workorderComponents[componentName] &&
+        <div>
+            {optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
+
+
+        {workorderComponents[componentName] &&
         <Button 
             color = {workorderComponents[componentName].status}
             variant="light" 
@@ -50,6 +62,8 @@ function ComponentStatusButton(props) {
         > 
             <h2>{componentName}</h2>
         </Button>
+        }
+        </div>
         
     )
 }

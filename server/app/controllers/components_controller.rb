@@ -10,10 +10,10 @@ class ComponentsController < ApplicationController
         workorder_id = params[:workorder_id]
         # IF no status param is passed, that means failed (false), ELSE true
         status = !params[:status].nil?
-        component_type = params[:component_type]
+        component_type_id = params[:component_type_id]
         failing_reasons = params[:failing_reasons]
 
-        component_record = Component.create_record workorder_id, component_type, status, failing_reasons
+        component_record = Component.create_record workorder_id, component_type_id, status, failing_reasons
         if component_record.id.nil?
             render json: fail_json(errors: component_record.errors)
             return
@@ -28,7 +28,7 @@ class ComponentsController < ApplicationController
 
     def update
         @component = Component.find(params[:id])
-        if @component.update!(params.require(:component).permit(:component_type,:workorder_id,:status, :failing_reasons))
+        if @component.update!(params.require(:component).permit(:component_type_id,:workorder_id,:status, :failing_reasons))
             @component.failing_reasons = params["component"][:failing_reasons]
             @component.save
             render json: success_json(@component)

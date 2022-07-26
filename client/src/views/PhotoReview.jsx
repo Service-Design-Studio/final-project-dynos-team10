@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import OptionsModal from "../components/OptionsModal";
 
 import { FaArrowLeft } from "react-icons/fa";
 import { IoTrashSharp } from "react-icons/io5";
@@ -50,6 +51,8 @@ function PhotoReview() {
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
+    const [optionsModal, setOptionsModal] = useState(false);
+
 
     const hasImages = useMemo(() => {
         return currentComponent.images.length > 0;
@@ -83,6 +86,15 @@ function PhotoReview() {
         
         <div style={{margin: 20}}>
 
+            {
+                optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
+
             {/* top section */}
             <Space h="lg" />
 
@@ -98,7 +110,7 @@ function PhotoReview() {
 
                 <Grid.Col span={1} align="right">
                     <ActionIcon color="blue" variant="outline" radius="md" size="3rem">
-                        <MdLibraryAdd onClick={() => navigate('/camera')} size="1.7rem"/>
+                        <MdLibraryAdd onClick={() => setOptionsModal(true)} size="1.7rem"/>
                     </ActionIcon>
                 </Grid.Col>
 
