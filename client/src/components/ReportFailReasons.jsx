@@ -91,6 +91,7 @@ function ReportFailReasons({editReport, reasons, setReasons}) {
                         placeholder="Add Reasons"
                         searchable
                         nothingFound="No options"
+                        // edit to return {value, label} 
                         data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings', 'others']}
                         // maxDropdownHeight = {120} 
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
