@@ -44,6 +44,10 @@ end
 
 MachineType.update_component_types(1,[1,2])
 MachineType.update_component_types(2,[2,3])
+ComponentType.update_machine_types(1,[1])
+ComponentType.update_machine_types(2,[1,2])
+ComponentType.update_machine_types(3,[2])
+
 
 workorders.each do |workorder|
   Workorder.create!(workorder)
