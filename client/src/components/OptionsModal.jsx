@@ -43,6 +43,10 @@ const handleChange = (e) => {
         getBase64(i)
 
     });
+    
+    if (location.pathname==='/photo-review' | location.pathname==='/component-status'){
+        navigate('/photo-review')
+    };
     setOptionsModal(false)
 };
 
