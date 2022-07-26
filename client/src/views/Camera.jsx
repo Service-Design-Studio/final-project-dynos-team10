@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { FaArrowLeft, FaArrowRight, FaRegCircle } from "react-icons/fa";
 import { IoFlash, IoFlashOutline } from "react-icons/io5"; // in case got flash option
@@ -64,7 +64,7 @@ function Camera() {
         console.log("take photo");
         console.log(count);
 
-        if (count > -1) {
+        if (count > -1 && !['green', 'red'].includes(currentComponent.status)) {
             dispatch(updateCurrentComponentStatus("yellow"))
         } 
         
@@ -96,6 +96,23 @@ function Camera() {
         }
     }, [imageCapture])
 
+
+    const continueEdit = ['green', 'red'].includes(currentComponent.status);
+    
+    const checkContinueEdit = (editMode) => {
+        console.log(continueEdit);
+        if (continueEdit){
+            navigate({
+                pathname: "/status-report",
+                search: createSearchParams({
+                    editMode: continueEdit
+                }).toString()
+            });
+        } else {
+            navigate('/photo-review');
+        }
+    };
+
     return (
         <div style={{margin: 30}}>
 
@@ -119,7 +136,7 @@ function Camera() {
                     <ActionIcon color="dark" variant="transparent">
                         {count > 0 ? 
                             <BsCardImage 
-                                onClick={() => navigate('/photo-review')} 
+                                onClick={checkContinueEdit}
                                 style={{fontSize: "2rem"}}
                                 /> 
                             : null} 
@@ -185,7 +202,7 @@ function Camera() {
                     <ActionIcon color="dark" variant="transparent">
                         {count > 0 ? 
                             <FaArrowRight 
-                                onClick={() => navigate('/photo-review')} 
+                                onClick={checkContinueEdit}
                                 className="to-photo-review-btn" 
                                 style={{fontSize: "2rem"}}
                                 /> 
