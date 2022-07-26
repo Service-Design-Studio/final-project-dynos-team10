@@ -41,9 +41,10 @@ class MachineTypesController < ApplicationController
   def update
     @machine_type = MachineType.find(params[:id])
     if @machine_type.update(params.require(:machine_type).permit(:type_name))
-      render json: success_json(@workorder)
+      MachineType.update_component_types(@machine_type.id,params[:component_type_ids])
+      render json: success_json(@machine_type)
     else
-      render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity
+      render json: fail_json(errors: @machine_type.errors, data: @machine_type), status: :unprocessable_entity
     end
   end
 
