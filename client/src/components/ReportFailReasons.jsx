@@ -11,20 +11,18 @@ import {
     Text, 
     ScrollArea,
     Select,
-    NativeSelect
+    NativeSelect,
+    MultiSelect
 } from "@mantine/core"
-import { useListState } from '@mantine/hooks';
 
 function ReportFailReasons({editReport, reasons, setReasons}) {
     const theme = useMantineTheme();
     const [value, setValue] = useState('');
 
-    // const [reasons, setReasons] = useListState(failingReasons);
-    
       // add one or more items to the end of the list
     const append = (reason) => {
         if (!reasons.includes(reason)){
-            setReasons.append(reason);
+            setReasons.append(reason); // setReasons is in StatusReport.jsx 
         }
     }
 
@@ -93,12 +91,11 @@ function ReportFailReasons({editReport, reasons, setReasons}) {
                         placeholder="Add Reasons"
                         searchable
                         nothingFound="No options"
-                        data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings']}
-                        maxdropdownheight={160}
+                        data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings', 'others']}
+                        // maxDropdownHeight = {120} 
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
                     />
             }
-
             
             <ScrollArea 
                 style={{

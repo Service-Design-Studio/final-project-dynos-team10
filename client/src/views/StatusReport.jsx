@@ -205,15 +205,21 @@ function StatusReport() {
             setOpenedNoChanges(true);
             return;
         }
+        const payload = {
+            component_id: currentComponentChanges.id
+        }
 
         if (differences.images) {
             // await this?
             updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
         }
 
-        const payload = {
-            component_id: currentComponentChanges.id
+        // payload does not have images, if only edit images cannot make patch request
+        if (!differences.status && !differences.failingReasons) {
+            successfulUpload();
+            return;
         }
+
         if (differences.status) {
             payload.status = currentComponentChanges.status === 'green';
         }
@@ -273,7 +279,11 @@ function StatusReport() {
                                     className="photo-review-camera-btn--secondary"
                                     colour="blue" 
                                     variant="outline" 
-                                    style={{marginTop: 30, marginInline: 20, width: "auto", height: 120, fontSize: "1.2rem"}}
+                                    style={{marginTop: 30, 
+                                            marginInline: 20, 
+                                            width: "auto", 
+                                            height: 120, 
+                                            fontSize: "1.2rem"}}
                                     onClick={() => navigate('/camera')}
                                 >
                                     go back to camera
@@ -367,6 +377,13 @@ function StatusReport() {
                 >
                 <Text size="lg" align="center" style={{margin: 20}}>No changes detected!</Text>
                 <Center><Button onClick={() => navigate('/component-status')}>Go Components List</Button></Center>
+                <Center 
+                    style={{marginTop: "1rem", 
+                            marginBottom: "2rem"}}>
+                    <Button onClick={() => setOpenedNoChanges(false)}>
+                        Continue Editing
+                    </Button>
+                </Center>
             </Modal>
 
         </div>

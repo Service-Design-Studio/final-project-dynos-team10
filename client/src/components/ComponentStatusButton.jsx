@@ -27,7 +27,7 @@ function ComponentStatusButton(props) {
 
     const handleClick = () => {
         dispatch(updateCurrentComponentName(componentName));
-        console.log(workorderComponents[componentName].status);
+        // console.log(workorderComponents[componentName].status);
         if (currentComponentImageCount > 0 && !currentStatusSubmitted) {
             navigate('/photo-review');
             return;
