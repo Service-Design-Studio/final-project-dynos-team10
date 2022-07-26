@@ -4,7 +4,7 @@ class MachineTypesController < ApplicationController
 
     machine_type_name = params[:type_name]
     unless machine_type_name.nil?
-      machine_type_rec = MachineType.find_one_by_machine_type_name(machine_type_name)
+      machine_type_rec = MachineType.find_one_by_type_name(machine_type_name)
       if machine_type_rec.nil?
         begin
           errors = machine_type_rec.errors

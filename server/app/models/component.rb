@@ -37,7 +37,7 @@ class Component < ApplicationRecord
 
     def self.create_components_for_workorder(workorder_id)
         work_order = Workorder.find_by(id:workorder_id)
-        all_comp_types = MachineType.get_all_component_types_for_machine_type_from_id(work_order.machine_type_id)
+        all_comp_types = MachineType.get_all_component_types_from_id(work_order.machine_type_id)
         all_comp_types.each do |comp_type|
             Component.create_record(work_order.id,comp_type.id,false)
         end

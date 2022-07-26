@@ -4,7 +4,7 @@ class ComponentTypesController < ApplicationController
   def index
     component_type_name = params[:type_name]
     unless component_type_name.nil?
-      component_type_rec = ComponentType.find_one_by_component_type_name(component_type_name)
+      component_type_rec = ComponentType.find_one_by_type_name(component_type_name)
       if component_type_rec.nil?
         begin
           errors = component_type_rec.errors
