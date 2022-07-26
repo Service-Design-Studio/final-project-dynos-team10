@@ -7,7 +7,8 @@ Feature: Registering as a new user
     Scenario: Registering as a completely new user
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "uNiQuENamE"
-        Then I fill in the input field for "Credential Nickname" with "uNiQuENamEKeY" 
+        And I fill in the input field for "Password" with "securepassword"
+        And I fill in the input field for "Confirm Password" with "securepassword"
         Then I click on the register button, expecting "success"
         Then I should see "Successful Registration"
         When I click on the Log In Now button
@@ -16,28 +17,25 @@ Feature: Registering as a new user
     Scenario: SAD PATH: Registering with non-unique username
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"
-        Then I fill in the input field for "Credential Nickname" with "test"
+        And I fill in the input field for "Password" with "securepassword"
+        And I fill in the input field for "Confirm Password" with "securepassword"
         Then I click on the register button, expecting "username is not unique"
         Then I should see "Username is not unique"
         And I should be on the "register" page
     
-    Scenario: SAD PATH: Registering without username
+    Scenario: SAD PATH: Registering without required fields
         Given I am on the "register" page
         Then I fill in the input field for "Credential Nickname" with "test"
         Then I click on the register button
         Then I should see "Username is required"
-        And I should be on the "register" page
-
-    Scenario: SAD PATH: Registering without credential nickname
-        Given I am on the "register" page
-        Then I fill in the input field for "Username" with "test"
-        Then I click on the register button
-        Then I should see "Credential Nickname is required"
+        And I should see "Password is required"
+        And I should see "Please enter your password again"
         And I should be on the "register" page
 
     Scenario: Registering without any fields
         Given I am on the "register" page
         Then I click on the register button
         Then I should see "Username is required"
-        And I should see "Credential Nickname is required"
+        And I should see "Password is required"
+        And I should see "Please enter your password again"
         And I should be on the "register" page

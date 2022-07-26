@@ -46,10 +46,10 @@ function Router() {
     useEffect(() => {
         (async() => {
             if (!publicRoutes.some(pubRouteName => location.pathname.includes(pubRouteName))) {
-                if (process.env.NODE_ENV === "development") {
-                    dispatch(setIsAuthenticated(true));
-                    return;
-                }
+                // if (process.env.NODE_ENV === "development") {
+                //     dispatch(setIsAuthenticated(true));
+                //     return;
+                // }
                 // TODO: what happens if verifyToken is awaited?
                 await verifyToken();
             }
