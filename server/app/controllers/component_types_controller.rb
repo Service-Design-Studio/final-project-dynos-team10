@@ -40,7 +40,7 @@ class ComponentTypesController < ApplicationController
   def update
       @component_type = ComponentType.find(params[:id])
       if @component_type.update(params.require(:component_type).permit(:type_name))
-        ComponentType.update_component_types(@component_type.id,params[:machine_type_ids])
+        ComponentType.update_machine_types(@component_type.id,params[:machine_type_ids])
         render json: success_json(@component_type)
       else
         render json: fail_json(errors: @component_type.errors, data: @component_type), status: :unprocessable_entity
