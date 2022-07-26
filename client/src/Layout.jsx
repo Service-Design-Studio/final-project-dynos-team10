@@ -8,6 +8,7 @@ import { selectWorkorderNumber, startNewWorkorder } from "./store/workorder/work
 import { $axios } from "./helpers/axiosHelper";
 import { FaUserCog } from "react-icons/fa";
 import { Logout } from '@mui/icons-material'
+import TSHlogo from './assets/TSHlogo.svg';
 
 import {
     ActionIcon,
@@ -91,72 +92,76 @@ export default function Layout() {
 
     const SideBar = () => {
         return(
-        <Drawer 
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Dynostic"
-        padding="md"
-        size="sm"
-        position="right"
-        >
-            <Stack justify="space-between" style={{height: 500}}>
-                <Stack
-                align="flex-start"
-                >                
-                    <Button
-                    color="dark"
-                    variant="subtle"
-                    onClick={() => {
-                        navigate('/qc-entry');
-                        setOpened(false);
-                        }}
-                    >
-                        New Entry
-                    </Button>
-
-                    <Menu 
-                        control={                  
-                            <Button
-                            color="dark"
-                            variant="subtle"
-                            >
-                                Drafts
-                            </Button>}
-                    >
-                        {/* fill in with work order drafts */}
-                        {
-                            workorders.map(el => {
-                                return (
-                                    <WorkorderButton
-                                        key={el.id}
-                                        workorder={el}
-                                    />
-                                )
-                            })
-                        }
-                    </Menu>
-                </Stack>
-
-                <Stack>
-                    <Button
-                        variant="light"
+            <Drawer 
+                opened={opened}
+                onClose={() => setOpened(false)}
+                title="Dynostic"
+                padding="md"
+                size="sm"
+                position="right"
+                >
+                <Stack justify="space-between" style={{height: "90%"}}>
+                    <Stack
+                        align="flex-start"
+                        >                  
+                        <Button
+                        color="dark"
+                        variant="subtle"
                         onClick={() => {
-                            navigate('/profile');
+                            navigate('/qc-entry');
                             setOpened(false);
-                        }}
-                        leftIcon={<FaUserCog size={24}/>}
-                    >
-                        Profile
-                    </Button>
-                    <Button 
-                        onClick={logout}
-                        leftIcon={<Logout/>}
-                    >
-                        Log Out
-                    </Button>
+                            }}
+                        >
+                            New Entry
+                        </Button>
+
+                        <Menu 
+                            control={                  
+                                <Button
+                                color="dark"
+                                variant="subtle"
+                                >
+                                    Drafts
+                                </Button>}
+                        >
+                            {/* fill in with work order drafts */}
+                            {
+                                workorders.map(el => {
+                                    return (
+                                        <WorkorderButton
+                                            key={el.id}
+                                            workorder={el}
+                                        />
+                                    )
+                                })
+                            }
+                        </Menu>
+                    </Stack>
+
+                    <Stack>
+                        <Button
+                            variant="light"
+                            onClick={() => {
+                                navigate('/profile');
+                                setOpened(false);
+                            }}
+                            leftIcon={<FaUserCog size={24}/>}
+                        >
+                            Profile
+                        </Button>
+                        <Button 
+                            onClick={logout}
+                            leftIcon={<Logout/>}
+                        >
+                            Log Out
+                        </Button>
+                        <Center>
+                            <img src={TSHlogo} width="140rem" ></img>
+                        </Center>
+                        
+                    </Stack>
                 </Stack>
-            </Stack>
-        </Drawer>
+            </Drawer>
         )
     };
 
@@ -204,7 +209,6 @@ export default function Layout() {
                 <Header height={70} p="md">
 
                     <SideBar/>
-                            
                 
                     <div style={{ 
                             display: "flex", 
@@ -213,15 +217,25 @@ export default function Layout() {
                             alignItems: "center", 
                             height: "100%" }}
                     >
-  
+                        {/* <div
+                            style={{ 
+                                display: "flex", 
+                                flexDirection:"row", 
+                                justifyContent:"space-between", 
+                                alignItems: "center", 
+                                height: "100%" }}
+                        > */}
                             <BackButton/>
-                            
+
+                            {/* <img src={TSHlogo} width="90rem" style={{marginLeft: "1.2rem"}}></img> */}
                             <Container>
                                 <Center>
                                     <Text size="xl" weight={500} ml="sm">{title}</Text>
                                 </Center>
                             </Container>
-
+                            {/* <img src={TSHlogo} width="90rem" style={{marginRight: "1.2rem"}}></img> */}
+                        {/* </div> */}
+                            
                             <MediaQuery>
                                 <Burger
                                     opened={opened}
@@ -230,7 +244,6 @@ export default function Layout() {
                                     color={theme.colors.gray[6]}
                                     mr="sm"
                                     />
-                                
                             </MediaQuery>
 
                     </div>

@@ -17,6 +17,7 @@ import { $axios } from "./helpers/axiosHelper";
 import PassFail from "./views/PassFail";
 import Profile from "./views/Profile";
 import StatusReport from "./views/StatusReport";
+import Test from './views/Test';
 
 function Router() {
     let location = useLocation();
@@ -60,6 +61,7 @@ function Router() {
         <Routes>
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>} />
+            <Route path="/test" element={<Test/>} />
 
             <Route
                 path="/"

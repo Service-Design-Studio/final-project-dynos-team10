@@ -9,10 +9,10 @@
 .photo-review-status-btn {
   border: none;
   cursor: pointer;
-  transition: all 0.5s;
+  transition: all 1s;
 }
 .photo-review-status-btn:hover {
   background-color: transparent;
-  transform: scale(1.1);
+  transform: scale(1.3);
 }
   /* ------------------------------ */

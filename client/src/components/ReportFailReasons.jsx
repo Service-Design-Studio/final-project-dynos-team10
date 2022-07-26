@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
+import { useListState, randomId } from '@mantine/hooks';
 import { updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
 
 import ClearIcon from '@mui/icons-material/Clear';
@@ -12,17 +13,39 @@ import {
     ScrollArea,
     Select,
     NativeSelect,
-    MultiSelect
+    MultiSelect,
+    Checkbox
 } from "@mantine/core"
 
-function ReportFailReasons({editReport, reasons, setReasons}) {
+
+function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight}) {
     const theme = useMantineTheme();
     const [value, setValue] = useState('');
+    // selectedReasons = reasons;
+    const allReasons = [
+        'Crumpled', 
+        'Torn', 
+        'Slanted', 
+        'Wrong Position', 
+        'Wrong Text', 
+        'Markings', 
+        'Others'
+    ];
 
-      // add one or more items to the end of the list
-    const append = (reason) => {
-        if (!reasons.includes(reason)){
-            setReasons.append(reason); // setReasons is in StatusReport.jsx 
+    // notSelectedReasons: reasons in the dropdown list 
+    // notSelectedReasons array = allReasons array - reasons array
+    // let difference = arr1.filter(x => !arr2.includes(x));
+
+    // useMemo - derived state that depends on other states (something liddat)
+    const notSelectedReasons = useMemo(() => {
+        return allReasons.filter(x => !reasons.includes(x));
+    }, [allReasons, reasons])
+
+  // add one or more items to the end of the list
+    const selectReason = (value) => {
+        {setValue(value)}
+        if (!reasons.includes(value) && value!==null){
+            setReasons.append(value); // setReasons is in StatusReport.jsx 
         }
     }
 
@@ -72,7 +95,7 @@ function ReportFailReasons({editReport, reasons, setReasons}) {
 
     return (
 
-        <Paper shadow="sm" p="xs" withBorder>
+        <Paper shadow="sm" p="xs" withBorder style={style}>
 
             <div 
                 style={{
@@ -84,22 +107,27 @@ function ReportFailReasons({editReport, reasons, setReasons}) {
 
             {
                 editReport && 
-                    <NativeSelect
+                    <Select
                         value={value}
-                        onChange={(event) => append(event.currentTarget.value)}
+                        // onChange={(event) => append(event.currentTarget.value)}
+                        onChange={selectReason}
                         // label="Add Reasons"
-                        placeholder="Add Reasons"
+                        placeholder="Scroll to Add Reasons"
                         searchable
+                        clearable 
+                        dropdownPosition="top"
                         nothingFound="No options"
-                        data={['crumbled', 'torn', 'slanted', 'wrong position', 'wrong text', 'markings', 'others']}
-                        // maxDropdownHeight = {120} 
+                        // edit to return {value, label} 
+                        data={notSelectedReasons}
+                        maxDropdownHeight = {120} 
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
                     />
+
             }
             
             <ScrollArea 
                 style={{
-                    height: 120,
+                    height: scrollHeight || 120,
                     // margin: "2rem", 
                     // marginTop: "0.1rem", 
                     // marginBottom: "1rem", 

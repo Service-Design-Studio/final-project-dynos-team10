@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import OptionsModal from "../components/OptionsModal";
 
@@ -78,9 +78,16 @@ function PhotoReview() {
     }
 
     const [chosenStatus, setChosenStatus] = useState('');
-    const proceedStatus = (() => {
+
+    const proceedStatus = () => {
         navigate('/pass-fail', { state: { chosenStatus } });
-    });
+    };
+        
+    
+    const proceedAfterStatus = (status) => {
+        setChosenStatus(status);
+
+    };
 
     return (
         
@@ -187,7 +194,7 @@ function PhotoReview() {
                         chosenStatus &&
                         (
                             <>
-                                <h4 style={{ marginTop: "0.5rem"}}>You have chosen: {colourToStatus[chosenStatus]}</h4>
+                                {/* <h4 style={{ marginTop: "0.5rem"}}>You have chosen: {colourToStatus[chosenStatus]}</h4> */}
                                 <Button 
                                     onClick={proceedStatus}
                                     colour="blue" 
