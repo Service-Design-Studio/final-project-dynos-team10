@@ -155,7 +155,10 @@ export default function Layout() {
                         >
                             Log Out
                         </Button>
-                        <img src={TSHlogo} width="200rem" ></img>
+                        <Center>
+                            <img src={TSHlogo} width="140rem" ></img>
+                        </Center>
+                        
                     </Stack>
                 </Stack>
             </Drawer>
@@ -206,7 +209,6 @@ export default function Layout() {
                 <Header height={70} p="md">
 
                     <SideBar/>
-                            
                 
                     <div style={{ 
                             display: "flex", 
@@ -215,27 +217,24 @@ export default function Layout() {
                             alignItems: "center", 
                             height: "100%" }}
                     >
-                        <div
+                        {/* <div
                             style={{ 
                                 display: "flex", 
                                 flexDirection:"row", 
                                 justifyContent:"space-between", 
                                 alignItems: "center", 
                                 height: "100%" }}
-                        >
+                        > */}
                             <BackButton/>
 
-                            <img src={TSHlogo} width="90rem" style={{marginLeft: "1.2rem"}}></img>
-
+                            {/* <img src={TSHlogo} width="90rem" style={{marginLeft: "1.2rem"}}></img> */}
                             <Container>
-                                {/* <Center> */}
+                                <Center>
                                     <Text size="xl" weight={500} ml="sm">{title}</Text>
-                                {/* </Center> */}
+                                </Center>
                             </Container>
-
                             {/* <img src={TSHlogo} width="90rem" style={{marginRight: "1.2rem"}}></img> */}
-
-                        </div>
+                        {/* </div> */}
                             
                             <MediaQuery>
                                 <Burger

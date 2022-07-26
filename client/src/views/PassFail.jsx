@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { $axios } from '../helpers/axiosHelper';
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import InputDisplay from "../components/InputDisplay.jsx";
+import ReportFailReasons from "../components/ReportFailReasons";
 import {
     Button,
     Text,
@@ -22,6 +23,7 @@ import {
 import { deepCompare } from "../helpers/objectHelper";
 import { buildComponentObjWithImages } from "../helpers/componentsHelper";
 import { cloneDeep } from "lodash";
+import { useListState } from "@mantine/hooks";
 
 export default function PassFail() {
     const { state } = useLocation();
@@ -37,11 +39,11 @@ export default function PassFail() {
     const currentComponent = useSelector(selectCurrentComponent);
 
     const [value, setValue] = useState("");
-    const [reasons, setReasons] = useState([]);
+    const [reasons, setReasons] = useListState([]);
     const[opened, setOpened] = useState(false);
 
     useEffect(() => {
-        setReasons(currentComponent.failingReasons);
+        setReasons.setState(currentComponent.failingReasons);
     }, [])
 
     const UploadButton = () => {
@@ -225,12 +227,22 @@ export default function PassFail() {
 
             {
                 !isPass && 
-                <InputDisplay 
-                    reasons={reasons}
-                    value={value}
-                    setReasons={setReasons}
-                    setValue={setValue}
-                />
+                // <InputDisplay 
+                //     reasons={reasons}
+                //     value={value}
+                //     setReasons={setReasons}
+                //     setValue={setValue}
+                // />
+                // <div style={{margin: "2rem"}}>
+                    <ReportFailReasons
+                        editReport={true}
+                        reasons={reasons}
+                        setReasons={setReasons}
+                        style={{margin: "2rem", paddingTop: "1.25rem", paddingBottom: "1.25rem" }}
+                        scrollHeight={180}
+                        />
+                // </div>
+                
             }
             {
                 isPass ?
