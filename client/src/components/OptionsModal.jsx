@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Button,
     Stack,
     Center,
@@ -13,6 +14,7 @@ selectCurrentComponentName,
 addImageToComponent,
 selectCurrentComponent
 } from "../store/workorder/workorderSlice";
+import { updateCurrentComponentStatus } from "../store/workorder/workorderSlice";
 
 
 function OptionsModal({optionsModal, setOptionsModal}) {
@@ -20,7 +22,14 @@ const navigate= useNavigate();
 const location= useLocation();
 
 const currentComponentName = useSelector(selectCurrentComponentName);
+const currentComponent = useSelector(selectCurrentComponent);
 const dispatch = useDispatch();
+
+const count = useMemo(() => {
+    return currentComponent.images.length;
+}, [currentComponent]);
+
+
 
 const getBase64 = (file) =>{
     const reader = new FileReader();
@@ -30,6 +39,10 @@ const getBase64 = (file) =>{
             componentName: currentComponentName,
             image: base64String
         }));
+
+        if (count > -1 && !['green', 'red'].includes(currentComponent.status)) {
+            dispatch(updateCurrentComponentStatus("yellow"))
+        } 
         // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
     };
     reader.readAsDataURL(file);
@@ -115,6 +128,7 @@ return (
                 </label>
             </Stack>
         </Center>
+        
         </Modal>
     </div>
  );

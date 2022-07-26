@@ -51,7 +51,7 @@ function PhotoReview() {
     const currentComponentName = useSelector(selectCurrentComponentName);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
-    const [optionsModal, setOptionsModal] = useState(false)
+    const [optionsModal, setOptionsModal] = useState(false);
 
 
     const hasImages = useMemo(() => {
