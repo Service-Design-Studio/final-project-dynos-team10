@@ -239,11 +239,14 @@ function StatusReport() {
     return (
         
         <div style={{margin: 20}}>
-
-            <OptionsModal
-            optionsModal={optionsModal}
-            setOptionsModal={setOptionsModal}
-            />
+            {
+                optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
 
             <Stack spacing="xs">
                 {

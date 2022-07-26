@@ -86,10 +86,14 @@ function PhotoReview() {
         
         <div style={{margin: 20}}>
 
-            <OptionsModal
-            optionsModal={optionsModal}
-            setOptionsModal={setOptionsModal}
-            />
+            {
+                optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
 
             {/* top section */}
             <Space h="lg" />

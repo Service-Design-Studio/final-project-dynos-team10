@@ -64,73 +64,71 @@ const handleChange = (e) => {
 };
 
 return ( 
-    <div>
-        <Modal
-        opened={optionsModal}
-        onClose={()=>setOptionsModal(false)}
+    <Modal
+    opened={optionsModal}
+    onClose={()=>setOptionsModal(false)}
+    >
+    <input
+    multiple={true}
+    onChange={handleChange}
+    type="file"
+    accept="image/*"
+    style={{ display: 'none' }}
+    id="contained-button-file"
+    />
+
+
+    <Center>
+        <Stack
+        spacing='xl'
         >
-        <input
-        multiple={true}
-        onChange={handleChange}
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        id="contained-button-file"
-        />
-
-
-        <Center>
-            <Stack
-            spacing='xl'
+            <Button
+            variant="light"
+            style={{height: 150, width: 200}}
+            onClick={() => navigate("/camera")}
             >
+                <Stack
+                spacing="xs"
+                >
+                    <Center>
+                        <CameraAltIcon
+                        sx={{fontSize: 50}}
+                        />
+                    </Center>
+                        <Text
+                        size="lg"
+                        >
+                            Camera
+                        </Text>
+                </Stack>
+            </Button>
+            
+            <label htmlFor="contained-button-file">
                 <Button
                 variant="light"
                 style={{height: 150, width: 200}}
-                onClick={() => navigate("/camera")}
+                component="span"
                 >
                     <Stack
                     spacing="xs"
                     >
                         <Center>
-                            <CameraAltIcon
+                            <FileUploadIcon
                             sx={{fontSize: 50}}
                             />
                         </Center>
                             <Text
                             size="lg"
                             >
-                                Camera
+                                Upload
                             </Text>
                     </Stack>
                 </Button>
-                
-                <label htmlFor="contained-button-file">
-                    <Button
-                    variant="light"
-                    style={{height: 150, width: 200}}
-                    component="span"
-                    >
-                        <Stack
-                        spacing="xs"
-                        >
-                            <Center>
-                                <FileUploadIcon
-                                sx={{fontSize: 50}}
-                                />
-                            </Center>
-                                <Text
-                                size="lg"
-                                >
-                                    Upload
-                                </Text>
-                        </Stack>
-                    </Button>
-                </label>
-            </Stack>
-        </Center>
-        
-        </Modal>
-    </div>
+            </label>
+        </Stack>
+    </Center>
+    
+    </Modal>
  );
 }
 

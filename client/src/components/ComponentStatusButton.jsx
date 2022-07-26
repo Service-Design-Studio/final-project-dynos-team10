@@ -31,22 +31,24 @@ function ComponentStatusButton(props) {
     const handleClick = () => {
         dispatch(updateCurrentComponentName(componentName));
         // console.log(workorderComponents[componentName].status);
-        if (currentComponentImageCount > 0 && !currentStatusSubmitted) {
+        if (currentComponentImageCount >= 0 && !currentStatusSubmitted) {
             setOptionsModal(true)
             return;
         } else if (currentStatusSubmitted) {
             navigate('/status-report');
             return;
         }
-        navigate('/options');
     }
 
     return (
         <div>
-             <OptionsModal
-            optionsModal={optionsModal}
-            setOptionsModal={setOptionsModal}
-            />
+            {optionsModal &&
+                <OptionsModal
+                    optionsModal={optionsModal}
+                    setOptionsModal={setOptionsModal}
+                />
+            }
+            
 
 
         {workorderComponents[componentName] &&
