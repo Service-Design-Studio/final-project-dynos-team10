@@ -17,7 +17,6 @@ import { $axios } from "./helpers/axiosHelper";
 import PassFail from "./views/PassFail";
 import Profile from "./views/Profile";
 import StatusReport from "./views/StatusReport";
-import Options from "./views/Options";
 
 function Router() {
     let location = useLocation();
@@ -79,7 +78,6 @@ function Router() {
                 <Route path="pass-fail" element={<PassFail />} />
                 <Route path="profile" element={<Profile />}/>
                 <Route path="status-report" element={<StatusReport/>}/>
-                <Route path="options" element={<Options />}/>
             </Route>
         </Routes>
     )
