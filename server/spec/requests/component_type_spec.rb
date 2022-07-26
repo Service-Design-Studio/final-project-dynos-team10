@@ -7,9 +7,9 @@ RSpec.describe "ComponentTypes", type: :request do
 
   describe "PUT #update" do
     it 'returns updated status as true after updating the machine type values' do
-      machine_type_1 = MachineType.create_record("m4")
-      machine_type_2 = MachineType.create_record("m5")
-      machine_type_3 = MachineType.create_record("m6")
+      machine_type_1 = MachineType.create_record("m5")
+      machine_type_2 = MachineType.create_record("m6")
+      machine_type_3 = MachineType.create_record("m7")
 
       component_type = ComponentType.create_record("zzzz")
       # puts component_type.id
