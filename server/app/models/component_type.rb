@@ -27,7 +27,7 @@ class ComponentType < ApplicationRecord
     machine_type.component_types.delete(comp_type)
   end
 
-  def self.update_machine_types(machine_type_ids, component_type_id)
+  def self.update_machine_types(component_type_id,machine_type_ids)
     comp_type = ComponentType.find_by(id: component_type_id)
     comp_type.machine_types.clear
     machine_type_ids.each do |machine_type_id|
