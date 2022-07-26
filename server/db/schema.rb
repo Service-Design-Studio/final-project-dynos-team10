@@ -18,8 +18,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_202458) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type_name", null: false
-    t.bigint "workorder_id"
-    t.index ["workorder_id"], name: "index_component_types_on_workorder_id"
   end
 
   create_table "component_types_machine_types", id: false, force: :cascade do |t|
