@@ -27,40 +27,43 @@ RSpec.describe Workorder, :type => :model do
   # end
 
 
-  
+
   # # ***** testing of methods *********
 
 
   describe '.find_one' do
-    context "given workorder id" do 
+    context "given workorder id" do
       it 'returns the workorder with that workorder_id' do
-        workorder = Workorder.create_record("1", 1)
-        expect(Workorder.find_one(workorder.id)).to eq(workorder)
+        machine_type = MachineType.create_record("m10")
+        work_order = Workorder.create_record("W03",machine_type.id)
+        expect(Workorder.find_one(work_order.id)).to eq(work_order)
       end
     end
   end
 
   describe '.create_record' do
-    context "given workorder number, machine_type" do 
+    context "given workorder number, machine_type" do
       it 'creates the workorder with the given arguments' do
-        test_workorder = Workorder.create_record("1","machine_1")
-        expect(test_workorder.workorder_number).to eq("1")
-        expect(test_workorder.machine_type).to eq("machine_1")
+        machine_type = MachineType.create_record("m10")
+        work_order = Workorder.create_record("W03",machine_type.id)
+        expect(work_order.workorder_number).to eq("W03")
+        expect(work_order.machine_type_id).to eq(machine_type.id)
       end
     end
   end
 
   describe '.find_one' do
-    context "given workorder number" do 
+    context "given workorder number" do
       it 'returns the workorder with that workorder number' do
-        workorder = Workorder.create_record("1", 1)
-        expect(Workorder.find_one_by_workorder_number(workorder.workorder_number)).to eq(workorder)
+        machine_type = MachineType.create_record("m10")
+        work_order = Workorder.create_record("W03",machine_type.id)
+        expect(Workorder.find_one_by_workorder_number(work_order.workorder_number)).to eq(work_order)
       end
     end
   end
 
   # describe '.get_failing_reasons' do
-  #   context "given workorder id" do 
+  #   context "given workorder id" do
   #     it 'returns the failing reasons with that workorder id' do
   #       workorder = Workorder.create_record("1",1)
   #       comp1 = Component.create_record(workorder.id,1,false)

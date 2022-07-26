@@ -1,14 +1,15 @@
 class Workorder < ApplicationRecord
     has_many :components
+    belongs_to :machine_type
     # TODO: sort out validations
-    validates :workorder_number, :machine_type, presence: true
+    validates :workorder_number, presence: true
     validates :workorder_number, uniqueness: true
 
     paginates_per 5
 
     # creates a new workorder
-    def self.create_record(workorder_number, machine_type)
-        Workorder.create(workorder_number: workorder_number, machine_type: machine_type)
+    def self.create_record(workorder_number, machine_type_id)
+        Workorder.create(workorder_number: workorder_number, machine_type_id: machine_type_id)
     end
 
     def self.find_paginated(page_number)

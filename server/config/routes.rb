@@ -20,4 +20,13 @@ Rails.application.routes.draw do
     post "batch", to: "images#batch_create", on: :collection
     delete "batch", to: "images#batch_delete", on: :collection
   end
+
+  resources :component_types do
+    get 'components', to: "component_types#get_one_components", on: :member
+  end
+
+  resources :machine_types do
+    get 'workorders', to: "machine_types#get_one_work_order"
+  end
+
 end
