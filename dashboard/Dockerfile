@@ -11,7 +11,7 @@ FROM nginx:1.21-alpine as production
 # add nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/configfile.template
 # copy built assets from build stage
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 ENV PORT 8080
 ENV HOST 0.0.0.0

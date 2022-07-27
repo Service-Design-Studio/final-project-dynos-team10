@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import OptionsModal from "../components/OptionsModal";
 
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -93,6 +93,13 @@ function PhotoReview() {
     const proceedStatus = () => {
         navigate('/pass-fail', { state: { chosenStatus } });
     };
+
+    const sendPhotoForInspection = () => {
+        navigate({
+            pathname: '/label-result',
+            search: createSearchParams({ chosenLabelPhotoIndex: activeStep }).toString()
+        })
+    }
 
 
     return (
@@ -239,7 +246,7 @@ function PhotoReview() {
                 <Center><h4 style={{marginTop: 0}}>Selected Photo for AI Inspection</h4></Center>
                 <Image
                     radius="md"
-                    src={ hasImages && currentComponent.images[activeStep].src || null}
+                    src={ (hasImages && currentComponent.images[activeStep].src) || null}
                 />
                 {/* <Center><h4>Send for AI Inspection?</h4></Center> */}
                 <div style={{display: "flex", justifyContent: "space-around", margin: "2rem 0 2rem"}}>
@@ -250,7 +257,7 @@ function PhotoReview() {
                         >
                         Select another
                     </Button>
-                    <Button rightIcon={<FaArrowRight size={14}/>}>Inspect</Button>
+                    <Button onClick={sendPhotoForInspection} rightIcon={<FaArrowRight size={14}/>}>Inspect</Button>
                 </div>
 
             </Modal>

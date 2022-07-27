@@ -28,12 +28,13 @@ import {
 // hash map, key -> route, value -> title at header, both are strings
 const routeMapStatic = {
     "/qc-entry": "QC Entry",
-    "/": "Home",
     "/failreasons": "Fail Reasons",
     "/pass": "Pass",
     '/qc-list': 'QC List',
     '/pass-fail': 'Status',
     '/profile': 'Profile',
+    '/label-result': 'Label Result',
+    "/": "Home",
 }
 let routeHideArr = ["/camera", "/photo-review"]; // routes to hide header
 
@@ -64,9 +65,9 @@ export default function Layout() {
 
     const routeMap = useMemo(() => {
         return {
-            ...routeMapStatic,
             '/component-status': currentWorkorderNumber,
-            '/status-report' : currentWorkorderNumber
+            '/status-report' : currentWorkorderNumber,
+            ...routeMapStatic,
         }
     }, [currentWorkorderNumber])
 
