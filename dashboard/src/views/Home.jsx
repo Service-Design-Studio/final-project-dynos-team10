@@ -1,5 +1,5 @@
 import { $axios } from '../helpers/axiosHelper';
-import {Button, TextInput} from '@mantine/core';
+import {Button, Stack, TextInput} from '@mantine/core';
 import { useState } from 'react';
 
 //POST to create new components/machine types
@@ -8,10 +8,42 @@ function Home() {
     const [machine, setMachine] = useState("");
     const [componentType, setComponentType] = useState("");
 
-    
 
-    //returns array of current machine names
-    const currentMachines = async () => {
+
+    //add components to a machine type
+    const addComponentToMachine = async () =>{
+        const id = 1;
+        try{
+            //ROUTE NOT WORKING
+            const toUpdate = await $axios.patch(`machine_types/${id}`);
+            console.log(toUpdate);
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    }
+
+        //returns array of current components
+        const currentComponents = async () => {
+            try{
+                const response = await $axios.get("/component_types");
+                console.log({response});
+                const types = response.data.result;
+                const pluck = property => element => element[property];
+                const value= types.map(pluck('type_name'));
+                console.log({value});
+                
+            }
+            catch(e){
+                console.error(e);
+                alert(e);
+            }
+        }
+
+
+     //returns array of current machine names
+     const currentMachines = async () => {
         try{
             const response = await $axios.get('machine_types');
             const types = response.data.result;
@@ -25,38 +57,6 @@ function Home() {
             console.error(e);
             alert(e);
         }
-    }
-
-    //returns array of current components
-    const currentComponents = async () => {
-        try{
-            ///ROUTE NOT WORKING
-            const response = await $axios.get("component_types");
-            console.log({response});
-            // const types = response.data.result;
-            // const pluck = property => element => element[property];
-            // const value= types.map(pluck('type_name'));
-            // console.log({value});
-            
-        }
-        catch(e){
-            console.error(e);
-            alert(e);
-        }
-    }
-
-    //add components to a machine type
-    const addComponentToMachine = async () =>{
-        const id = 'wire'
-        try{
-            //ROUTE NOT WORKING
-            const toUpdate = await $axios.patch('machine_types/${id}')
-            console.log(toUpdate)
-        }
-        catch(e){
-            console.error(e);
-            alert(e);
-        };
     }
 
 
@@ -102,17 +102,32 @@ function Home() {
             value={componentType}
             onChange={(event)=>setComponentType(event.currentTarget.value)}
             />
+
             <Button
             onClick={createNewComponentType}
             >
                 Submit
             </Button>
+            
+            <Stack>
             <Button
             onClick={addComponentToMachine}
             >
                 Check
             </Button>
- 
+
+            <Button
+            onClick={currentMachines}
+            >
+                Current Machines
+            </Button>
+
+            <Button
+            onClick={currentComponents}
+            >
+                Current Components
+            </Button>
+            </Stack>
         </div>
         
 
