@@ -12,10 +12,11 @@ function Home() {
 
     //add components to a machine type
     const addComponentToMachine = async () =>{
-        const id = 1;
+        const id = '1';
         try{
             //ROUTE NOT WORKING
-            const toUpdate = await $axios.patch(`machine_types/${id}`);
+            const toUpdate = await $axios.patch('machine_types/2', 
+            {id: 2, component_type_ids:[2,3,4]});
             console.log(toUpdate);
         }
         catch(e){

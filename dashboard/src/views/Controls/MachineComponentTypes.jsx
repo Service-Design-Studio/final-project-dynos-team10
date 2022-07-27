@@ -15,12 +15,70 @@ import { useListState } from '@mantine/hooks';
 import { useState } from 'react';
 import { Box, Components, Plus } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
+import { $axios } from '../../helpers/axiosHelper';
+
 
 export default function MachineComponentTypes() {
     const [machineTypes, machineTypesHandlers] = useListState([]);
     const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
+    
+    const currentComponents = async () => {
+        try{
+            const response = await $axios.get("/component_types");
+            console.log({response});
+            const types = response.data.result;
+            const pluck = property => element => element[property];
+            const value= types.map(pluck('type_name'));
+            console.log({value});
+            
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    }
+    
+    const currentMachines = async () => {
+        try{
+            const response = await $axios.get('machine_types');
+            const types = response.data.result;
+            const pluck = property => element => element[property];
+            const value = types.map(pluck('type_name'));
+            console.log({value});
+            return value
+            
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    };
+
+    const createNewComponentType = async (newComponent) => {
+        try {
+        const result = await $axios.post("/component_types", {
+            type_name: newComponent});
+            console.log({result});
+         } 
+         catch(e){
+            console.error(e);
+            alert(e);
+            }
+        };
+
+    const createNewMachineType = async (newMachineType) => {
+        try {
+        const result = await $axios.post("/machine_types", {
+            type_name: newMachineType});
+            console.log({result});
+            } 
+         catch(e) {
+            console.error(e);
+            alert(e);
+            }
+        }
 
     const newMachineForm = useForm({
         initialValues:{
@@ -67,6 +125,7 @@ export default function MachineComponentTypes() {
             rightElementIfEmpty: <AddComponentButton machineType={newMachineType}/>,
             footer: <Button fullWidth mt="sm" onClick={() => editMachineType(newMachineType)}>Edit Components</Button>
         })
+        createNewMachineType(newMachineType)
         newMachineForm.reset();
     }
     const submitNewComponentType = () => {
@@ -77,6 +136,7 @@ export default function MachineComponentTypes() {
         componentTypesHandlers.append({
             label: newComponentForm.values.newComponentType
         })
+        createNewComponentType(newComponentForm.values.newComponentType)
         newComponentForm.reset();
     }
 
@@ -103,19 +163,6 @@ export default function MachineComponentTypes() {
             </Tooltip>
         )
     }
-
-
-    const mockdata = [
-        {
-            label: 'Non-nested',
-            rightElementIfEmpty: <AddComponentButton/>
-        },
-        {
-            label: 'Nested',
-            items: [{label: 'Item 1'}, {label: 'Item 2'}, {label: 'Item 3'}],
-            footer: <Button fullWidth mt="sm">Edit Components</Button>
-        },
-    ]
 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
