@@ -310,8 +310,8 @@ And('I delete {string} failing reasons', (number) => {
 Then('I click on the Scan QR Code button', () => {
     cy.get('.qr-scanner-btn').click();
 });
-Then('the QR scanner should {string}', (openOrClose) => {
-    const shouldBeOpen = openOrClose === 'open' ? 'exist' : 'not.exist';
+Then('the QR scanner should be {string}', (openedOrClosed) => {
+    const shouldBeOpen = openedOrClosed === 'opened' ? 'exist' : 'not.exist';
     cy.get('.qr-scanner').should(shouldBeOpen);
 })
 
