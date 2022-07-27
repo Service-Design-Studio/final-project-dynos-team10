@@ -17,6 +17,7 @@ import {
 import { CheckCircleOutline, HighlightOff } from "@mui/icons-material";
 import ReportFailReasons from "../components/ReportFailReasons";
 import { useListState } from "@mantine/hooks";
+import { $aiAxios } from '../helpers/axiosHelper';
 
 /**
  * This page is for ANY labelling result that has been returned from the AI service
@@ -50,14 +51,26 @@ export default function LabelResult() {
     const [reasons, reasonsHandler] = useListState([]);
 
     useEffect(() => {
-        if (chosenLabelPhoto !== null) {
-            setGettingResults(true);
-            // call API here
-            setTimeout(() => {
-                setGettingResults(false);
-                setNoLabel(true);
-            }, 1500)
-        }
+        (async() => {
+            if (chosenLabelPhoto !== null) {
+                setGettingResults(true);
+                // call API here
+                setTimeout(() => {
+                    setGettingResults(false);
+                    setNoLabel(true);
+                }, 1500)
+    
+                let response;
+                try {
+                    response = await $aiAxios.post('prediction', {
+                        image: chosenLabelPhoto
+                    })
+                    console.log({response});
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        })()
     }, [chosenLabelPhoto])
 
     // ---- dispute modal ----

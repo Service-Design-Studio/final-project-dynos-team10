@@ -57,4 +57,9 @@ class MachineTypesController < ApplicationController
     work_order = MachineType.get_one_work_order params[:id]
     render json: success_json(work_order)
   end
+
+  def get_one_component_types
+    component_types = MachineType.get_all_component_types_from_id params[:id]
+    render json: success_json(component_types)
+  end
 end

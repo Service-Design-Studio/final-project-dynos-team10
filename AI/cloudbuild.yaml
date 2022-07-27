@@ -1,12 +1,14 @@
+steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/tsh-qc/./incorrect 5 (crumpled).jpeg', '.']
+  args: ['build', '-t', 'gcr.io/tsh-qc/dynostic-ai-img', '.']
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/tsh-qc/./incorrect 5 (crumpled).jpeg']
+  args: ['push', 'gcr.io/tsh-qc/dynostic-ai-img']
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '2022-07-27r0', '--image', 'gcr.io/tsh-qc/./incorrect 5 (crumpled).jpeg', '--region', 'asia-southeast1']
+  args: ['run', 'deploy', 'dynostic-ai', '--image', 'gcr.io/tsh-qc/dynostic-ai-img', '--region', 'asia-southeast1', '--platform', 'managed']
 images:
-- gcr.io/tsh-qc/./incorrect 5 (crumpled).jpeg
+- gcr.io/tsh-qc/dynostic-ai-img
+timeout: 900s
