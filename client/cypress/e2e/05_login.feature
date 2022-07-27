@@ -6,6 +6,7 @@ Feature: Logging In
     Scenario: Valid log in
         Given I am on the "login" page
         Then I fill in the input field for "Username" with "test"
+        Then I fill in the input field for "Password" with "securepassword"
         Then I click on the log in button, expecting "success"
         And I should be on the "home" page
     
@@ -18,6 +19,7 @@ Feature: Logging In
     Scenario: SAD PATH: Log in with invalid username
         Given I am on the "login" page
         Then I fill in the input field for "Username" with "acbdegfhikjl"
+        Then I fill in the input field for "Password" with "securepassword"
         Then I click on the log in button, expecting "username does not exist"
         Then I should see "Username could not be found"
         And I should be on the "login" page

@@ -39,7 +39,7 @@ class MachineTypesController < ApplicationController
   end
 
   def update
-    @machine_type = MachineType.find(params[:id])
+    @machine_type = MachineType.find_one params[:id]
     if @machine_type.update(params.require(:machine_type).permit(:type_name))
       MachineType.update_component_types(@machine_type.id,params[:component_type_ids])
       render json: success_json(@machine_type)

@@ -60,4 +60,7 @@ class ComponentType < ApplicationRecord
     ComponentType.find_by(id: component_type_id).components
   end
 
+  def self.find_all
+    ComponentType.all
+  end
 end

@@ -37,7 +37,7 @@ Feature: Components
         When I click on the upload button
         Then I should see "Upload Successful"
         When I click on the close icon
-        Then the component "xxx" button colour should be "green" 
+        Then the component "xxx" button colour should be "green"
         
     Scenario: component xxx failing manual check
         Given I click on the fail button
