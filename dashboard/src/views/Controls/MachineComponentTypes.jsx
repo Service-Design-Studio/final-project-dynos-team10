@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Box, Components, Plus } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
 import { $axios } from '../../helpers/axiosHelper';
@@ -23,30 +23,34 @@ export default function MachineComponentTypes() {
     const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
-    
+    const [components, setComponents] = useState([]);
+    const [machines, setMachines] = useState([]);
+
+    const pluck = property => element => element[property];
+
     const currentComponents = async () => {
         try{
             const response = await $axios.get("/component_types");
             const types = response.data.result;
-            const pluck = property => element => element[property];
-            const value= types.map(pluck('type_name'));
-            console.log({value});
-            
+            const values = types.map(pluck('type_name'));
+            setComponents(values);
         }
         catch(e){
             console.error(e);
             alert(e);
         }
-    }
+    };
+
+    useEffect(()=> {
+        currentComponents();
+    }, [])
     
     const currentMachines = async () => {
         try{
             const response = await $axios.get('machine_types');
             const types = response.data.result;
-            const pluck = property => element => element[property];
             const value = types.map(pluck('type_name'));
-            console.log({value});
-            return value
+            setMachines(value);
             
         }
         catch(e){
@@ -55,11 +59,14 @@ export default function MachineComponentTypes() {
         }
     };
 
+    useEffect(()=>{
+        currentMachines();
+    }, [])
+
     const createNewComponentType = async (newComponent) => {
         try {
         const result = await $axios.post("/component_types", {
             type_name: newComponent});
-            console.log({result});
          } 
          catch(e){
             console.error(e);
@@ -71,7 +78,6 @@ export default function MachineComponentTypes() {
         try {
         const result = await $axios.post("/machine_types", {
             type_name: newMachineType});
-            console.log({result});
             } 
          catch(e) {
             console.error(e);
@@ -80,13 +86,11 @@ export default function MachineComponentTypes() {
         };
 
     //add components to a machine type
-    const addComponentToMachine = async () =>{
-        const machineList = currentMachines();
-        const i = machineList.indexOf(editingMachineType)
+    const addComponentToMachine = async (componentIndex) =>{
+        const i = machines.indexOf(editingMachineType)
         try{
             const toUpdate = await $axios.patch(`machine_types/${i}`, 
-            {id: i, component_type_ids:[2,3,4]});
-            console.log(toUpdate);
+            {id: i, component_type_ids: componentIndex});
         }
         catch(e){
             console.error(e);
@@ -111,6 +115,7 @@ export default function MachineComponentTypes() {
             }
         }
     })
+
     const newComponentForm = useForm({
         initialValues:{
             newComponentType: ''
@@ -128,6 +133,9 @@ export default function MachineComponentTypes() {
             }
         }
     })
+
+
+
     const submitNewMachineType = () => {
         const validation = newMachineForm.validate();
         if (validation.hasErrors) {
@@ -139,7 +147,7 @@ export default function MachineComponentTypes() {
             rightElementIfEmpty: <AddComponentButton machineType={newMachineType}/>,
             footer: <Button fullWidth mt="sm" onClick={() => editMachineType(newMachineType)}>Edit Components</Button>
         })
-        createNewMachineType(newMachineType)
+        createNewMachineType(newMachineType);
         newMachineForm.reset();
     }
     const submitNewComponentType = () => {
@@ -178,9 +186,25 @@ export default function MachineComponentTypes() {
         )
     }
 
+    const renderAllMachines = () => {
+        machines.forEach(el => 
+        const { newMachineType } = el;
+        machineTypesHandlers.append({
+        label: newMachineType,
+        rightElementIfEmpty: <AddComponentButton machineType={newMachineType}/>,
+        footer: <Button fullWidth mt="sm" onClick={() => editMachineType(newMachineType)}>Edit Components</Button>
+    }))
+    };
+
+    useEffect(() => {
+        renderAllMachines()
+    }, [])
+
+
+
+ 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
 
@@ -201,15 +225,15 @@ export default function MachineComponentTypes() {
         }
         
         // retrieving index of required components
-        const pluck = property => element => element[property];
-        const componentNames = machineTypeComponents.map(pluck('label'));
-        const componentIndex=[]
-        const existingComponents = currentComponents()
-        console.log(typeof existingComponents)
-        // componentNames.forEach( el =>
-        //     componentIndex.push(existingComponents.indexOf(el))
-        // )
-        console.log(componentIndex)
+        
+        const selectedComponents = machineTypeComponents.map(pluck('label'));
+        let componentIndex = []
+        selectedComponents.forEach(el => {
+            const i = components.indexOf(el)
+            componentIndex.push(i)
+        });
+
+        addComponentToMachine(componentIndex);
         
         machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
     }
