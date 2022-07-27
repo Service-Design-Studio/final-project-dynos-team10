@@ -7,8 +7,19 @@ import { useState } from 'react';
 function Home() {
     const [machine, setMachine] = useState("");
     const [componentType, setComponentType] = useState("");
+    const [componentsForM, setComponentsForM] = useState([])
 
-
+    const existingComponents = async () => {
+        const id = '1'
+        try{
+            const toUpdate = await $axios.get('machine_types/1');
+            console.log(toUpdate);
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    }
 
     //add components to a machine type
     const addComponentToMachine = async () =>{
@@ -112,7 +123,7 @@ function Home() {
             
             <Stack>
             <Button
-            onClick={addComponentToMachine}
+            onClick={existingComponents}
             >
                 Check
             </Button>

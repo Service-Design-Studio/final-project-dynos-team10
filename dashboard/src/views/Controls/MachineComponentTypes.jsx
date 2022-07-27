@@ -34,6 +34,7 @@ export default function MachineComponentTypes() {
             const types = response.data.result;
             const values = types.map(pluck('type_name'));
             setComponents(values);
+    
         }
         catch(e){
             console.error(e);
@@ -63,6 +64,7 @@ export default function MachineComponentTypes() {
         currentMachines();
     }, [])
 
+
     const createNewComponentType = async (newComponent) => {
         try {
         const result = await $axios.post("/component_types", {
@@ -91,6 +93,7 @@ export default function MachineComponentTypes() {
         try{
             const toUpdate = await $axios.patch(`machine_types/${i}`, 
             {id: i, component_type_ids: componentIndex});
+            console.log(toUpdate)
         }
         catch(e){
             console.error(e);
@@ -187,22 +190,33 @@ export default function MachineComponentTypes() {
     }
 
     const renderAllMachines = () => {
-        machines.forEach(el => 
-        const { newMachineType } = el;
-        machineTypesHandlers.append({
-        label: newMachineType,
-        rightElementIfEmpty: <AddComponentButton machineType={newMachineType}/>,
-        footer: <Button fullWidth mt="sm" onClick={() => editMachineType(newMachineType)}>Edit Components</Button>
-    }))
-    };
+        machines.forEach(el =>{ 
+            machineTypesHandlers.append({
+                    label: el,
+                    rightElementIfEmpty: <AddComponentButton machineType={el}/>,
+                    footer: <Button fullWidth mt="sm" onClick={() => editMachineType(el)}>Edit Components</Button>
+            })
+        })
+    }
 
-    useEffect(() => {
-        renderAllMachines()
+    const renderAllComponents = () => {
+        components.forEach(el => {
+            componentTypesHandlers.append({
+                label: el
+            })
+        })
+    }
+
+    useEffect(()=>{
+        if (components !== []){
+            renderAllComponents()
+        }
+        if (machines !==[]){
+            renderAllMachines()
+        }
     }, [])
 
 
-
- 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
@@ -211,7 +225,7 @@ export default function MachineComponentTypes() {
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
         const machineTypeData = {...machineTypes[machineTypeIndex]};
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
-
+        console.log (machineTypeComponents)
         if (checked === !!machineTypeComponents.find(el => el.label === componentType)) {
             // just to make sure we are not in a situation of UNCHECKING BUT it was already not selected
             // or checking but it was already selected
@@ -232,7 +246,6 @@ export default function MachineComponentTypes() {
             const i = components.indexOf(el)
             componentIndex.push(i)
         });
-
         addComponentToMachine(componentIndex);
         
         machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
