@@ -27,7 +27,6 @@ export default function MachineComponentTypes() {
     const currentComponents = async () => {
         try{
             const response = await $axios.get("/component_types");
-            console.log({response});
             const types = response.data.result;
             const pluck = property => element => element[property];
             const value= types.map(pluck('type_name'));
@@ -78,7 +77,22 @@ export default function MachineComponentTypes() {
             console.error(e);
             alert(e);
             }
+        };
+
+    //add components to a machine type
+    const addComponentToMachine = async () =>{
+        const machineList = currentMachines();
+        const i = machineList.indexOf(editingMachineType)
+        try{
+            const toUpdate = await $axios.patch(`machine_types/${i}`, 
+            {id: i, component_type_ids:[2,3,4]});
+            console.log(toUpdate);
         }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    }
 
     const newMachineForm = useForm({
         initialValues:{
@@ -185,6 +199,18 @@ export default function MachineComponentTypes() {
         } else {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
+        
+        // retrieving index of required components
+        const pluck = property => element => element[property];
+        const componentNames = machineTypeComponents.map(pluck('label'));
+        const componentIndex=[]
+        const existingComponents = currentComponents()
+        console.log(typeof existingComponents)
+        // componentNames.forEach( el =>
+        //     componentIndex.push(existingComponents.indexOf(el))
+        // )
+        console.log(componentIndex)
+        
         machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
     }
 
