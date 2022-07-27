@@ -29,4 +29,7 @@ Rails.application.routes.draw do
     get 'workorders', to: "machine_types#get_one_work_order"
   end
 
+  mount ActionCable.server => "/ws"
+
+  resources :messages, only: [:create]
 end
