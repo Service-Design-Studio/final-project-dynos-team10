@@ -19,7 +19,7 @@ app = Flask(__name__)
 # np.set_printoptions(suppress=True)
 
 # Load the model
-model = tensorflow.keras.models.load_model('keras_model.h5',  compile=False)
+model = tensorflow.keras.models.load_model('keras_model.h5')
 
 @app.route("/")
 def hello_world():
@@ -34,7 +34,7 @@ def hello_world():
 # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 def prediction():
-    image = '/Users/bridget/Desktop/2022/SCHOOL/TERM5/60.004/MODEL/augmentation/LABELS/TEST IMAGES/incorrect 18 (wrong position).jpeg'
+    image = './incorrect 5 (crumpled).jpeg'
     image = Image.open(image)
     image = image.resize((224,224))
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
