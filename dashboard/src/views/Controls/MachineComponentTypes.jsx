@@ -55,6 +55,7 @@ export default function MachineComponentTypes() {
             const types = response.data.result;
             const values = types.map(pluck('type_name'));
             setComponents(values);
+            return values;
     
         }
         catch(e){
@@ -73,6 +74,7 @@ export default function MachineComponentTypes() {
             const types = response.data.result;
             const value = types.map(pluck('type_name'));
             setMachines(value);
+            return value;
             
         }
         catch(e){
@@ -222,6 +224,7 @@ export default function MachineComponentTypes() {
 
             const machineTypeIndex = machineTypes.findIndex(component => component.label === el);
             const machineTypeData = {...machineTypes[machineTypeIndex]};
+            let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
 
             const p = Promise.resolve(checkedComponents(el));
             const listOfComponents = []
@@ -229,16 +232,21 @@ export default function MachineComponentTypes() {
                 value.forEach(name => 
                     listOfComponents.push({label: name})
                     )
-                
-                machineTypeData.items = listOfComponents
-                console.log(machineTypeData)
 
+                // machineTypeData.items = listOfComponents
                 }
             ).catch(err => {
                 console.log(err);
                 }
-            )          
-        })
+            )  
+
+            machineTypesHandlers.setItemProp(machineTypeIndex, 'items', listOfComponents);
+
+            
+            console.log(machineTypes)
+            // const machineTypesItems = machineType.map((item, i) => <ContentGroup key={i} {...item} />)        
+            }
+        )
     }
 
 
@@ -256,9 +264,13 @@ export default function MachineComponentTypes() {
     // }
 
     useEffect(()=>{
-        if (components !== []){
+        const p = Promise.resolve(checkedComponents(currentComponents()));
+        p.then(value=>{
             renderAllComponents()
-        }
+        })
+        // if (components !== []){
+        //     renderAllComponents()            
+        
         if (machines !==[]){
             renderAllMachines()
         }
@@ -271,11 +283,8 @@ export default function MachineComponentTypes() {
         const checked = event.currentTarget.checked;
         
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
-
         const machineTypeData = {...machineTypes[machineTypeIndex]};
-        console.log(machineTypeData)
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
-        console.log (machineTypeComponents)
         if (checked === !!machineTypeComponents.find(el => el.label === componentType)) {
             // just to make sure we are not in a situation of UNCHECKING BUT it was already not selected
             // or checking but it was already selected
@@ -287,8 +296,9 @@ export default function MachineComponentTypes() {
         } else {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
+        console.log(machineTypeComponents)
         machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
-        
+
         // retrieving index of required components
         const selectedComponents = machineTypeComponents.map(pluck('label'));
         let componentIndex = []
