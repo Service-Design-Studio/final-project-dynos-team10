@@ -130,7 +130,7 @@ export default function LabelResult() {
                     </Center>
                 }
                 {
-                    !gettingResults && noLabel &&
+                    !gettingResults && hasChosenPhoto &&
                     <Grid>
                         <Grid.Col span={4} style={{ minHeight: 200 }}>
                             <OutcomeIcon height={100} />
