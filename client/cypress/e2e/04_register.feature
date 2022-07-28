@@ -9,7 +9,7 @@ Feature: Registering as a new user
         Then I fill in the input field for "Username" with "uNiQuENamE"
         And I fill in the input field for "Password" with "securepassword"
         And I fill in the input field for "Confirm Password" with "securepassword"
-        Then I click on the register button, expecting "success"
+        Then I click on the register button without a credential nickname, expecting "success"
         Then I should see "Successful Registration"
         When I click on the Log In Now button
         Then I should be on the "login" page
@@ -19,7 +19,7 @@ Feature: Registering as a new user
         Then I fill in the input field for "Username" with "test"
         And I fill in the input field for "Password" with "securepassword"
         And I fill in the input field for "Confirm Password" with "securepassword"
-        Then I click on the register button, expecting "username is not unique"
+        Then I click on the register button without a credential nickname, expecting "username is not unique"
         Then I should see "Username is not unique"
         And I should be on the "register" page
     

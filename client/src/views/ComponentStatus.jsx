@@ -17,7 +17,7 @@ function ComponentStatus() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // const [componentNames, setComponentNames] = useState([]);
+    const [componentTypes, setComponentTypes] = useState([]);
     const workorderNumber = useSelector(selectWorkorderNumber);
     useEffect(() => {
         (async() => {
@@ -26,30 +26,28 @@ function ComponentStatus() {
                 response = await $axios.get(`workorders?workorder_number=${workorderNumber}`);
                 const machineTypeId = response.data.result.machine_type_id;
                 response = await $axios.get(`machine_types/${machineTypeId}/component_types`);
-                const componentTypes = response.data.result;
-                console.log({componentTypes})
-                // setComponentNames()
+                setComponentTypes(response.data.result)
             } catch (e) {
                 console.log(e);
             }
         })()
     }, [workorderNumber])
 
-    const componentnames = ["label" , "wire", "xxx", "yyy"];
+    // const componentnames = ["label" , "wire", "xxx", "yyy"];
     const [modalOpened, setModalOpened] = useState(false);
 
     const [componentsReady, setComponentsReady] = useState(false);
 
     const processExistingComponent = (componentData) => {
         const { componentId, componentStatus, componentName, images, componentFailingReasons } = componentData;
-        if (!componentnames.includes(componentName)) {
-            // this means that a custom component was created by the user for this workorder
-            // we need to initialise it, and add the details
-            dispatch(addNewComponent(componentName));
+        // if (!componentnames.includes(componentName)) {
+        //     // this means that a custom component was created by the user for this workorder
+        //     // we need to initialise it, and add the details
+        //     dispatch(addNewComponent(componentName));
 
-            // TODO: to check this again when feature to create custom components is added
-            // the dispatch above is not synchoronous and might affect the following code in this function
-        }
+        //     // TODO: to check this again when feature to create custom components is added
+        //     // the dispatch above is not synchoronous and might affect the following code in this function
+        // }
         // since this is an existing component in the DB, we add a non-null ID to it
         dispatch(updateComponentId({
             componentName,
@@ -108,9 +106,11 @@ function ComponentStatus() {
                                 url: imageEl.public_url
                             }
                         })
+                        response = await $axios.get(`component_types/${el.component_type_id}`);
+                        const componentTypeName = response.data.result.type_name;
                         const componentObj = {
                             componentId: el.id,
-                            componentName: el.component_type,
+                            componentName: componentTypeName,
                             componentStatus: el.status,
                             images: formattedImages,
                             componentFailingReasons: el.failing_reasons || []
@@ -127,9 +127,12 @@ function ComponentStatus() {
             }
             // ---- important -----
             // no matter what, we always INITIALISE the DEFAULT components
-            componentnames.forEach(componentName => {
-                dispatch(addNewComponent(componentName));
-            });
+            componentTypes.forEach(componentTypeObj => {
+                dispatch(addNewComponent(componentTypeObj));
+            })
+            // componentnames.forEach(componentName => {
+            //     dispatch(addNewComponent(componentName));
+            // });
             // --------------------
             if (componentsWithImages.length > 0) {
                 // if there are existing records of components for this workorder, we process them
@@ -137,15 +140,15 @@ function ComponentStatus() {
             }
             setComponentsReady(true);
         })();
-    }, [workorderNumber]);
+    }, [workorderNumber, componentTypes]);
 
     return (
         <>
             <div style={{ display: "flex", flexDirection:"row", flexWrap: "wrap", alignItems: "center", justifyContent: "center", height: "100%" }}>
                 {
                     componentsReady &&
-                    componentnames.map((componentname, index) => 
-                        <ComponentStatusButton key={index} component={componentname} />
+                    componentTypes.map((componentTypeObj, index) => 
+                        <ComponentStatusButton key={index} component={componentTypeObj.type_name} />
                     )
                 }
             </div>
