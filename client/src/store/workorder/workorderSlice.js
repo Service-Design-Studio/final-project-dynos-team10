@@ -104,6 +104,16 @@ export const workorderSlice = createSlice({
             state.components = {};
             state.workorderNumber = action.payload;
             state.currentComponentName = '';
+        },
+        putOrAddComponent: (state, action) => {
+            const { componentName, images, status, failingReasons, id, componentTypeId } = action.payload;
+            state.components[componentName] = {
+                images,
+                status,
+                failingReasons,
+                id,
+                componentTypeId
+            }
         }
     }
 })
@@ -122,7 +132,8 @@ export const {
     resetWorkorderValues,
     startNewWorkorder,
     addImagesArrayToComponent,
-    updateComponentStatus
+    updateComponentStatus,
+    putOrAddComponent
 } = workorderSlice.actions;
 
 // GETTERS

@@ -6,7 +6,8 @@ import {
     updateComponentId,
     addImagesArrayToComponent,
     updateComponentStatus,
-    addFailingReasons
+    addFailingReasons,
+    putOrAddComponent
 } from "../store/workorder/workorderSlice";
 import { Button, Modal, Text } from "@mantine/core";
 import { useState, useEffect } from "react";
@@ -39,7 +40,7 @@ function ComponentStatus() {
     const [componentsReady, setComponentsReady] = useState(false);
 
     const processExistingComponent = (componentData) => {
-        const { componentId, componentStatus, componentName, images, componentFailingReasons } = componentData;
+        const { componentId, componentStatus, componentName, images, componentFailingReasons, componentTypeId } = componentData;
         // if (!componentnames.includes(componentName)) {
         //     // this means that a custom component was created by the user for this workorder
         //     // we need to initialise it, and add the details
@@ -49,29 +50,45 @@ function ComponentStatus() {
         //     // the dispatch above is not synchoronous and might affect the following code in this function
         // }
         // since this is an existing component in the DB, we add a non-null ID to it
-        dispatch(updateComponentId({
-            componentName,
-            id: componentId
-        }))
-
-        dispatch(addImagesArrayToComponent({
+        const payload = { 
             componentName,
             images: images.map(el => {
                 return {
                     id: el.imageId,
                     src: el.url
                 }
-            })
-        }));
-        const colorStatus = componentStatus ? 'green' : 'red';
-        dispatch(updateComponentStatus({
-            componentName,
-            status: colorStatus
-        }))
-        dispatch(addFailingReasons({
-            componentName,
-            failingReasons: componentFailingReasons
-        }));
+            }),
+            status: componentStatus ? 'green' : 'red',
+            failingReasons: componentFailingReasons,
+            id: componentId,
+            componentTypeId
+        }
+
+        dispatch(putOrAddComponent(payload));
+
+        // dispatch(updateComponentId({
+        //     componentName,
+        //     id: componentId
+        // }))
+
+        // dispatch(addImagesArrayToComponent({
+        //     componentName,
+        //     images: images.map(el => {
+        //         return {
+        //             id: el.imageId,
+        //             src: el.url
+        //         }
+        //     })
+        // }));
+        // const colorStatus = componentStatus ? 'green' : 'red';
+        // dispatch(updateComponentStatus({
+        //     componentName,
+        //     status: colorStatus
+        // }))
+        // dispatch(addFailingReasons({
+        //     componentName,
+        //     failingReasons: componentFailingReasons
+        // }));
     }
 
     useEffect(() => {
@@ -106,14 +123,16 @@ function ComponentStatus() {
                                 url: imageEl.public_url
                             }
                         })
-                        response = await $axios.get(`component_types/${el.component_type_id}`);
+                        const componentTypeId = el.component_type_id;
+                        response = await $axios.get(`component_types/${componentTypeId}`);
                         const componentTypeName = response.data.result.type_name;
                         const componentObj = {
                             componentId: el.id,
                             componentName: componentTypeName,
                             componentStatus: el.status,
                             images: formattedImages,
-                            componentFailingReasons: el.failing_reasons || []
+                            componentFailingReasons: el.failing_reasons || [],
+                            componentTypeId
                         }
                         return componentObj;
                     })
