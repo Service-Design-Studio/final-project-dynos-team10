@@ -12,15 +12,129 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Box, Components, Plus } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
+import { $axios } from '../../helpers/axiosHelper';
+
 
 export default function MachineComponentTypes() {
     const [machineTypes, machineTypesHandlers] = useListState([]);
     const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
+    const [components, setComponents] = useState([]);
+    const [machines, setMachines] = useState([]);
+    const [checkComponent, setCheckComponent] = useState([]);
+
+    const pluck = property => element => element[property];
+
+    // machines = [{id: 1, type_name: string}]
+    // components = [{id:1, type_name: string}]
+
+    const checkedComponents = async (machineName) => {
+        // const i = machines.indexOf(machineName)
+        const id = machines.find(el => el.type_name === machineName).id;
+        try{
+            const response = await $axios.get(`/machine_types/${id}/component_types`);
+            const c = response.data.result;
+            // const value = c.map(pluck('id'));
+            // c is the components that are linked to this machine
+            const componentList = c.map(pluck('type_name'));
+            // c.forEach(el => {
+            //     const name = components.find(x => x.id === el).type_name;
+            //     componentList.push(name)
+            // });
+            setCheckComponent(componentList);
+            return componentList;
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    };
+
+    const currentComponents = async () => {
+        try{
+            const response = await $axios.get("/component_types");
+            const values = response.data.result;
+            setComponents(values);
+    
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    };
+
+    useEffect(()=> {
+        currentComponents();
+    }, [])
+    
+    const currentMachines = async () => {
+        try{
+            const response = await $axios.get('machine_types');
+            const types = response.data.result;
+            // const value = types.map(pluck('type_name'));
+            // setMachines(value);
+            setMachines(types);
+            // return value;
+            
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    };
+
+    useEffect(() => {
+        renderAllMachines();
+    }, [machines])
+
+    useEffect(() => {
+        renderAllComponents();
+    }, [components])
+
+    useEffect(()=>{
+        currentMachines();
+    }, [])
+
+
+    const createNewComponentType = async (newComponent) => {
+        try {
+        const result = await $axios.post("/component_types", {
+            type_name: newComponent});
+         } 
+         catch(e){
+            console.error(e);
+            alert(e);
+            }
+        };
+
+    const createNewMachineType = async (newMachineType) => {
+        try {
+        const result = await $axios.post("/machine_types", {
+            type_name: newMachineType});
+            } 
+         catch(e) {
+            console.error(e);
+            alert(e);
+            }
+        };
+
+    //add components to a machine type
+    const addComponentToMachine = async (componentIndex) =>{
+        const id = machines.find(el => el.type_name === editingMachineType).id
+        try{
+            const toUpdate = await $axios.patch(`machine_types/${id}`, 
+            {id, component_type_ids: componentIndex});
+            console.log(toUpdate)
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    }
 
     const newMachineForm = useForm({
         initialValues:{
@@ -39,6 +153,7 @@ export default function MachineComponentTypes() {
             }
         }
     })
+
     const newComponentForm = useForm({
         initialValues:{
             newComponentType: ''
@@ -56,20 +171,20 @@ export default function MachineComponentTypes() {
             }
         }
     })
-    const submitNewMachineType = () => {
+
+
+
+    const submitNewMachineType = async () => {
         const validation = newMachineForm.validate();
         if (validation.hasErrors) {
             return;
         }
         const { newMachineType } = newMachineForm.values;
-        machineTypesHandlers.append({
-            label: newMachineType,
-            rightElementIfEmpty: <AddComponentButton machineType={newMachineType}/>,
-            footer: <Button fullWidth mt="sm" onClick={() => editMachineType(newMachineType)}>Edit Components</Button>
-        })
+        await createNewMachineType(newMachineType);
         newMachineForm.reset();
+        currentMachines();
     }
-    const submitNewComponentType = () => {
+    const submitNewComponentType = async() => {
         const validation = newComponentForm.validate();
         if (validation.hasErrors) {
             return;
@@ -77,7 +192,10 @@ export default function MachineComponentTypes() {
         componentTypesHandlers.append({
             label: newComponentForm.values.newComponentType
         })
+        
+        await createNewComponentType(newComponentForm.values.newComponentType);
         newComponentForm.reset();
+        currentComponents();
     }
 
     const editMachineType = (machineType) => {
@@ -104,29 +222,58 @@ export default function MachineComponentTypes() {
         )
     }
 
+    const renderAllMachines = async() => {
+        const transformedMachineTypes = machines.map(el => {
+            return {
+                label: el.type_name,
+                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+                footer: <Button fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
+            }
+        })
+        machineTypesHandlers.setState(transformedMachineTypes);
 
-    const mockdata = [
-        {
-            label: 'Non-nested',
-            rightElementIfEmpty: <AddComponentButton/>
-        },
-        {
-            label: 'Nested',
-            items: [{label: 'Item 1'}, {label: 'Item 2'}, {label: 'Item 3'}],
-            footer: <Button fullWidth mt="sm">Edit Components</Button>
-        },
-    ]
+        machines.forEach(el => { 
+            const machineTypeIndex = machineTypes.findIndex(component => component.label === el.type_name);
+            const machineTypeData = {...machineTypes[machineTypeIndex]};
+            let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
+
+            const p = Promise.resolve(checkedComponents(el.type_name));
+            // checked components returns array of component names linked to this machine
+            const listOfComponents = []
+            p.then(value=>{
+                value.forEach(name => 
+                    listOfComponents.push({label: name})
+                    )
+                }
+            ).catch(err => {
+                console.log(err);
+                }
+            )  
+
+            machineTypesHandlers.setItemProp(machineTypeIndex, 'items', listOfComponents);
+            }
+        )
+    }
+
+
+    const renderAllComponents = async() => {
+        const transformedComponentTypes = components.map(el => {
+            return {
+                    label: el.type_name
+            }
+        })
+        componentTypesHandlers.setState(transformedComponentTypes);
+    }
+
 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
-
+        
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
         const machineTypeData = {...machineTypes[machineTypeIndex]};
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
-
         if (checked === !!machineTypeComponents.find(el => el.label === componentType)) {
             // just to make sure we are not in a situation of UNCHECKING BUT it was already not selected
             // or checking but it was already selected
@@ -139,6 +286,18 @@ export default function MachineComponentTypes() {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
         machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
+
+        // retrieving index of required components
+        const selectedComponents = machineTypeComponents.map(pluck('label'));
+        let componentIndex = []
+         selectedComponents.forEach(componentName => {
+            const id = components.find(el => el.type_name === componentName).id;
+            componentIndex.push(id);
+        });
+
+        addComponentToMachine(componentIndex);
+        
+        
     }
 
     return (
