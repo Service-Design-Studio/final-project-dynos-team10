@@ -1,7 +1,13 @@
 import { useMemo, useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
-import { selectWorkorderComponents, updateCurrentComponentName, selectWorkorderNumber, selectCurrentComponent } from "../store/workorder/workorderSlice";
+import { 
+    selectWorkorderComponents, 
+    updateCurrentComponentName, 
+    selectWorkorderNumber, 
+    selectCurrentComponent, 
+    selectCurrentComponentName 
+} from "../store/workorder/workorderSlice";
 import { 
     Button,
     Center,
@@ -18,6 +24,7 @@ import { CheckCircleOutline, HighlightOff } from "@mui/icons-material";
 import ReportFailReasons from "../components/ReportFailReasons";
 import { useListState } from "@mantine/hooks";
 import { $axios } from '../helpers/axiosHelper';
+import { $aiAxios } from '../helpers/axiosHelper';
 import { buildComponentObjWithImages } from "../helpers/componentsHelper";
 import { cloneDeep } from "lodash";
 import { deepCompare } from "../helpers/objectHelper";
@@ -34,6 +41,7 @@ export default function LabelResult() {
     const workorderComponents = useSelector(selectWorkorderComponents);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
+    const currentComponentName = useSelector(selectCurrentComponentName);
     const [hasChosenPhoto, setHasChosenPhoto] = useState(false);
     const chosenLabelPhoto = useMemo(() => {
         const chosenIndex = searchParams.get('chosenLabelPhotoIndex');
@@ -92,13 +100,74 @@ export default function LabelResult() {
         }
     }
 
+    const createNewComponent = async(workorderId) => {
+        const payload = {
+            workorder_id: workorderId,
+            component_type: currentComponentName,
+        }
+        if (!noLabel) {
+            payload.status = true;
+        } else {
+            payload.failing_reasons = reasons;
+        }
+
+        let response;
+        try {
+            response = await $axios.post('components', payload);
+            if (!response.data.success) {
+                return;
+            }
+            console.log({response});
+            const { id: component_id } = response.data.result;
+            response = await $axios.post('images/batch', {
+                component_id,
+                images: currentComponent.images.map(el => el.src)
+            })
+            console.log({response});
+            submitLabelResult(response);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    const updateImages = async(componentId, oldImages, updatedImages) => {
+        // Note: images can only be added or deleted, they cannot be edited
+        console.log({componentId, oldImages, updatedImages});
+        const newImages = updatedImages.filter(el => el.id === null); 
+        const deletedImages = oldImages.filter(old => {
+            return !updatedImages.find(newEl => newEl.id === old.id);
+        })
+        console.log({newImages, deletedImages});
+
+        // await these??
+
+        // 1) find the new images to add
+        await $axios.post('images/batch', {
+            component_id: componentId,
+            images: newImages.map(el => el.src)
+        })
+
+        // 2) find images that are missing from the old images and delete them
+        const deleteQueryParams = new URLSearchParams({
+            ids: deletedImages.map(el => el.id)
+        })
+        await $axios.delete(`images/batch?${deleteQueryParams.toString()}`);
+    }
+
     const updateComponentRecord = async() => {
         // get workorder id
         const workorderId = await findWorkorderRecord();
         if (!workorderId) {
             return;
         }
-        console.log("hi")
+
+        // POST request, new component
+        if (currentComponent.id === null) {
+            console.log('We are working with a new component');
+            createNewComponent(workorderId);
+            return;
+        }
+
         // here we deal with EDITING/patch requests
         let response = await $axios.get(`components/${currentComponent.id}`);
         const dbComponent = response.data.result;
@@ -127,10 +196,10 @@ export default function LabelResult() {
         //     return;
         // }
 
-        // if (differences.images) {
-        //     // await this?
-        //     updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
-        // }
+        if (differences.images) {
+            // await this?
+            updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
+        }
 
         const payload = {
             component_id: currentComponentChanges.id
@@ -148,13 +217,15 @@ export default function LabelResult() {
 
         submitLabelResult();
     }
-    
+
     const submitLabelResult = () => {
         setSubmitModal(true);
+        // proceedWithDispute();
         // send to status to database
         updateComponentRecord();
 
     }
+    
 
     // ---- dispute modal ----
     const [ disputeSent, setDisputeSent ] = useState(false);
@@ -200,6 +271,8 @@ export default function LabelResult() {
             </Modal>
         )
     }
+    
+
 
     const goBackLabelPhotoReview = () => {
         dispatch(updateCurrentComponentName('label'));
@@ -223,7 +296,7 @@ export default function LabelResult() {
                     </Center>
                 }
                 {
-                    !gettingResults && hasChosenPhoto &&
+                    !gettingResults && hasChosenPhoto && !disputeSent &&
                     <Grid>
                         <Grid.Col span={4} style={{ minHeight: 200 }}>
                             <OutcomeIcon height={100} />
@@ -262,7 +335,7 @@ export default function LabelResult() {
                                 scrollHeight={150}
                             />
                         </Grid.Col>
-                        <Button onClick={updateComponentRecord} mt="md" fullWidth>Submit</Button>
+                        <Button onClick={submitLabelResult} mt="md" fullWidth>Submit</Button>
                     </Grid>
                 }
                 {
@@ -286,7 +359,7 @@ export default function LabelResult() {
                             >
                                 Choose Another Photo
                             </Button>
-                            <Button onClick={updateComponentRecord} mt="md" fullWidth>Submit</Button>
+                            <Button onClick={submitLabelResult} mt="md" fullWidth>Submit</Button>
                     </>
                     
                 }
