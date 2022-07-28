@@ -23,7 +23,9 @@ function ComponentStatusButton(props) {
     }, [workorderComponents]);
     
     const currentStatusSubmitted = useMemo(() => {
-        return ['green', 'red'].includes(workorderComponents[componentName].status);
+        if (workorderComponents[componentName]) {
+            return ['green', 'red'].includes(workorderComponents[componentName].status);
+        }
     }, [workorderComponents]);
 
     const computedClassName = componentName.toLowerCase().split(' ').join('-') + '__btn';

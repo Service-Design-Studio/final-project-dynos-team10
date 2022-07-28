@@ -66,9 +66,10 @@ export default function PassFail() {
     }
 
     const createNewComponent = async(workorderId) => {
+        console.log({currentComponent});
         const payload = {
             workorder_id: workorderId,
-            component_type: currentComponentName,
+            component_type_id: currentComponent.componentTypeId,
         }
 
         if (isPass) {

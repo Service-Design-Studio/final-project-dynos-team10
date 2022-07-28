@@ -131,6 +131,32 @@ Then('I should see a Go Back To Camera button', () => {
 Then('I click on the register button', () => {
     cy.get('.register-btn').click();
 });
+Then('I click on the register button without a credential nickname, expecting {string}', (expectedOutcome) => {
+    let stubbingFixture, statusCode;
+    switch(expectedOutcome) {
+        case "success":
+            // for successful login, we stub the FIRST request, and not request for credentials
+            // hence we throw a network error and STOP all subsequent lines in the click handler
+            stubbingFixture = 'registration/successful.json';
+            statusCode = 200;
+            break;
+        case "username is not unique":
+            stubbingFixture = 'registration/username-taken.json';
+            statusCode = 422;
+            break;
+    }
+    cy.intercept('POST', 'registration', req => {
+        // prevent the request from actually reaching the server and stub response with fixture
+        req.reply({
+            fixture: stubbingFixture,
+            statusCode
+        })
+    }).as('registration');
+    
+    // click must be BEHIND intercept
+    cy.get('.register-btn').click();
+    cy.wait('@registration');
+});
 Then('I click on the register button, expecting {string}', (expectedOutcome) => {
     let stubbingFixture, statusCode;
     switch(expectedOutcome) {

@@ -58,7 +58,7 @@ def prediction():
 
     # run the inference
     prediction = model.predict(data)
-    return prediction.tolist(), 200
+    return '{}'.format(prediction), 200
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

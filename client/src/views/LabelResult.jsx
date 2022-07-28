@@ -103,7 +103,7 @@ export default function LabelResult() {
     const createNewComponent = async(workorderId) => {
         const payload = {
             workorder_id: workorderId,
-            component_type: currentComponentName,
+            component_type_id: currentComponent.componentTypeId,
         }
         if (!noLabel) {
             payload.status = true;

@@ -1,22 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// A component should look like this:
-// label: {
-//     images: [],
-//     status: pass/fail/incomplete
-//     failingReasons: []
-// }
-
-// ----- old interfaces ---------
-/*
-interface Component {
-    images: string[],
-    status: 'green' | 'red' | 'yellow' | 'blue'
-    failingReasons: string[]
-}
-*/
-
-// ------- new interface to be implemented moving forward to help with db operations ----------
+// ------- old interfaces ----------
 /*
 interface Component {
     images: Image[],
@@ -28,6 +12,17 @@ interface Component {
 interface Image {
     id: number | null,
     src: string
+}
+*/
+
+// ------- new interfaces ----------
+/*
+interface Component {
+    images: Image[],
+    status: 'green' | 'red' | 'yellow' | 'blue'
+    failingReasons: string[],
+    id: number | null, // null to indicate this has not yet been in the DB
+    componentTypeId: number
 }
 */
 
@@ -45,7 +40,7 @@ export const workorderSlice = createSlice({
             state.workorderNumber = action.payload;
         },
         addNewComponent: (state, action) => {
-            const componentName = action.payload;
+            const { type_name: componentName, id: componentTypeId } = action.payload;
             if (componentName in state.components) {
                 return;
             }
@@ -54,7 +49,8 @@ export const workorderSlice = createSlice({
                 images: [],
                 status: 'blue',
                 failingReasons: [],
-                id: null
+                id: null,
+                componentTypeId
             }
         },
         updateComponentId: (state, action) => {
