@@ -6,6 +6,8 @@
 - [Joel Tay](https://github.com/Vemrthiss)
 - [Tan Kay Wee](https://github.com/kayweeee)
 - [Tan Li Hui](https://github.com/t-lihui)
+- [Bridget Chua](http://github.com/bridget5615)
+- [Tan Kang Min](https://github.com/hamster-with-human-hands)
 - [Umang Gupta](https://github.com/Usgupta)
 
 ## Collaborating
