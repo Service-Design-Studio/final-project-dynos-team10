@@ -12,8 +12,9 @@ function Home() {
     const existingComponents = async () => {
         const id = '1'
         try{
-            const toUpdate = await $axios.get('machine_types/1');
-            console.log(toUpdate);
+            const response = await $axios.get('/machine_types/1/component_types');
+            const value = response.data.result;
+            console.log(value);
         }
         catch(e){
             console.error(e);

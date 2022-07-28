@@ -33,7 +33,7 @@ class ComponentTypesController < ApplicationController
   end
 
   def show
-    component_type_rec = ComponentType.find_one params[:id]
+    component_type_rec = ComponentType.get_one_component_type_from_id params[:id]
     render json: success_json(component_type_rec)
   end
 

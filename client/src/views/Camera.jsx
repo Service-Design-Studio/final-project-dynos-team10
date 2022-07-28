@@ -18,7 +18,7 @@ import {
     Grid,
     Space,
     ThemeIcon
-  } from "@mantine/core";
+} from "@mantine/core";
 
 function Camera() {
     // const theme = useMantineTheme();

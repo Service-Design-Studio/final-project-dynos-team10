@@ -1,13 +1,15 @@
 import { useMemo, useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import OptionsModal from "../components/OptionsModal";
 
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { IoTrashSharp } from "react-icons/io5";
-import { MdLibraryAdd } from "react-icons/md";
+import { MdLibraryAdd, MdOutlineClear } from "react-icons/md";
 import PassIconSvg from '../assets/pass-icon.svg';
 import FailIconSvg from '../assets/fail-icon.svg';
 import SwipeableTextMobileStepper from '../components/PhotoCarousel';
+import SwipeableViews from 'react-swipeable-views';
+import { Image } from '@mantine/core';
 
 import './PhotoReview.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +28,10 @@ import {
     Grid,
     Space,
     Button,
-    Text
+    Text,
+    Center,
+    Modal,
+    Box
   } from "@mantine/core";
 
 import { $axios } from '../helpers/axiosHelper';
@@ -52,6 +57,7 @@ function PhotoReview() {
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
     const [optionsModal, setOptionsModal] = useState(false);
+    const [ photoForAI, setPhotoForAI ] = useState(false);
 
 
     const hasImages = useMemo(() => {
@@ -68,6 +74,11 @@ function PhotoReview() {
             index: activeStep,
             componentName: currentComponentName
         }));
+        console.log("number of images in array " + currentComponent.images.length)
+        console.log("active step: " + activeStep)
+        if (activeStep === (currentComponent.images.length - 1)) {
+            setActiveStep(activeStep - 1)
+        } 
         toggleCarouselKey();
     }
 
@@ -82,12 +93,14 @@ function PhotoReview() {
     const proceedStatus = () => {
         navigate('/pass-fail', { state: { chosenStatus } });
     };
-        
-    
-    const proceedAfterStatus = (status) => {
-        setChosenStatus(status);
 
-    };
+    const sendPhotoForInspection = () => {
+        navigate({
+            pathname: '/label-result',
+            search: createSearchParams({ chosenLabelPhotoIndex: activeStep }).toString()
+        })
+    }
+
 
     return (
         
@@ -131,7 +144,8 @@ function PhotoReview() {
             
             <Space h="xs" />
 
-            {/* middle section -> carousel */}
+           
+            {/* ============================= middle section -> carousel ============================== */}
             <Container px="0">
             {
                     !hasImages
@@ -162,7 +176,7 @@ function PhotoReview() {
 
             </Container>
             {
-                hasImages &&
+                hasImages && currentComponentName !== 'label' &&
                 <div style={{textAlign: 'center'}}>
                     <h3 style={{ marginTop: "0.5rem"}} >Indicate Status to Proceed</h3>
 
@@ -209,6 +223,45 @@ function PhotoReview() {
                     }
                 </div>
             }
+
+            {/* =========================== will be displayed for label component ======================*/}
+            {
+                hasImages && currentComponentName === 'label' &&
+                <>
+                    <Center><h4>Select 1 photo for AI inspection</h4></Center> 
+                    <Center>
+                        <Button onClick={ () => setPhotoForAI(true)}>
+                            Select this Photo
+                        </Button>
+                    </Center>
+                </>
+                    
+            }
+
+            <Modal
+                opened={photoForAI}
+                onClose={ () => setPhotoForAI(false)}
+            >
+
+                <Center><h4 style={{marginTop: 0}}>Selected Photo for AI Inspection</h4></Center>
+                <Image
+                    radius="md"
+                    src={ (hasImages && currentComponent.images[activeStep].src) || null}
+                />
+                {/* <Center><h4>Send for AI Inspection?</h4></Center> */}
+                <div style={{display: "flex", justifyContent: "space-around", margin: "2rem 0 2rem"}}>
+                    <Button 
+                        rightIcon={<MdOutlineClear size={16}/>} 
+                        variant="outline"
+                        onClick={() => setPhotoForAI(false)}
+                        >
+                        Select another
+                    </Button>
+                    <Button onClick={sendPhotoForInspection} rightIcon={<FaArrowRight size={14}/>}>Inspect</Button>
+                </div>
+
+            </Modal>
+               
         </div>
     )
 }

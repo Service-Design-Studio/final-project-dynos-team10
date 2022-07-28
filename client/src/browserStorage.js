@@ -1,4 +1,4 @@
-const KEY = "redux";
+export const KEY = "redux";
 
 /**
  * loads the serialised redux store state from local storage

@@ -25,8 +25,29 @@ export default function MachineComponentTypes() {
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
+    const [checkComponent, setCheckComponent] = useState([]);
 
     const pluck = property => element => element[property];
+
+    const checkedComponents = async (componentName) => {
+        const i = machines.indexOf(componentName)
+        try{
+            const response = await $axios.get(`/machine_types/${i}/component_types`);
+            const c = response.data.result;
+            const value = c.map(pluck('id'));
+            const componentList = [];
+            value.forEach(el => {
+                const name = components[el];
+                componentList.push(name)
+            });
+            setCheckComponent(componentList);
+            return componentList;
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    };
 
     const currentComponents = async () => {
         try{
@@ -189,15 +210,37 @@ export default function MachineComponentTypes() {
         )
     }
 
-    const renderAllMachines = () => {
-        machines.forEach(el =>{ 
-            machineTypesHandlers.append({
-                    label: el,
-                    rightElementIfEmpty: <AddComponentButton machineType={el}/>,
-                    footer: <Button fullWidth mt="sm" onClick={() => editMachineType(el)}>Edit Components</Button>
-            })
+    const renderAllMachines = async() => {
+        machines.forEach(el => { 
+            machineTypesHandlers.append(
+                {
+                label: el,
+                rightElementIfEmpty: <AddComponentButton machineType={el}/>,
+                footer: <Button fullWidth mt="sm" onClick={() => editMachineType(el)}>Edit Components</Button>
+                }
+            )
+
+            const machineTypeIndex = machineTypes.findIndex(component => component.label === el);
+            const machineTypeData = {...machineTypes[machineTypeIndex]};
+
+            const p = Promise.resolve(checkedComponents(el));
+            const listOfComponents = []
+            p.then(value=>{
+                value.forEach(name => 
+                    listOfComponents.push({label: name})
+                    )
+                
+                machineTypeData.items = listOfComponents
+                console.log(machineTypeData)
+
+                }
+            ).catch(err => {
+                console.log(err);
+                }
+            )          
         })
     }
+
 
     const renderAllComponents = () => {
         components.forEach(el => {
@@ -206,6 +249,11 @@ export default function MachineComponentTypes() {
             })
         })
     }
+
+    // const renderAllChecks = () => {
+    //     const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
+    //     checkedComponents(machineTypeIndex)
+    // }
 
     useEffect(()=>{
         if (components !== []){
@@ -221,9 +269,11 @@ export default function MachineComponentTypes() {
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
-
+        
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
+
         const machineTypeData = {...machineTypes[machineTypeIndex]};
+        console.log(machineTypeData)
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
         console.log (machineTypeComponents)
         if (checked === !!machineTypeComponents.find(el => el.label === componentType)) {
@@ -237,18 +287,18 @@ export default function MachineComponentTypes() {
         } else {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
+        machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
         
         // retrieving index of required components
-        
         const selectedComponents = machineTypeComponents.map(pluck('label'));
         let componentIndex = []
         selectedComponents.forEach(el => {
-            const i = components.indexOf(el)
-            componentIndex.push(i)
+            const i = components.indexOf(el);
+            componentIndex.push(i);
         });
         addComponentToMachine(componentIndex);
         
-        machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
+        
     }
 
     return (
