@@ -103,6 +103,7 @@ export default function Login() {
         const pubKeyCredential = await Login.authenticateExposed(challenge, registeredCredentials);
 
         result = await commitLogin(pubKeyCredential, challenge);
+        console.log(result);
         if (!result) {
             setLoginLoading(false);
             return;
@@ -142,7 +143,6 @@ export default function Login() {
             setLoginLoading(false);
             return;
         }
-
         let token;
         if (withWebAuth) {
             token = await signInWithWebAuth();
@@ -218,7 +218,7 @@ export default function Login() {
                         <Button onClick={() => signIn(false)} className="login-btn" loading={loginLoading} sx={{flexGrow: 1}}>
                             Sign In
                         </Button>
-                        <Button onClick={() => signIn(true)} variant="outline">
+                        <Button className="login-btn--credentials" onClick={() => signIn(true)} variant="outline">
                             <FaceId/>
                         </Button>
                     </Group>

@@ -14,6 +14,17 @@ Feature: Registering as a new user
         When I click on the Log In Now button
         Then I should be on the "login" page
 
+    Scenario: Registering as a completely new user with device credentials
+        Given I am on the "register" page
+        Then I fill in the input field for "Username" with "UNiQuENamE"
+        And I fill in the input field for "Password" with "securepassword"
+        And I fill in the input field for "Confirm Password" with "securepassword"
+        And I fill in the input field for "Credential Nickname" with "uNiQuENamEKeY" 
+        Then I click on the register button, expecting "success"
+        Then I should see "Successful Registration"
+        When I click on the Log In Now button
+        Then I should be on the "login" page
+
     Scenario: SAD PATH: Registering with non-unique username
         Given I am on the "register" page
         Then I fill in the input field for "Username" with "test"

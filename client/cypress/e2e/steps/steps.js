@@ -217,7 +217,7 @@ When('I click on the Log In Now button', () => {
 Then('I click on the log in button', () => {
     cy.get('.login-btn').click();
 })
-Then('I click on the log in button, expecting {string}', (expectedOutcome) => {
+Then('I click on the log in button with device credentials, expecting {string}', (expectedOutcome) => {
     let stubbingFixture, statusCode;
     switch(expectedOutcome) {
         case "success":
@@ -240,7 +240,8 @@ Then('I click on the log in button, expecting {string}', (expectedOutcome) => {
     }).as('session');
     cy.intercept('POST', 'session/callback', req => {
         req.reply({
-            statusCode: 200
+            statusCode: 200,
+            fixture: 'login/successful-final.json'
         })
     }).as('sessionCallback');
     
@@ -253,9 +254,34 @@ Then('I click on the log in button, expecting {string}', (expectedOutcome) => {
         })
     });
 
-    cy.get('.login-btn').click();
+    cy.get('.login-btn--credentials').click();
     cy.wait('@session');
     cy.wait('@sessionCallback');
+})
+Then('I click on the log in button, expecting {string}', (expectedOutcome) => {
+    let stubbingFixture, statusCode;
+    switch(expectedOutcome) {
+        case "success":
+            // for successful login, we stub the FIRST request, and not request for credentials
+            // hence we throw a network error and STOP all subsequent lines in the click handler
+            stubbingFixture = 'login/successful-final.json';
+            statusCode = 200;
+            break;
+        case "username does not exist":
+            stubbingFixture = 'login/username-unknown.json';
+            statusCode = 422;
+            break;
+    }
+
+    cy.intercept('POST', 'session', req => {
+        req.reply({
+            fixture: stubbingFixture,
+            statusCode
+        })
+    }).as('session');
+
+    cy.get('.login-btn').click();
+    cy.wait('@session');
 })
 
 // // ------------- status_of_components.feature ------------------
