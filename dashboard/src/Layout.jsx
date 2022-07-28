@@ -32,14 +32,28 @@ const useStyles = createStyles((theme) => ({
         '&, &:hover': {
             backgroundColor: theme.colors[theme.primaryColor][7],
         },
-    },
+    }
 }));
+
+
 
 function NavbarLink({ icon: Icon, label, active, onClick }) {
     const { classes, cx } = useStyles();
+    const systemclass = () => {
+        if (label === 'System Controls'){ /// it is system control button
+        return (
+            "system-control-btn " + cx(classes.link, { [classes.active]: active })
+        )
+    }
+    return (
+        cx(classes.link, { [classes.active]: active })
+    )
+    }
+
     return (
         <Tooltip label={label} position="right" withArrow transitionDuration={0}>
-            <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
+            <UnstyledButton onClick={onClick} 
+            className={{systemclass}}>
                 <Icon />
             </UnstyledButton>
         </Tooltip>

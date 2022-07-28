@@ -17,10 +17,13 @@
     "@mantine/hooks": "^4.2.12",
     "@rails/actioncable": "^7.0.3-1",
     "axios": "^0.27.2",
+    "force": "^0.0.3",
+    "fore": "^0.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
-    "tabler-icons-react": "^1.53.0"
+    "tabler-icons-react": "^1.53.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",
