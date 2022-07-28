@@ -227,7 +227,7 @@ export default function MachineComponentTypes() {
             return {
                 label: el.type_name,
                 rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
-                footer: <Button fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
+                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
             }
         })
         machineTypesHandlers.setState(transformedMachineTypes);
@@ -265,9 +265,15 @@ export default function MachineComponentTypes() {
         componentTypesHandlers.setState(transformedComponentTypes);
     }
 
+    const classFunc = ()=> {
+        if (item.label === "Machine Type 1"){
+         return 'machine-type-1';
+        }
+        return;
+    }
 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
         
@@ -301,7 +307,7 @@ export default function MachineComponentTypes() {
     }
 
     return (
-        <>
+        <div className='errors'>
             <Group position="center" align="flex-start" spacing={50}>
                 <div style={{width: .4*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
@@ -318,11 +324,11 @@ export default function MachineComponentTypes() {
                         {...newMachineForm.getInputProps('newMachineType')}
                         onKeyUp={(e) => {if (e.key === 'Enter') submitNewMachineType()}}
                         rightSection={
-                            <ActionIcon onClick={submitNewMachineType}><Plus/></ActionIcon>
+                            <ActionIcon className='add-machine-btn' onClick={submitNewMachineType}><Plus/></ActionIcon>
                         }
                         mb="md"
                     />
-                    <ScrollArea offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                    <ScrollArea className="machine-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
                         {machineTypesItems}
                     </ScrollArea>
                 </div>
@@ -341,11 +347,11 @@ export default function MachineComponentTypes() {
                         {...newComponentForm.getInputProps('newComponentType')}
                         onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
                         rightSection={
-                            <ActionIcon onClick={submitNewComponentType}><Plus/></ActionIcon>
+                            <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
                         }
                         mb="md"
                     />
-                    <ScrollArea offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                    <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
                         {componentTypesItems}
                     </ScrollArea>
                 </div>
@@ -375,6 +381,6 @@ export default function MachineComponentTypes() {
                     ))}
                 </ScrollArea>
             </Drawer>
-        </>
+        </div>
     )
 }

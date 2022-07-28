@@ -32,14 +32,18 @@ const useStyles = createStyles((theme) => ({
         '&, &:hover': {
             backgroundColor: theme.colors[theme.primaryColor][7],
         },
-    },
+    }
 }));
+
+
 
 function NavbarLink({ icon: Icon, label, active, onClick }) {
     const { classes, cx } = useStyles();
+
     return (
         <Tooltip label={label} position="right" withArrow transitionDuration={0}>
-            <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
+            <UnstyledButton onClick={onClick} 
+            className={cx(classes.link, { [classes.active]: active })}>
                 <Icon />
             </UnstyledButton>
         </Tooltip>
