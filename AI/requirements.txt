@@ -5,8 +5,9 @@ certifi==2021.10.8
 chardet==4.0.0
 charset-normalizer==2.0.12
 click==8.0.4
-cv2==4.5.5
+# cv2==4.5.5
 Flask==2.1.3
+Flask-Cors==3.0.10
 flatbuffers==2.0
 gast==0.5.3
 gdown==4.5.1
@@ -30,7 +31,7 @@ keras==2.8.0
 Keras-Preprocessing==1.1.2
 Markdown==3.3.6
 MarkupSafe==2.1.1
-numpy==1.21.4
+# numpy==1.21.4
 oauthlib==3.2.0
 opt-einsum==3.3.0
 Pillow==8.4.0

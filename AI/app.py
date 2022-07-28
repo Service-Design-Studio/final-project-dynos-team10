@@ -10,9 +10,13 @@ import tensorflow as tf
 
 # Import Flask API
 from flask import Flask, request
+from flask_cors import CORS
 from numpy import apply_along_axis
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
+CORS(app)
 
 
 # Disable scientific notation for clarity
@@ -25,74 +29,36 @@ model = tensorflow.keras.models.load_model('keras_model.h5')
 def hello_world():
     return ("Hello World!")
 
-@app.route("/prediction", methods=['POST'])
 
 
 # Create the array of the right shape to feed into the keras model
 # The 'length' or number of images you can put into the array is
 # determined by the first position in the shape tuple, in this case 1.
 # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-
+@app.route("/prediction", methods=['POST'])
 def prediction():
-    image = './incorrect 5 (crumpled).jpeg'
-    image = Image.open(image)
+    base64_string = request.get_json()["image"].encode("utf-8")
+    tapered_base64_string = ""
+    if base64_string.startswith(b"data:image/jpeg;base64,"):
+      tapered_base64_string = base64_string.replace(b"data:image/jpeg;base64,", b"")
+    elif base64_string.startswith(b"data:image/png;base64,"):
+      tapered_base64_string = base64_string.replace(b"data:image/png;base64,", b"")
+
+    # image = './incorrect 5 (crumpled).jpeg'
+    # image = Image.open(image)
+    # convert to RGB because png images have an extra alpha channel (RGBA, 4 columns) and we disregard tha
+    image = Image.open(BytesIO(base64.b64decode(tapered_base64_string))).convert('RGB')
     image = image.resize((224,224))
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
- 
-    if True:
-      image_array = np.asarray(image)
-# Normalize the image
-      normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
-      # Load the image into the array
-      data[0] = normalized_image_array
+    image_array = np.asarray(image)
+    # Normalize the image
+    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+    # Load the image into the array
+    data[0] = normalized_image_array
 
-      # run the inference
-      prediction = model.predict(data)
-      return '{}'.format(prediction) , 200
-
-    else:
-      #If the apikey is not the same, then return a 400 status indicating an error.
-      return "Not valid apikey", 500 
-
-    # def read_tensor_from_image_url(url,
-    #                             input_height=224,
-    #                             input_width=224,
-    #                             input_mean=0,
-    #                             input_std=255):
-        
-    #     image_open = open(image, 'rb')
-    #     image_read = image_open.read()
-    #     image_reader = tf.image.decode_jpeg(
-    #         image_read, channels=3, name="jpeg_reader")
-    #     float_caster = tf.cast(image_reader, tf.float32)
-    #     dims_expander = tf.expand_dims(float_caster, 0)
-    #     resized = tf.image.resize(dims_expander,[input_height,input_width], method='bilinear',antialias=True, name = None)
-    #     normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-
-    #     return normalized
-    #Get all the values in your POST request. 
-    # apikey = request.args.get('apikey')
-    # image = request.args.get('url')
-    # image = image.resize((224,224))
-
-    #Check for API key access  --> Very makeshift manual solution. Totally not fit for production levels. 
-    #Change this if you're using this method.
-    # if apikey == 'AIzaSyCQsKa7J2bNPKKiiEHaAsrXTouyHI5zX5c':  
-    # if True:
-    #     #Follow all the neccessary steps to get the prediction of your image. 
-    #     image = read_tensor_from_image_url(image)
-    #     image_array = np.asarray(image)
-    #     normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
-    #     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    #     data[0] = normalized_image_array
-    #     prediction = model.predict(data)
-        
-    #     #Retunr the prediction and a 200 status
-    #     return '{}'.format(prediction) , 200
-
-    # else:
-    #     #If the apikey is not the same, then return a 400 status indicating an error.
-    #     return "Not valid apikey", 500 
+    # run the inference
+    prediction = model.predict(data)
+    return prediction.tolist(), 200
     
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

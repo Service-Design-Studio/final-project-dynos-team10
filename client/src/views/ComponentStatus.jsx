@@ -17,8 +17,25 @@ function ComponentStatus() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const componentnames = ["label" , "wire", "xxx", "yyy"];
+    // const [componentNames, setComponentNames] = useState([]);
     const workorderNumber = useSelector(selectWorkorderNumber);
+    useEffect(() => {
+        (async() => {
+            let response;
+            try {
+                response = await $axios.get(`workorders?workorder_number=${workorderNumber}`);
+                const machineTypeId = response.data.result.machine_type_id;
+                response = await $axios.get(`machine_types/${machineTypeId}/component_types`);
+                const componentTypes = response.data.result;
+                console.log({componentTypes})
+                // setComponentNames()
+            } catch (e) {
+                console.log(e);
+            }
+        })()
+    }, [workorderNumber])
+
+    const componentnames = ["label" , "wire", "xxx", "yyy"];
     const [modalOpened, setModalOpened] = useState(false);
 
     const [componentsReady, setComponentsReady] = useState(false);

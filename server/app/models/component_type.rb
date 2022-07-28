@@ -56,7 +56,7 @@ class ComponentType < ApplicationRecord
   def self.get_count
     ComponentType.count
   end
-  def self.get_one_component(component_type_id)
+  def self.get_one_components(component_type_id)
     ComponentType.find_by(id: component_type_id).components
   end
 

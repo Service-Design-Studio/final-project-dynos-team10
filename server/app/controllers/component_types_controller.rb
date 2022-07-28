@@ -55,8 +55,8 @@ class ComponentTypesController < ApplicationController
    render json: success_json(ComponentType.get_count)
  end
 
- def get_one_component
-   component = ComponentType.get_one_component params[:id]
+ def get_one_components
+   component = ComponentType.get_one_components params[:id]
    render json: success_json(component)
  end
 

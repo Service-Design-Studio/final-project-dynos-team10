@@ -1,23 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { $axios } from "../helpers/axiosHelper";
 import { useDispatch } from "react-redux";
 import { startNewWorkorder } from "../store/workorder/workorderSlice";
 import {
-  useMantineTheme,
   TextInput,
   Text,
   Button,
   Stack,
   Modal,
-  Center
-
+  Select
 } from "@mantine/core";
 import QrReader from 'modern-react-qr-reader';
 
 function QCEntry() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [existingMachineTypes, setExistingMachineTypes] = useState([]);
+  useEffect(() => {
+    (async () => {
+      let response;
+      try {
+        response = await $axios.get('machine_types');
+        setExistingMachineTypes(response.data.result);
+      } catch (e) {
+        console.log(e);
+      }
+    })()
+  }, [])
+  const existingMachineTypesOptions = useMemo(() => existingMachineTypes.map(el => {
+    return {
+      value: el.type_name,
+      label: el.type_name
+    }
+  }), [existingMachineTypes])
 
   const [formValues, setFormValues] = useState(
     { serialno: "", type: "" }
@@ -63,41 +80,27 @@ function QCEntry() {
         }
       } catch (e) {
         console.error(e);
+        const errors = {};
         if (e.response.data.errors.workorder_number) {
-          setFormErrors({serialno: 'workorder number is taken'});
+          errors.serialno = 'workorder number is taken';
         }
+        if (e.response.data.errors.machine_type) {
+          errors.type = 'machine type does not exist';
+        }
+        setFormErrors(errors);
       }
       setIsLoading(false);
     })();
   }, [formErrors, isSubmit]);
 
-  // const NextButton = () => {
-  //   setFormErrors(validate(formValues));
-  //   setIsSubmit(true);
-
-  //   if (Object.keys(formErrors).length === 0 && isSubmit) {
-  //       return (<Button size="md"
-  //       variant="filled"
-  //       onClick={handleNextPage}
-  //       uppercase
-  //       className="submit-workorder-btn">NEXT</Button>)
-  //   };
-  //   return (<Button size="md"
-  //   variant="filled"
-  //   onClick={handleNextPage}
-  //   uppercase
-  //   className="submit-workorder-btn" 
-  //   disabled>NEXT</Button>)
-  // };
-
   const createWorkOrder = async () => {
+    const existingMachineTypeObj = existingMachineTypes.find(el => el.type_name === formValues.type);
     return await $axios.post("workorders", {
       workorder_number: formValues.serialno,
-      machine_type: formValues.type,
+      machine_type_id: existingMachineTypeObj.id,
     });
   };
 
-  const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   
   const handleResult = (result) => {
@@ -107,7 +110,12 @@ function QCEntry() {
         console.log(result)
         const data = result.split(",");
         setPrevValue(formValues);
+
         setFormValues({serialno: data[0], type: data[2]});
+
+        if (!existingMachineTypes.find(el => el.type_name === data[2])) {
+          setFormErrors({type: 'This machine type does not exist'});
+        }
         setOpened(false);
       }
 
@@ -169,7 +177,16 @@ function QCEntry() {
         </Stack>
 
         <Stack spacing={"5"} align="center" justify={"center"}>
-          <TextInput
+          <Select
+            placeholder="MACHINE TYPE"
+            data={existingMachineTypesOptions}
+            searchable
+            clearable 
+            nothingFound="No options"
+            value={formValues.type}
+            onChange={val => setFormValues({ ...formValues, 'type': val })}
+          />
+          {/* <TextInput
             placeholder="MACHINE TYPE"
             name="type"
             type="text"
@@ -177,7 +194,7 @@ function QCEntry() {
             onChange={handleChange}
             size="sm"
             style={{ paddingLeft: 12, paddingRight: 12, width: 200 }}
-          />
+          /> */}
 
           <Text size="sm" color={"red"}>
             {formErrors.type}

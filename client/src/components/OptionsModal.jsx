@@ -106,7 +106,7 @@ return (
             <label htmlFor="contained-button-file">
                 <Button
                 variant="light"
-                style={{height: 150, width: 200}}
+                style={{height: 150, width: 200, marginBottom: "2rem"}}
                 component="span"
                 >
                     <Stack

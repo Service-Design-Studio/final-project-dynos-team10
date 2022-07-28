@@ -29,7 +29,6 @@ function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight
         'Wrong Position', 
         'Wrong Text', 
         'Markings', 
-        'Others'
     ];
 
     // notSelectedReasons: reasons in the dropdown list 

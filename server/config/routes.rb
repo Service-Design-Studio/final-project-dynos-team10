@@ -26,7 +26,8 @@ Rails.application.routes.draw do
   end
 
   resources :machine_types do
-    get 'workorders', to: "machine_types#get_one_work_order"
+    get 'workorders', to: "machine_types#get_one_work_order", on: :member
+    get 'component_types', to: "machine_types#get_one_component_types", on: :member
   end
 
   mount ActionCable.server => "/ws"
