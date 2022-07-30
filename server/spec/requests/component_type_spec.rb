@@ -34,8 +34,9 @@ RSpec.describe "ComponentTypes", type: :request do
 
 
       expected_json =  {"success"=>true, "result"=>{"type_name"=>"gggg", "id"=>component_type.id, "created_at"=>component_type.created_at, "updated_at"=>component_type.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
 
-      expect(JSON.parse(response.body)).to include{expected_json}
+      expect(JSON.parse(response.body)).to eq(expected_json)
 
     end
   end

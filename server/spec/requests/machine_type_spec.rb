@@ -41,10 +41,11 @@ RSpec.describe "MachineTypes", type: :request do
 
 
       expected_json =  {"success"=>true, "result"=>{"type_name"=>"m9", "id"=>machine_type_in.id, "created_at"=>machine_type_in.created_at, "updated_at"=>machine_type_in.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
 
       # puts JSON.parse(response.body)
 
-      expect(JSON.parse(response.body)).to include{expected_json}
+      expect(JSON.parse(response.body)).to eq(expected_json)
 
     end
   end
