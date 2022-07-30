@@ -14,6 +14,7 @@ gem "pg"
 gem "puma", "~> 5.0"
 
 gem "google-cloud-storage"
+gem "google-cloud-pubsub"
 gem "dotenv-rails"
 gem "rack-cors"
 gem 'jwt'

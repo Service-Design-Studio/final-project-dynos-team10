@@ -1,0 +1,21 @@
+{
+  "name": "etl_functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:dev": "gcloud functions deploy workorders-etl --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy:prod": "gcloud functions deploy workorders-etl-prod --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^6.0.1",
+    "knex": "^2.2.0",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "@types/knex": "^0.16.1"
+  }
+}
