@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_25_202458) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_30_072919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,6 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_202458) do
     t.string "workorder_number"
     t.bigint "user_id"
     t.bigint "machine_type_id"
+    t.boolean "completed", default: false
     t.index ["machine_type_id"], name: "index_workorders_on_machine_type_id"
   end
 
