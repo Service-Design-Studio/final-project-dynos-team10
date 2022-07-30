@@ -19,7 +19,13 @@ class MachineTypesController < ApplicationController
     end
 
     all_machine_types = MachineType.all
-    render json: success_json(all_machine_types)
+    all_machine_types_array = all_machine_types.to_a
+    all_machine_types_array = all_machine_types_array.map do |machine_type_rec|
+      machine_type_json = machine_type_rec.as_json
+      machine_type_json[:component_types] = machine_type_rec.component_types
+      machine_type_json
+    end
+    render json: success_json(all_machine_types_array)
   end
 
   def create
@@ -35,7 +41,9 @@ class MachineTypesController < ApplicationController
 
   def show
     machine_type_rec = MachineType.find_one params[:id]
-    render json: success_json(machine_type_rec)
+    machine_type_json = machine_type_rec.as_json
+    machine_type_json[:component_types] = machine_type_rec.component_types
+    render json: success_json(machine_type_json)
   end
 
   def update
