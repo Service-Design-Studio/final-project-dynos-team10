@@ -25,7 +25,6 @@ export default function MachineComponentTypes() {
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
-    const [checkComponent, setCheckComponent] = useState([]);
 
     const mapComponents = () => {
         const listToChange = []
@@ -39,33 +38,39 @@ export default function MachineComponentTypes() {
 
     const componentTypes = useMemo(() => mapComponents(), [components])
 
+      // const mapMachines = () => {
+    //     const listToChange=[]
+    //     machines.map(el => {
+    //         const itemList = []
+
+    //         el.component_types.map(c => 
+    //             itemList.push({
+    //                 label: c.id
+    //             })
+    //         );
+
+    //         listToChange.push({
+    //             label: el.type_name,
+    //             rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+    //             footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
+    //             items: itemList
+    //         })
+    //     })
+    // }
+    // console.log(machines)
+    // const machineTypes = useMemo(() => mapMachines(), [machines])
+    // const machineTypesItems = () => {
+    //     return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)}
+
+    // useEffect(() => { machineTypesItems   
+    // }, [machineTypes])
+
     const pluck = property => element => element[property];
 
     // machines = [{id: 1, type_name: string}]
     // components = [{id:1, type_name: string}]
 
 ///---------------------axios calls -----------------------------
-    const checkedComponents = async (machineName) => {
-        // const i = machines.indexOf(machineName)
-        const id = machines.find(el => el.type_name === machineName).id;
-        try{
-            const response = await $axios.get(`/machine_types/${id}/component_types`);
-            const c = response.data.result;
-            // const value = c.map(pluck('id'));
-            // c is the components that are linked to this machine
-            const componentList = c.map(pluck('type_name'));
-            // c.forEach(el => {
-            //     const name = components.find(x => x.id === el).type_name;
-            //     componentList.push(name)
-            // });
-            setCheckComponent(componentList);
-            return componentList;
-        }
-        catch(e){
-            console.error(e);
-            alert(e);
-        };
-    };
 
     const currentComponents = async () => {
         try{
@@ -245,28 +250,6 @@ export default function MachineComponentTypes() {
             }
         })
         machineTypesHandlers.setState(transformedMachineTypes);
-
-        machines.forEach(el => { 
-            const machineTypeIndex = machineTypes.findIndex(component => component.label === el.type_name);
-            const machineTypeData = {...machineTypes[machineTypeIndex]};
-            let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
-
-            const p = Promise.resolve(checkedComponents(el.type_name));
-            // checked components returns array of component names linked to this machine
-            const listOfComponents = []
-            p.then(value=>{
-                value.forEach(name => 
-                    listOfComponents.push({label: name})
-                    )
-                }
-            ).catch(err => {
-                console.log(err);
-                }
-            )  
-
-            machineTypesHandlers.setItemProp(machineTypeIndex, 'items', listOfComponents);
-            }
-        )
     }
 
 
