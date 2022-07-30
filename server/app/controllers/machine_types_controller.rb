@@ -48,6 +48,12 @@ class MachineTypesController < ApplicationController
     end
   end
 
+  def destroy
+    @machine_type = MachineType.find(params[:id])
+    @machine_type.destroy
+    render json: success_json(@machine_type)
+  end
+
 
   def get_count
     render json: success_json(MachineType.get_count)
