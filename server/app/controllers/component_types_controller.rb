@@ -37,6 +37,7 @@ class ComponentTypesController < ApplicationController
     render json: success_json(component_type_rec)
   end
 
+
   def update
       @component_type = ComponentType.find(params[:id])
       if @component_type.update(params.require(:component_type).permit(:type_name))
@@ -47,9 +48,11 @@ class ComponentTypesController < ApplicationController
       end
     end
 
-  def destroy
-
-  end
+ def destroy
+   @component_type = ComponentType.find(params[:id])
+   @component_type.destroy
+   render json: success_json(@component_type)
+ end
 
  def get_count
    render json: success_json(ComponentType.get_count)

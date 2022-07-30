@@ -5,6 +5,16 @@ RSpec.describe "ComponentTypes", type: :request do
   #   pending "add some examples (or delete) #{__FILE__}"
   # end
 
+  describe "DELETE /destroy" do
+    it 'destroys the component type and returns the destroy record details' do
+      component_type = ComponentType.create_record("box")
+      expected_json =  {"success"=>true, "result"=>{"type_name"=>"box", "id"=>component_type.id, "created_at"=>component_type.created_at, "updated_at"=>component_type.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
+      delete component_type_path(component_type)
+      expect(JSON.parse(response.body)).to eq(expected_json)
+    end
+  end
+
   describe "PUT #update" do
     it 'returns updated status as true after updating the machine type values' do
       machine_type_1 = MachineType.create_record("m5")
