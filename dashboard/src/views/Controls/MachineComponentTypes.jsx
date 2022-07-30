@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useMemo } from 'react';
 import { Box, Components, Plus } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
 import { $axios } from '../../helpers/axiosHelper';
@@ -20,18 +20,31 @@ import { $axios } from '../../helpers/axiosHelper';
 
 export default function MachineComponentTypes() {
     const [machineTypes, machineTypesHandlers] = useListState([]);
-    const [componentTypes, componentTypesHandlers] = useListState([]);
+    // const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
     const [checkComponent, setCheckComponent] = useState([]);
 
+    const mapComponents = () => {
+        const listToChange = []
+        components.map(el => 
+            listToChange.push({
+                label: el.type_name
+            })
+            )
+        return listToChange
+    };
+
+    const componentTypes = useMemo(() => mapComponents(), [components])
+
     const pluck = property => element => element[property];
 
     // machines = [{id: 1, type_name: string}]
     // components = [{id:1, type_name: string}]
 
+///---------------------axios calls -----------------------------
     const checkedComponents = async (machineName) => {
         // const i = machines.indexOf(machineName)
         const id = machines.find(el => el.type_name === machineName).id;
@@ -75,10 +88,7 @@ export default function MachineComponentTypes() {
         try{
             const response = await $axios.get('machine_types');
             const types = response.data.result;
-            // const value = types.map(pluck('type_name'));
-            // setMachines(value);
             setMachines(types);
-            // return value;
             
         }
         catch(e){
@@ -91,9 +101,9 @@ export default function MachineComponentTypes() {
         renderAllMachines();
     }, [machines])
 
-    useEffect(() => {
-        renderAllComponents();
-    }, [components])
+    // useEffect(() => {
+    //     renderAllComponents();
+    // }, [components])
 
     useEffect(()=>{
         currentMachines();
@@ -122,6 +132,7 @@ export default function MachineComponentTypes() {
             }
         };
 
+        console.log(componentTypes)
     //add components to a machine type
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
@@ -136,6 +147,7 @@ export default function MachineComponentTypes() {
         };
     }
 
+    ///------------------start of the page------------------------------
     const newMachineForm = useForm({
         initialValues:{
             newMachineType: '',
@@ -172,6 +184,8 @@ export default function MachineComponentTypes() {
         }
     })
 
+    console.log({components})
+
 
 
     const submitNewMachineType = async () => {
@@ -189,9 +203,9 @@ export default function MachineComponentTypes() {
         if (validation.hasErrors) {
             return;
         }
-        componentTypesHandlers.append({
-            label: newComponentForm.values.newComponentType
-        })
+        // componentTypesHandlers.append({
+        //     label: newComponentForm.values.newComponentType
+        // })
         
         await createNewComponentType(newComponentForm.values.newComponentType);
         newComponentForm.reset();
@@ -256,14 +270,14 @@ export default function MachineComponentTypes() {
     }
 
 
-    const renderAllComponents = async() => {
-        const transformedComponentTypes = components.map(el => {
-            return {
-                    label: el.type_name
-            }
-        })
-        componentTypesHandlers.setState(transformedComponentTypes);
-    }
+    // const renderAllComponents = async() => {
+    //     const transformedComponentTypes = components.map(el => {
+    //         return {
+    //                 label: el.type_name
+    //         }
+    //     })
+    //     componentTypesHandlers.setState(transformedComponentTypes);
+    // }
 
     const classFunc = ()=> {
         if (item.label === "Machine Type 1"){
