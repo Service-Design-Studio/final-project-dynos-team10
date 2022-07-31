@@ -5,6 +5,24 @@ RSpec.describe "ComponentTypes", type: :request do
   #   pending "add some examples (or delete) #{__FILE__}"
   # end
 
+  describe "DELETE /destroy" do
+    it 'destroys the component type removes it from the lists of machine types and returns the destroy record details' do
+      @component_type = ComponentType.create_record("box")
+      @machine_type1 = MachineType.create_record("m8")
+      @machine_type2 = MachineType.create_record("m9")
+      ComponentType.add_machine_type(@machine_type2.id,@component_type.id)
+      ComponentType.add_machine_type(@machine_type1.id,@component_type.id)
+      expected_json =  {"success"=>true, "result"=>{"type_name"=>"box", "id"=>@component_type.id, "created_at"=>@component_type.created_at, "updated_at"=>@component_type.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
+      delete component_type_path(@component_type)
+      @machine_type2.reload
+      @machine_type1.reload
+      expect(@machine_type1.component_types).to be_empty
+      expect(@machine_type2.component_types).to be_empty
+      expect(JSON.parse(response.body)).to eq(expected_json)
+    end
+  end
+
   describe "PUT #update" do
     it 'returns updated status as true after updating the machine type values' do
       machine_type_1 = MachineType.create_record("m5")
@@ -34,8 +52,9 @@ RSpec.describe "ComponentTypes", type: :request do
 
 
       expected_json =  {"success"=>true, "result"=>{"type_name"=>"gggg", "id"=>component_type.id, "created_at"=>component_type.created_at, "updated_at"=>component_type.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
 
-      expect(JSON.parse(response.body)).to include{expected_json}
+      expect(JSON.parse(response.body)).to eq(expected_json)
 
     end
   end

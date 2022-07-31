@@ -36,6 +36,10 @@ class Workorder < ApplicationRecord
         Workorder.find_by(id: workorder_id).components
     end
 
+    def self.is_completed(workorder_id)
+        Workorder.find_by(id: workorder_id).completed
+    end
+
     # TODO: test whether this works
     #doesnt work as intended while doing rspec testing
     # def self.get_failing_reasons(workorder_id)

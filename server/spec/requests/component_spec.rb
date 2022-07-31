@@ -30,8 +30,9 @@ RSpec.describe "Components", type: :request do
                            "created_at"=>component.created_at,
                            "updated_at"=>component.updated_at,
                            "failing_reasons"=>["wrong position"]}}
+      expected_json = JSON.parse(expected_json.to_json)
 
-      expect(JSON.parse(response.body)).to include{expected_json}
+      expect(JSON.parse(response.body)).to eq(expected_json)
 
     end
   end
