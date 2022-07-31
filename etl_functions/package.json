@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy:dev": "gcloud functions deploy workorders-etl --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
-    "deploy:prod": "gcloud functions deploy workorders-etl-prod --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com"
+    "deploy-etl:dev": "gcloud functions deploy workorders-etl --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-etl:prod": "gcloud functions deploy workorders-etl-prod --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-date-query:dev": "gcloud functions deploy date-range-query --region asia-southeast1 --entry-point queryAllByDateRange --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-date-query:prod": "gcloud functions deploy date-range-query-prod --region asia-southeast1 --entry-point queryAllByDateRange --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com"
   },
   "author": "",
   "license": "ISC",

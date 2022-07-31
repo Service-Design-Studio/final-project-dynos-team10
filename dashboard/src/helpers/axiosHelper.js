@@ -12,3 +12,7 @@ export const $axios = axios.create({
 export const $authAxios = axios.create({
     baseURL: 'https://dynostic-auth-oakg5bt7gq-as.a.run.app'
 })
+
+export const $functionsAxios = axios.create({
+    baseURL: 'https://asia-southeast1-tsh-qc.cloudfunctions.net'
+})
