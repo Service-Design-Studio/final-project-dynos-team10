@@ -6,11 +6,19 @@ RSpec.describe "ComponentTypes", type: :request do
   # end
 
   describe "DELETE /destroy" do
-    it 'destroys the component type and returns the destroy record details' do
-      component_type = ComponentType.create_record("box")
-      expected_json =  {"success"=>true, "result"=>{"type_name"=>"box", "id"=>component_type.id, "created_at"=>component_type.created_at, "updated_at"=>component_type.updated_at}}
+    it 'destroys the component type removes it from the lists of machine types and returns the destroy record details' do
+      @component_type = ComponentType.create_record("box")
+      @machine_type1 = MachineType.create_record("m8")
+      @machine_type2 = MachineType.create_record("m9")
+      ComponentType.add_machine_type(@machine_type2.id,@component_type.id)
+      ComponentType.add_machine_type(@machine_type1.id,@component_type.id)
+      expected_json =  {"success"=>true, "result"=>{"type_name"=>"box", "id"=>@component_type.id, "created_at"=>@component_type.created_at, "updated_at"=>@component_type.updated_at}}
       expected_json = JSON.parse(expected_json.to_json)
-      delete component_type_path(component_type)
+      delete component_type_path(@component_type)
+      @machine_type2.reload
+      @machine_type1.reload
+      expect(@machine_type1.component_types).to be_empty
+      expect(@machine_type2.component_types).to be_empty
       expect(JSON.parse(response.body)).to eq(expected_json)
     end
   end

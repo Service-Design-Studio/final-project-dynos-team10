@@ -58,6 +58,10 @@ class MachineTypesController < ApplicationController
 
   def destroy
     @machine_type = MachineType.find(params[:id])
+    comp_types = MachineType.get_all_component_types_from_id(@machine_type.id)
+    comp_types.each do |comp_type|
+      MachineType.remove_component_type(@machine_type.id,comp_type.id)
+    end
     @machine_type.destroy
     render json: success_json(@machine_type)
   end
