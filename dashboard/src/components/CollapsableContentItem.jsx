@@ -45,7 +45,7 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty }) {
     const [opened, setOpened] = useState(false);
     const ChevronIcon = theme.dir === 'ltr' ? ChevronRight : ChevronLeft;
 
-
+    
     const itemsEl = (hasItems ? items : []).map((item) => (
         <Text
           className={classes.item}
