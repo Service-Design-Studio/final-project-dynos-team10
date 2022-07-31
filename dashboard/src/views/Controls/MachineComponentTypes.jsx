@@ -19,8 +19,6 @@ import { $axios } from '../../helpers/axiosHelper';
 
 
 export default function MachineComponentTypes() {
-    // const [machineTypes, machineTypesHandlers] = useListState([]);
-    // const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
@@ -51,7 +49,6 @@ export default function MachineComponentTypes() {
             const response = await $axios.get('machine_types');
             const types = response.data.result;
             setMachines(types);
-            
         }
         catch(e){
             console.error(e);
@@ -60,21 +57,47 @@ export default function MachineComponentTypes() {
     };
     
 
-    // useEffect(() => {
-    //     renderAllMachines();
-    // }, [machines])
-
-    // useEffect(() => {
-    //     renderAllComponents();
-    // }, [components])
-
     useEffect(()=>{
         currentMachines();
         currentComponents();
-        console.log("machines and components ran")
     }, [])
 
-    
+    const createNewComponentType = async (newComponent) => {
+        try {
+        const result = await $axios.post("/component_types", {
+            type_name: newComponent});
+         } 
+         catch(e){
+            console.error(e);
+            alert(e);
+            }
+        };
+
+    const createNewMachineType = async (newMachineType) => {
+        try {
+        const result = await $axios.post("/machine_types", {
+            type_name: newMachineType});
+            } 
+         catch(e) {
+            console.error(e);
+            alert(e);
+            }
+        };
+
+    const addComponentToMachine = async (componentIndex) =>{
+        const id = machines.find(el => el.type_name === editingMachineType).id
+        try{
+            const toUpdate = await $axios.patch(`machine_types/${id}`, 
+            {id, component_type_ids: componentIndex});
+            console.log(toUpdate)
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    }
+
+    ///------------------mapping data from axios to UI functions------------------------------
     const AddComponentButton = ({ machineType }) => {
         return (
             <Tooltip
@@ -100,15 +123,11 @@ export default function MachineComponentTypes() {
             listToChange.push({
                 label: el.type_name
             })
-            )
+        )
         return listToChange
     };
-
-    console.log({machines})
-    console.log({components})
   
-
-    const componentTypes = useMemo(() => mapComponents(), [components])
+    let componentTypes = useMemo(() => mapComponents(), [components])
 
       const mapMachines = () => {
         const listToChange=[]
@@ -117,10 +136,9 @@ export default function MachineComponentTypes() {
         }
         machines.map(el => {
             const itemList = []
-
             el.component_types.map(c => 
                 itemList.push({
-                    label: c.id
+                    label: c.type_name
                 })
             );
 
@@ -133,53 +151,13 @@ export default function MachineComponentTypes() {
         });
         return listToChange;
     }
-    // console.log(machines)
+
     let machineTypes = useMemo(() => mapMachines(), [machines])
-    // const machineTypesItems = () => {
-    //     return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)}
 
-    // useEffect(() => { machineTypesItems   
-    // }, [machineTypes])
-    console.log({machineTypes})
+    console.log(machineTypes)
 
-
-    const createNewComponentType = async (newComponent) => {
-        try {
-        const result = await $axios.post("/component_types", {
-            type_name: newComponent});
-         } 
-         catch(e){
-            console.error(e);
-            alert(e);
-            }
-        };
-
-    const createNewMachineType = async (newMachineType) => {
-        try {
-        const result = await $axios.post("/machine_types", {
-            type_name: newMachineType});
-            } 
-         catch(e) {
-            console.error(e);
-            alert(e);
-            }
-        };
-
-    //add components to a machine type
-    const addComponentToMachine = async (componentIndex) =>{
-        const id = machines.find(el => el.type_name === editingMachineType).id
-        try{
-            const toUpdate = await $axios.patch(`machine_types/${id}`, 
-            {id, component_type_ids: componentIndex});
-            console.log(toUpdate)
-        }
-        catch(e){
-            console.error(e);
-            alert(e);
-        };
-    }
-
-    ///------------------start of the page------------------------------
+    ///------------------------start of the actual page--------------------------
+    
     const newMachineForm = useForm({
         initialValues:{
             newMachineType: '',
@@ -232,9 +210,6 @@ export default function MachineComponentTypes() {
         if (validation.hasErrors) {
             return;
         }
-        // componentTypesHandlers.append({
-        //     label: newComponentForm.values.newComponentType
-        // })
         
         await createNewComponentType(newComponentForm.values.newComponentType);
         newComponentForm.reset();
@@ -246,40 +221,10 @@ export default function MachineComponentTypes() {
         setEditDrawerOpened(true);
     }
 
-
-    // const renderAllMachines = async() => {
-    //     const transformedMachineTypes = machines.map(el => {
-    //         return {
-    //             label: el.type_name,
-    //             rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
-    //             footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
-    //         }
-    //     })
-    //     machineTypesHandlers.setState(transformedMachineTypes);
-    // }
-
-
-    // const renderAllComponents = async() => {
-    //     const transformedComponentTypes = components.map(el => {
-    //         return {
-    //                 label: el.type_name
-    //         }
-    //     })
-    //     componentTypesHandlers.setState(transformedComponentTypes);
-    // }
-
-    const classFunc = ()=> {
-        if (item.label === "Machine Type 1"){
-         return 'machine-type-1';
-        }
-        return;
-    }
-    
-    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
-    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
+    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
-        
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
         const machineTypeData = {...machineTypes[machineTypeIndex]};
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
