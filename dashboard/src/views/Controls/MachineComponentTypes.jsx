@@ -154,8 +154,6 @@ export default function MachineComponentTypes() {
 
     let machineTypes = useMemo(() => mapMachines(), [machines])
 
-    console.log(machineTypes)
-
     ///------------------------start of the actual page--------------------------
     
     const newMachineForm = useForm({
@@ -223,7 +221,7 @@ export default function MachineComponentTypes() {
 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-    const toggleComponentType = (event, machineType, componentType) => {
+    const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
         const machineTypeData = {...machineTypes[machineTypeIndex]};
@@ -239,18 +237,18 @@ export default function MachineComponentTypes() {
         } else {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
-        machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
 
         // retrieving index of required components
         const selectedComponents = machineTypeComponents.map(pluck('label'));
+        console.log(machineTypeComponents)
         let componentIndex = []
          selectedComponents.forEach(componentName => {
             const id = components.find(el => el.type_name === componentName).id;
             componentIndex.push(id);
         });
 
-        addComponentToMachine(componentIndex);
-        
+        await addComponentToMachine(componentIndex);
+        currentMachines();
         
     }
 
