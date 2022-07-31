@@ -19,51 +19,12 @@ import { $axios } from '../../helpers/axiosHelper';
 
 
 export default function MachineComponentTypes() {
-    const [machineTypes, machineTypesHandlers] = useListState([]);
+    // const [machineTypes, machineTypesHandlers] = useListState([]);
     // const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
-
-    const mapComponents = () => {
-        const listToChange = []
-        components.map(el => 
-            listToChange.push({
-                label: el.type_name
-            })
-            )
-        return listToChange
-    };
-
-    const componentTypes = useMemo(() => mapComponents(), [components])
-
-      // const mapMachines = () => {
-    //     const listToChange=[]
-    //     machines.map(el => {
-    //         const itemList = []
-
-    //         el.component_types.map(c => 
-    //             itemList.push({
-    //                 label: c.id
-    //             })
-    //         );
-
-    //         listToChange.push({
-    //             label: el.type_name,
-    //             rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
-    //             footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
-    //             items: itemList
-    //         })
-    //     })
-    // }
-    // console.log(machines)
-    // const machineTypes = useMemo(() => mapMachines(), [machines])
-    // const machineTypesItems = () => {
-    //     return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)}
-
-    // useEffect(() => { machineTypesItems   
-    // }, [machineTypes])
 
     const pluck = property => element => element[property];
 
@@ -84,10 +45,6 @@ export default function MachineComponentTypes() {
             alert(e);
         }
     };
-
-    useEffect(()=> {
-        currentComponents();
-    }, [])
     
     const currentMachines = async () => {
         try{
@@ -101,10 +58,11 @@ export default function MachineComponentTypes() {
             alert(e);
         }
     };
+    
 
-    useEffect(() => {
-        renderAllMachines();
-    }, [machines])
+    // useEffect(() => {
+    //     renderAllMachines();
+    // }, [machines])
 
     // useEffect(() => {
     //     renderAllComponents();
@@ -112,7 +70,77 @@ export default function MachineComponentTypes() {
 
     useEffect(()=>{
         currentMachines();
+        currentComponents();
+        console.log("machines and components ran")
     }, [])
+
+    
+    const AddComponentButton = ({ machineType }) => {
+        return (
+            <Tooltip
+                label="Add Components"
+                withArrow
+            >
+                <ActionIcon
+                    component="div"
+                    variant="outline"
+                    color="blue"
+                    size={22}
+                    onClick={() => editMachineType(machineType)}
+                >
+                    <Plus/>
+                </ActionIcon>
+            </Tooltip>
+        )
+    }
+
+    const mapComponents = () => {
+        const listToChange = []
+        components.map(el => 
+            listToChange.push({
+                label: el.type_name
+            })
+            )
+        return listToChange
+    };
+
+    console.log({machines})
+    console.log({components})
+  
+
+    const componentTypes = useMemo(() => mapComponents(), [components])
+
+      const mapMachines = () => {
+        const listToChange=[]
+        if (machines===[]){
+            return [];
+        }
+        machines.map(el => {
+            const itemList = []
+
+            el.component_types.map(c => 
+                itemList.push({
+                    label: c.id
+                })
+            );
+
+            listToChange.push({
+                label: el.type_name,
+                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
+                items: itemList
+            })
+        });
+        return listToChange;
+    }
+    // console.log(machines)
+    let machineTypes = useMemo(() => mapMachines(), [machines])
+    // const machineTypesItems = () => {
+    //     return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)}
+
+    // useEffect(() => { machineTypesItems   
+    // }, [machineTypes])
+    console.log({machineTypes})
 
 
     const createNewComponentType = async (newComponent) => {
@@ -137,7 +165,6 @@ export default function MachineComponentTypes() {
             }
         };
 
-        console.log(componentTypes)
     //add components to a machine type
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
@@ -189,9 +216,6 @@ export default function MachineComponentTypes() {
         }
     })
 
-    console.log({components})
-
-
 
     const submitNewMachineType = async () => {
         const validation = newMachineForm.validate();
@@ -222,35 +246,17 @@ export default function MachineComponentTypes() {
         setEditDrawerOpened(true);
     }
 
-    const AddComponentButton = ({ machineType }) => {
-        return (
-            <Tooltip
-                label="Add Components"
-                withArrow
-            >
-                <ActionIcon
-                    component="div"
-                    variant="outline"
-                    color="blue"
-                    size={22}
-                    onClick={() => editMachineType(machineType)}
-                >
-                    <Plus/>
-                </ActionIcon>
-            </Tooltip>
-        )
-    }
 
-    const renderAllMachines = async() => {
-        const transformedMachineTypes = machines.map(el => {
-            return {
-                label: el.type_name,
-                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
-                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
-            }
-        })
-        machineTypesHandlers.setState(transformedMachineTypes);
-    }
+    // const renderAllMachines = async() => {
+    //     const transformedMachineTypes = machines.map(el => {
+    //         return {
+    //             label: el.type_name,
+    //             rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+    //             footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
+    //         }
+    //     })
+    //     machineTypesHandlers.setState(transformedMachineTypes);
+    // }
 
 
     // const renderAllComponents = async() => {
@@ -269,7 +275,12 @@ export default function MachineComponentTypes() {
         return;
     }
 
-    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const machineTypesItems = () => {
+        if (machineTypes !== undefined){
+          return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+        }
+        return;
+    }
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
