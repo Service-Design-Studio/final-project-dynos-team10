@@ -274,13 +274,8 @@ export default function MachineComponentTypes() {
         }
         return;
     }
-
-    const machineTypesItems = () => {
-        if (machineTypes !== undefined){
-          return machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-        }
-        return;
-    }
+    
+    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
     const toggleComponentType = (event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
