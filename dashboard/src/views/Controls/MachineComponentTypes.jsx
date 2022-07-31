@@ -249,7 +249,6 @@ export default function MachineComponentTypes() {
 
         await addComponentToMachine(componentIndex);
         currentMachines();
-        
     }
 
     return (
