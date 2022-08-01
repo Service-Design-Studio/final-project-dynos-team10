@@ -8,7 +8,7 @@ import {
 } from 'tabler-icons-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Layout.css';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -74,17 +74,32 @@ export default function Layout() {
         }
     }
 
-    const links = [];
-    for (const [route, routeData] of Object.entries(routeMapStatic)) {
-        links.push(
-            <NavbarLink
-                {...routeData}
-                key={routeData.label}
-                active={location.pathname === route}
-                onClick={() => tryNavigate(route)}
-            />
-        )
-    }
+    const links = useMemo(() => {
+        const allLinks = [];
+        for (const [route, routeData] of Object.entries(routeMapStatic)) {
+            if (location.pathname === '/' || route === '/') {
+                allLinks.push(
+                    <NavbarLink
+                        {...routeData}
+                        key={routeData.label}
+                        active={location.pathname === route}
+                        onClick={() => tryNavigate(route)}
+                    />
+                )
+            } else {
+                allLinks.push(
+                    <NavbarLink
+                        {...routeData}
+                        key={routeData.label}
+                        active={location.pathname.startsWith(route)}
+                        onClick={() => tryNavigate(route)}
+                    />
+                )
+            }
+        }
+        return allLinks;
+    }, [location])
+    
 
     return (
         <Group align="flex-start">
