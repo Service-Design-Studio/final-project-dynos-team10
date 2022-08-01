@@ -48,7 +48,7 @@ function WorkorderItemBuilder(item, i, theme) {
 
 export default function AnalyticsPassFail() {
     const navigate = useNavigate();
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics();
+    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics(3);
     const chartSize = .3 * window.innerWidth;
 
     const workordersFormatted = useMemo(() => {
@@ -80,8 +80,7 @@ export default function AnalyticsPassFail() {
         if (el) {
             let { workorderId } = el.dataset;
             workorderId = parseInt(workorderId, 10);
-            console.log({workorderId});
-            // if (workorderId) navigate(`workorders/${workorderId}`);
+            if (workorderId) navigate(`/workorders/${workorderId}`);
         }
     } 
 

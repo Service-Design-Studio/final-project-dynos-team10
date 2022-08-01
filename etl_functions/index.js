@@ -89,6 +89,24 @@ exports.workordersEtl = async (message, context) => {
         const workorder = await getWorkorder(pool, workorderId);
         console.log({workorder: workorder[0]});
         const { id: workorder_id, workorder_number, user_id, machine_type_id } = workorder[0];
+
+        // validate if there are duplicate entries (what about updating???)
+        const sqlQuery = `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            WHERE workorder_id = @id
+        `
+        const options = {
+            query: sqlQuery,
+            location: 'asia-southeast1',
+            params: { id: parseInt(workorder_id, 10) }
+        }
+        const response = await bigquery.query(options);
+        if (response[0].length > 0) {
+            console.log('existing record found');
+            return;
+        }
+
         const { type_name: machine_type_name } = (await getMachineType(pool, machine_type_id))[0];
         const components = await getComponents(pool, workorder_id);
         // TODO: for now, passed workorders means all components pass, which makes logical sense

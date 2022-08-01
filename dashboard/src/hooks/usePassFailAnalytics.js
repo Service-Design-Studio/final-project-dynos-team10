@@ -4,7 +4,7 @@ import { subDays, formatISO9075 } from 'date-fns';
 import { $functionsAxios } from '../helpers/axiosHelper';
 import { useMantineTheme } from '@mantine/core';
 
-export default function usePassFailAnalytics() {
+export default function usePassFailAnalytics(numDays=1) {
     const [viewingWorkorders, setViewingWorkorders] = useState([]);
     const theme = useMantineTheme();
 
@@ -41,7 +41,7 @@ export default function usePassFailAnalytics() {
 
     useEffect(() => {
         (async() => {
-            const result = await getPreviousDaysWorkorders(2);
+            const result = await getPreviousDaysWorkorders(numDays);
             console.log(result.data[0]);
             setViewingWorkorders(result.data[0]);
         })()

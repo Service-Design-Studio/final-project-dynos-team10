@@ -61,7 +61,7 @@ function AnimatedPie({
                             x={centroidX}
                             y={centroidY}
                             dy=".33em"
-                            fontSize={14}
+                            fontSize={18}
                             textAnchor="middle"
                             pointerEvents="none"
                         >
@@ -91,7 +91,7 @@ export default function PieChart({
     const radius = Math.min(innerWidth, innerHeight) / 2;
     const centerY = innerHeight / 2;
     const centerX = innerWidth / 2;
-    const donutThickness = 50;
+    const donutThickness = 60;
 
     return (
         <svg width={width} height={height} onClick={onClick}>
