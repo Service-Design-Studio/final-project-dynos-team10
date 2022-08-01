@@ -68,4 +68,10 @@ class ComponentTypesController < ApplicationController
    render json: success_json(component)
  end
 
+ def get_all_failing_reasons_types
+   all_failing_reasons_types = ComponentType.get_all_failing_reasons_types params[:id]
+   render json: success_json(all_failing_reasons_types)
+
+ end
+
 end
