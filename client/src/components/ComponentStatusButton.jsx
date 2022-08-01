@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
     updateCurrentComponentName, 
     selectWorkorderComponents, 
     selectCurrentComponent 
 } from '../store/workorder/workorderSlice';
-import {Button} from "@mantine/core"
+import { Button, Spoiler, Text, Paper } from "@mantine/core"
 import OptionsModal from "../components/OptionsModal";
 
 
@@ -51,18 +51,28 @@ function ComponentStatusButton(props) {
                 />
             }
             
-
-
+            
         {workorderComponents[componentName] &&
         <Button 
             color = {workorderComponents[componentName].status}
             variant="light" 
             className={computedClassName} 
             onClick={handleClick}
-            style={{marginTop: 30, marginInline: 20, width: 120, height: 120, borderColor: "#1c7ed6" }} 
+            style={{
+                // display: "flex", 
+                marginTop: 30, 
+                marginInline: 20, 
+                width: 120, 
+                height: 120, 
+                borderColor: "#1c7ed6", 
+                overflowWrap: "break-word", 
+                wordBreak: "break-all", }} 
             // border colour from mantine default
         > 
-            <h2>{componentName}</h2>
+            <div style={{ overflowWrap: "break-word", wordBreak: "break-all",}} > 
+                <h3 style={{maxWidth: 110, overflowWrap: "break-word", wordBreak: "break-all", }} >{componentName}</h3>
+            </div>
+
         </Button>
         }
         </div>
