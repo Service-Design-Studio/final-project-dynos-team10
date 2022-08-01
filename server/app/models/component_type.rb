@@ -67,4 +67,8 @@ class ComponentType < ApplicationRecord
   def self.find_all
     ComponentType.all
   end
+
+  def self.get_all_failing_reasons_types(component_type_id)
+    ComponentType.find_by(id: component_type_id).failing_reasons_types
+  end
 end
