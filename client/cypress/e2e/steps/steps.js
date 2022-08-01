@@ -49,8 +49,6 @@ When('I click on the next button', () => {
     cy.wait('@createWorkorder');
 })
 
-
-
 // ------------- take_photo.feature ------------------
 And('I click on the drafts button', () => {
     cy.get('.home__drafts-btn').click();
@@ -67,6 +65,8 @@ And('I click on component {string} button', (componentName) => {
 Then('my camera should open',() => {
     cy.get('.camera').should('exist');
 });
+
+
 
 // Scenario: Taking one photo of component xxx
 And('I click on the take photo button', () => {
@@ -93,7 +93,7 @@ Given('I am on the photo review page of component {string}', (componentName) => 
     // reused step 1: I am on the {status of components} page
     cy.visit(buildRoute('status of components'));
     // reused step 2: I click on component {string} button
-    const componentButtonClass = buildComponentButtonClass(componentName);
+    const componentButtonClass = buildClass(componentName);
     cy.get(componentButtonClass).click();
     // (reused) step 3: Take at least 1 photo
     cy.get('.take-photo-btn').click();
@@ -356,6 +356,30 @@ And('I delete {string} failing reasons', (number) => {
         // for testing, always delete the first item in the list
         cy.get('.delete-failing-reasons-btn--0').click(); 
     }
+})
+// scenario changing status 
+Then('I should be on the {string} page', (componentName) => {
+    cy.visit(buildRoute('status-report'));
+})
+Then('I click on edit button', () => {
+    cy.get('.edit').click();
+})
+And('I click on the change status button', () => {
+    cy.get('.change_status').click();
+})
+Then('I should see a failing reasons box', () => {
+    cy.get('.failing_reasons').contains(text);
+})  
+And('I click the save button', () => {
+    cy.get('.save-btn').click();
+})
+
+//scenario updating photos
+And('I click on the add photo button', () => {
+    cy.get('.add-photo').click();
+})
+Then('I click on camera button', () => {
+    cy.get('.camera').click();
 })
 
 // -------------- qr_work_order.feature --------------

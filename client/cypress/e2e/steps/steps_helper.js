@@ -8,7 +8,8 @@ const descriptionToRouteMap = {
     'qc entry': 'qc-entry',
     'register': 'register',
     'login': 'login',
-    'drafts': 'qc-list'
+    'drafts': 'qc-list',
+    'status-report': 'status-report'
 }
 
 /**
