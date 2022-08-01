@@ -1,5 +1,6 @@
 class ComponentType < ApplicationRecord
   has_many :components
+  has_many :failing_reasons_types
   has_and_belongs_to_many :machine_types, dependent: :destroy
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
@@ -65,5 +66,9 @@ class ComponentType < ApplicationRecord
 
   def self.find_all
     ComponentType.all
+  end
+
+  def self.get_all_failing_reasons_types(component_type_id)
+    ComponentType.find_by(id: component_type_id).failing_reasons_types
   end
 end

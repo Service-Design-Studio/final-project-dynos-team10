@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_30_072919) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_01_071427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,10 +30,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_30_072919) do
     t.datetime "updated_at", null: false
     t.bigint "workorder_id"
     t.boolean "status"
-    t.text "failing_reasons", default: [], array: true
     t.bigint "component_type_id"
     t.index ["component_type_id"], name: "index_components_on_component_type_id"
     t.index ["workorder_id"], name: "index_components_on_workorder_id"
+  end
+
+  create_table "components_failing_reasons_types", id: false, force: :cascade do |t|
+    t.bigint "component_id", null: false
+    t.bigint "failing_reasons_type_id", null: false
+  end
+
+  create_table "failing_reasons_types", force: :cascade do |t|
+    t.string "reason", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "component_type_id"
+    t.index ["component_type_id"], name: "index_failing_reasons_types_on_component_type_id"
   end
 
   create_table "images", force: :cascade do |t|

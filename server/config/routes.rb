@@ -23,11 +23,16 @@ Rails.application.routes.draw do
 
   resources :component_types do
     get 'components', to: "component_types#get_one_components", on: :member
+    get 'failing_reasons_types', to: "component_types#get_all_failing_reasons_types", on: :member
   end
 
   resources :machine_types do
     get 'workorders', to: "machine_types#get_one_work_order", on: :member
     get 'component_types', to: "machine_types#get_one_component_types", on: :member
+  end
+
+  resources :failing_reasons_types do
+
   end
 
   mount ActionCable.server => "/ws"
