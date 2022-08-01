@@ -32,4 +32,16 @@ class FailingReasonsTypeController < ApplicationController
   #   end
   #
   # end
+
+  def destroy
+    @failing_reason_type = FailingReasonsType.find(params[:id])
+    components = FailingReasonsType.get_components(@failing_reason_type.id)
+    components.each do |component|
+      Component.remove_failing_reasons_type(component.id,@failing_reason_type.id)
+    end
+    @failing_reason_type.save
+    @failing_reason_type.destroy
+    render json: success_json(@failing_reason_type)
+  end
+
 end
