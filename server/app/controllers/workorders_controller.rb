@@ -46,7 +46,7 @@ class WorkordersController < ApplicationController
 
     def update
         @workorder = Workorder.find(params[:id])
-        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id))
+        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id,:completed))
             render json: success_json(@workorder)
         else
             render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity

@@ -123,3 +123,41 @@ exports.workordersEtl = async (message, context) => {
         console.error(e);
     }
 }
+
+/**
+ * Responds to HTTP request to get BigQuery data
+ * @param {object} req HTTP request context 
+ * @param {object} res HTTP response context
+ */
+exports.queryAllByDateRange = async (req, res) => {
+    // Set CORS headers for preflight requests
+    // Allows GETs from any origin with the Content-Type header
+    // and caches preflight response for 3600s
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        // Send response to OPTIONS requests
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    }
+
+    const { start, end } = req.query;
+    if (!(start && end)) {
+        res.status(400).send('Missing start and end query params');
+    }
+
+    const sqlQuery = `
+        SELECT *
+        FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+        WHERE submitted_datetime BETWEEN @start AND @end
+    `
+    const options = {
+        query: sqlQuery,
+        location: 'asia-southeast1',
+        params: { start, end }
+    }
+    //const response = await bigquery.dataset(DATASET_ID).table(TABLE_ID).query(options);
+    const response = await bigquery.query(options);
+    res.status(200).send(response);
+}

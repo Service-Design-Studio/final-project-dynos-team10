@@ -39,20 +39,22 @@ const useStyles = createStyles(theme => ({
     }
 }))
 
-export function ContentGroup({ label, items, footer, rightElementIfEmpty }) {
+export function ContentGroup({ label, items, footer, rightElementIfEmpty, customItemElBuilder }) {
     const { classes, theme } = useStyles();
     const hasItems = Array.isArray(items) && items.length > 0;
     const [opened, setOpened] = useState(false);
     const ChevronIcon = theme.dir === 'ltr' ? ChevronRight : ChevronLeft;
+    
 
-
-    const itemsEl = (hasItems ? items : []).map((item) => (
+    const itemsEl = (hasItems ? items : []).map((item, i) => (
+        !customItemElBuilder ? 
         <Text
           className={classes.item}
           key={item.label}
         >
             {item.label}
-        </Text>
+        </Text> :
+        customItemElBuilder(item, i, theme)
     ));
 
     return (

@@ -37,6 +37,7 @@ class ComponentTypesController < ApplicationController
     render json: success_json(component_type_rec)
   end
 
+
   def update
       @component_type = ComponentType.find(params[:id])
       if @component_type.update(params.require(:component_type).permit(:type_name))
@@ -47,9 +48,16 @@ class ComponentTypesController < ApplicationController
       end
     end
 
-  def destroy
-
-  end
+ def destroy
+   @component_type = ComponentType.find(params[:id])
+   machine_types = ComponentType.get_all_machine_types_from_id(@component_type.id)
+   machine_types.each do |machine_type|
+     ComponentType.remove_machine_type(machine_type.id,@component_type.id)
+   end
+   @component_type.save
+   @component_type.destroy
+   render json: success_json(@component_type)
+ end
 
  def get_count
    render json: success_json(ComponentType.get_count)
@@ -58,6 +66,12 @@ class ComponentTypesController < ApplicationController
  def get_one_components
    component = ComponentType.get_one_components params[:id]
    render json: success_json(component)
+ end
+
+ def get_all_failing_reasons_types
+   all_failing_reasons_types = ComponentType.get_all_failing_reasons_types params[:id]
+   render json: success_json(all_failing_reasons_types)
+
  end
 
 end
