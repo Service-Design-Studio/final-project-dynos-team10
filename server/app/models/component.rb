@@ -2,6 +2,7 @@ class Component < ApplicationRecord
     has_many :images
     belongs_to :workorder
     belongs_to :component_type
+    has_and_belongs_to_many :failing_reasons_type
     validates :component_type_id, :workorder_id, presence: true
     validates :component_type_id, uniqueness: { scope: :workorder_id}
     # TODO: validate uniqueness of the above 2 AS a whole unit
