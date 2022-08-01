@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_01_071427) do
     t.bigint "machine_type_id", null: false
     t.bigint "component_type_id", null: false
   end
+  # shud i make status default false
 
   create_table "components", force: :cascade do |t|
     t.datetime "created_at", null: false

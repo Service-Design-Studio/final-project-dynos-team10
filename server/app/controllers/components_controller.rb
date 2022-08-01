@@ -12,7 +12,7 @@ class ComponentsController < ApplicationController
         status = !params[:status].nil?
         component_type_id = params[:component_type_id]
         # failing_reasons = params[:failing_reasons]
-
+        # shud i make status default false
         component_record = Component.create_record workorder_id, component_type_id, status
         if component_record.id.nil?
             render json: fail_json(errors: component_record.errors)
