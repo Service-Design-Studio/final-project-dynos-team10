@@ -14,4 +14,22 @@ class FailingReasonsTypeController < ApplicationController
     end
     render json: success_json(failing_reasons_type)
   end
+
+  def show
+    failing_reason_type = FailingReasonsType.find_one params[:id]
+    render json: success_json(failing_reason_type)
+  end
+
+  # def update
+  #   @failing_reason_type = FailingReasonsType.find(params[:id])
+  #   if @failing_reason_type.update!(params.require(:failing_reasons_type).permit(:component_type_id,:reason))
+  #     Component.update_failing_reasons_types(@component.id,params[:failing_reasons_type_ids])
+  #     @component.save
+  #     render json: success_json(@component)
+  #
+  #   else
+  #     render json: fail_json(errors: @component.errors, data: @component), status: :unprocessable_entity
+  #   end
+  #
+  # end
 end

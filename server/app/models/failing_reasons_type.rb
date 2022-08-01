@@ -16,4 +16,8 @@ class FailingReasonsType < ApplicationRecord
     FailingReasonsType.all
   end
 
+  def self.find_one(failing_reasons_type_id)
+   FailingReasonsType.find_by(id: failing_reasons_type_id)
+  end
+
 end
