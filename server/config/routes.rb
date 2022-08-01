@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
   resources :component_types do
     get 'components', to: "component_types#get_one_components", on: :member
-    get 'failing_reasons_types', to: "component_types#get_all_failing_reasons_types", on: :member
+    get 'failing_reasons_typess', to: "component_types#get_all_failing_reasons_typess", on: :member
   end
 
   resources :machine_types do

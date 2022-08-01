@@ -1,4 +1,5 @@
-class FailingReasonsTypeController < ApplicationController
+
+class FailingReasonsTypesController < ApplicationController
   def index
     all_failing_reasons_types = FailingReasonsType.find_all
     render json: success_json(all_failing_reasons_types)

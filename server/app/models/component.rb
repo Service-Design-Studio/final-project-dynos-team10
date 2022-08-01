@@ -63,7 +63,7 @@ class Component < ApplicationRecord
     def self.remove_failing_reasons_type(component_id,failing_reasons_type_id)
         @component = Component.find_by(id: component_id)
         @failing_reasons_type = FailingReasonsType.find_by(id: failing_reasons_type_id)
-        @component.failing_reasons_types.delete(@failing_reasons_type)
+        @component.failing_reasons_type.delete(@failing_reasons_type)
         @failing_reasons_type.components.delete(@component)
     end
 
