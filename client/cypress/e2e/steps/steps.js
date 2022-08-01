@@ -311,7 +311,7 @@ And('I click on the proceed button', () => {
     cy.get('.proceed-btn').click();
 })
 And('I click on the upload button', () => {
-    cy.intercept('GET', 'workorders?workorder_number=', req => {
+    cy.intercept('GET', 'workorders?workorder_number=**', req => {
         req.reply({
             fixture: 'pass-fail/query-workorder-id.json'
         })
@@ -321,7 +321,7 @@ And('I click on the upload button', () => {
             fixture: 'pass-fail/create-component.json'
         })
     }).as('components');
-    cy.intercept('POST', 'images/batch-create', req => {
+    cy.intercept('POST', 'images/batch', req => {
         req.reply({
             fixture: 'pass-fail/image-batch-create.json'
         })
@@ -368,3 +368,12 @@ Then('the QR scanner should be {string}', (openedOrClosed) => {
 })
 
 // ------------- drafts.feature ---------------
+
+// ------------- editing.feature -------------------
+When('I click on the "Continue" button', () => {
+    cy.get('.continue-btn').click();
+})
+
+When('I click on the camera button', () => {
+    cy.get('.camera-btn').click();
+})

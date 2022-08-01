@@ -92,6 +92,9 @@ function StatusReport() {
             index: activeStep,
             componentName: currentComponentName
         }));
+        if (activeStep === (currentComponent.images.length - 1)) {
+            setActiveStep(activeStep - 1)
+        } 
         toggleCarouselKey();
     }
 
