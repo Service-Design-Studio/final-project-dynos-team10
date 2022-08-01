@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_31_142631) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_01_070117) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_31_142631) do
     t.string "reason", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "component_type_id"
+    t.index ["component_type_id"], name: "index_failing_reasons_types_on_component_type_id"
   end
 
   create_table "images", force: :cascade do |t|

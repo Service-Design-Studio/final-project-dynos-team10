@@ -1,0 +1,2 @@
+class FailingReasonsTypeController < ApplicationController
+end
