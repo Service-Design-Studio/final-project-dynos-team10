@@ -1,6 +1,6 @@
 import { Box, createStyles, Text, UnstyledButton, Collapse, Group } from "@mantine/core";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from 'tabler-icons-react';
+import { ChevronLeft, ChevronRight, X } from 'tabler-icons-react';
 
 const useStyles = createStyles(theme => ({
     control: {
@@ -39,7 +39,7 @@ const useStyles = createStyles(theme => ({
     }
 }))
 
-export function ContentGroup({ label, items, footer, rightElementIfEmpty, customItemElBuilder }) {
+export function ContentGroup({ label, items, footer, rightElementIfEmpty, customItemElBuilder, deleteElement }) {
     const { classes, theme } = useStyles();
     const hasItems = Array.isArray(items) && items.length > 0;
     const [opened, setOpened] = useState(false);
@@ -62,17 +62,20 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty, custom
             <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
                 <Group position="apart" spacing={0}>
                     <Box>{label}</Box>
-                    {
-                        hasItems ?
-                        <ChevronIcon 
-                            className={classes.chevron}
-                            size={14}
-                            style={{
-                                transform: opened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
-                            }}
-                        /> :
-                        rightElementIfEmpty
-                    }
+                    <Group postion="right">
+                        {deleteElement}
+                        {
+                            hasItems ?
+                            <ChevronIcon 
+                                className={classes.chevron}
+                                size={14}
+                                style={{
+                                    transform: opened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
+                                }}
+                            /> :
+                            rightElementIfEmpty
+                        }
+                    </Group>
                 </Group>
             </UnstyledButton>
             {

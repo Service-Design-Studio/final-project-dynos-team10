@@ -13,7 +13,7 @@ import {
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
 import { useState,useEffect, useMemo } from 'react';
-import { Box, Components, Plus } from 'tabler-icons-react';
+import { Box, Components, Plus, X } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
 import { $axios } from '../../helpers/axiosHelper';
 
@@ -101,8 +101,8 @@ export default function MachineComponentTypes() {
     const AddComponentButton = ({ machineType }) => {
         return (
             <Tooltip
-                label="Add Components"
-                withArrow
+            label="Add Components"
+            withArrow
             >
                 <ActionIcon
                     component="div"
@@ -117,11 +117,31 @@ export default function MachineComponentTypes() {
         )
     }
 
+    const Delete =({ machineType }) => {
+        return (
+            <Tooltip
+            label="Delete Machine"
+            withArrow
+            >
+   
+            <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                // onClick={() => editMachineType(machineType)}
+            >
+                <X/>
+            </ActionIcon>
+        </Tooltip>
+        )
+    }
+
     const mapComponents = () => {
         const listToChange = []
         components.map(el => 
             listToChange.push({
-                label: el.type_name
+                label: el.type_name,
+                deleteElement: <Delete machineType={el.type_name}/>
             })
         )
         return listToChange
@@ -131,9 +151,9 @@ export default function MachineComponentTypes() {
 
       const mapMachines = () => {
         const listToChange=[]
-        if (machines===[]){
-            return [];
-        }
+        // if (machines===[]){
+        //     return [];
+        // }
         machines.map(el => {
             const itemList = []
             el.component_types.map(c => 
@@ -141,12 +161,14 @@ export default function MachineComponentTypes() {
                     label: c.type_name
                 })
             );
+            console.log({itemList})
 
             listToChange.push({
                 label: el.type_name,
                 rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
                 footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
-                items: itemList
+                items: itemList,
+                deleteElement: <Delete machineType={el.type_name}/>
             })
         });
         return listToChange;
@@ -240,7 +262,6 @@ export default function MachineComponentTypes() {
 
         // retrieving index of required components
         const selectedComponents = machineTypeComponents.map(pluck('label'));
-        console.log(machineTypeComponents)
         let componentIndex = []
          selectedComponents.forEach(componentName => {
             const id = components.find(el => el.type_name === componentName).id;
