@@ -29,8 +29,8 @@ class ComponentsController < ApplicationController
     def update
         @component = Component.find(params[:id])
         if @component.update!(params.require(:component).permit(:component_type_id,:workorder_id,:status))
-            # @component.failing_reasons = params["component"][:failing_reasons]
-            # @component.save
+            Component.update_failing_reasons_types(@component.id,params[:failing_reasons_type_ids])
+            @component.save
             render json: success_json(@component)
 
         else
