@@ -11,11 +11,7 @@ RSpec.describe "FailingReasonsTypes", type: :request do
       @failing_reasons_type1 = FailingReasonsType.create_record("damaged",@component_type.id)
       @failing_reasons_type2 = FailingReasonsType.create_record("not sealed",@component_type.id)
       get failing_reasons_types_path(@failing_reasons_type)
-      puts "json parse"
-      puts JSON.parse(response.body)
-      puts "count"
-      puts FailingReasonsType.count
-      expect(JSON.parse(response.body).size).to eq(FailingReasonsType.count)
+      expect(JSON.parse(response.body)["result"].size).to eq(FailingReasonsType.count)
     end
   end
 
