@@ -18,6 +18,21 @@ RSpec.describe "FailingReasonsTypes", type: :request do
     end
   end
 
+  describe "GET /create" do
+    it 'creates and returns the failing reason type from given reason and component id' do
+      @machine_type = MachineType.create_record("m9")
+      @component_type = ComponentType.create_record("box")
+      ComponentType.add_machine_type(@machine_type.id,@component_type.id)
+      @work_order = Workorder.create_record("W005",@machine_type.id)
+      @component = Component.create_record(@work_order.id,@component_type.id,false)
+      post failing_reasons_types_path(), params: {:reason => "damaged", :component_type_id => @component_type.id}
+      @failing_reasons_type = FailingReasonsType.find_by(reason:"damaged")
+      expected_json =  {"success"=>true, "result"=>{"id"=>@failing_reasons_type.id, "reason"=>"damaged", "created_at"=>@failing_reasons_type.created_at, "updated_at"=>@failing_reasons_type.updated_at, "component_type_id"=>@component_type.id}}
+      expected_json = JSON.parse(expected_json.to_json)
+      expect(JSON.parse(response.body)).to eq(expected_json)
+    end
+  end
+
 
   describe "DELETE /destroy" do
     it 'destroys the failing reason type removes it from the lists of machine types and returns the destroy record details' do
