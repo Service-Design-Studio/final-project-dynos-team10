@@ -53,7 +53,7 @@ export default function Layout() {
         // (i.e. 1 page, backend defines how many pages)
         (async() => {
             if (opened) {
-                const response = await $axios.get('workorders/page/1');
+                const response = await $axios.get('workorders/page/1?completed=0');
                 setWorkorders(response.data.result);
             }
         })()
@@ -104,15 +104,26 @@ export default function Layout() {
                 <Stack justify="space-between" style={{height: "90%"}}>
                     <Stack
                         align="flex-start"
-                        >                  
+                        >  
                         <Button
-                        color="dark"
-                        variant="subtle"
-                        onClick={() => {
-                            navigate('/qc-entry');
-                            setOpened(false);
-                            }}
-                        >
+                            color="dark"
+                            variant="subtle"
+                            onClick={() => {
+                                navigate('/');
+                                setOpened(false);
+                                }}
+                            >
+                                Home
+                        </Button>
+
+                        <Button
+                            color="dark"
+                            variant="subtle"
+                            onClick={() => {
+                                navigate('/qc-entry');
+                                setOpened(false);
+                                }}
+                            >
                             New Entry
                         </Button>
 

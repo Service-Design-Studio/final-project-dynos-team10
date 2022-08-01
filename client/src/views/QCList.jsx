@@ -44,7 +44,7 @@ export default function QCList() {
     useEffect(() => {
         (async() => {
             setIsLoading(true);
-            const response = await $axios.get('workorders/total');
+            const response = await $axios.get('workorders/total?completed=0');
             setWorkordersTotal(response.data.result);
             setIsLoading(false);
         })()
@@ -53,8 +53,9 @@ export default function QCList() {
         (async() => {
             if (workordersTotal) {
                 setIsLoading(true);
-                const response = await $axios.get(`workorders/page/${currentPage}`);
+                const response = await $axios.get(`workorders/page/${currentPage}?completed=0`);
                 setWorkorders(response.data.result);
+                console.log(response.data.result);
                 setIsLoading(false);
             }
         })();
@@ -65,7 +66,7 @@ export default function QCList() {
         navigate('/component-status');
     }
 
-    console.log("workorders array" + workorders);
+    // console.log("workorders array" + workorders.filter(el => console.log(el.completed === false)));
 
     return (
         <div>
@@ -87,6 +88,7 @@ export default function QCList() {
                                 )
                             })
                         }
+
                     </div>
                 }
             </Stack>
