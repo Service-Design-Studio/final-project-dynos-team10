@@ -275,7 +275,7 @@ export default function MachineComponentTypes() {
     return (
         <div className='errors'>
             <Group position="center" align="flex-start" spacing={50}>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Box size={20}/>
                         <Title order={5} ml="xs">
@@ -298,7 +298,7 @@ export default function MachineComponentTypes() {
                         {machineTypesItems}
                     </ScrollArea>
                 </div>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Components size={20}/>
                         <Title order={5} ml="xs">
@@ -321,7 +321,32 @@ export default function MachineComponentTypes() {
                         {componentTypesItems}
                     </ScrollArea>
                 </div>
+                <div style={{width: .2*window.innerWidth}}>
+                    <Group align="center" spacing={0} mb="md">
+                        <Components size={20}/>
+                        <Title order={5} ml="xs">
+                            Failing Reasons
+                        </Title>
+                    </Group>
+                    <TextInput
+                        placeholder="Enter Fail Reasons"
+                        label="New Fail Reason"
+                        required
+                        sx={{flexGrow: 1}}
+                        // {...newComponentForm.getInputProps('newComponentType')}
+                        // onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
+                        // rightSection={
+                        //     <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
+                        // }
+                        mb="md"
+                    />
+                    {/* <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                        {componentTypesItems}
+                    </ScrollArea> */}
+                </div>
             </Group>
+
+            {/* START OF DRAWERS */}
             <Drawer
                 opened={editDrawerOpened}
                 onClose={() => setEditDrawerOpened(false)}
