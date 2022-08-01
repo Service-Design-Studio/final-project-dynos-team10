@@ -72,7 +72,7 @@ class Component < ApplicationRecord
 
     def self.update_failing_reasons_types(component_id, failing_reasons_type_ids)
         @component = Component.find_by(id: component_id)
-        @component.failing_reasons_types.clear
+        @component.failing_reasons_type.clear
         failing_reasons_type_ids.each do |failing_reasons_type_id|
             Component.add_failing_reasons_type(component_id,failing_reasons_type_id)
         end
