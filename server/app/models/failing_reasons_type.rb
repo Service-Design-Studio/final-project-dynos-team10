@@ -12,6 +12,11 @@ class FailingReasonsType < ApplicationRecord
     @failing_reasons_type.components
   end
 
+  def self.get_component_type(failing_reasons_type_id)
+    @failing_reasons_type = FailingReasonsType.find_by(id: failing_reasons_type_id)
+    @failing_reasons_type.component_type
+  end
+
   def self.find_all
     FailingReasonsType.all
   end
