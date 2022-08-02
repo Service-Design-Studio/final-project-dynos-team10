@@ -13,7 +13,7 @@ import {
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
 import { useState,useEffect, useMemo } from 'react';
-import { Box, Components, Plus } from 'tabler-icons-react';
+import { Box, Components, Plus, X } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
 import { $axios } from '../../helpers/axiosHelper';
 
@@ -95,14 +95,45 @@ export default function MachineComponentTypes() {
             console.error(e);
             alert(e);
         };
-    }
+    };
+
+    const deleteMachine = async (machineType) => {
+        const id = machines.find(el => el.type_name === machineType).id
+        console.log({id})
+        console.log({machineType})
+        try{
+            const remove = await $axios.delete(`machine_types/${id}`)
+            console.log(remove);
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+
+    const deleteComponent = async(componentType) => {
+        const id = components.find(el => el.type_name === componentType).id
+        console.log({id})
+        console.log({componentType})
+        try{
+            const remove = await $axios.delete(`component_types/${id}`)
+            console.log(remove);
+            currentComponents();
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
 
     ///------------------mapping data from axios to UI functions------------------------------
     const AddComponentButton = ({ machineType }) => {
         return (
             <Tooltip
-                label="Add Components"
-                withArrow
+            label="Add Components"
+            withArrow
             >
                 <ActionIcon
                     component="div"
@@ -117,11 +148,48 @@ export default function MachineComponentTypes() {
         )
     }
 
+    const DeleteMachine =({ machineType}) => {
+        return (
+            <Tooltip
+            label="Delete Machine"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteMachine(machineType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
+    const DeleteComponent =({ componentType }) => {
+        return (
+            <Tooltip
+            label="Delete Component"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteComponent(componentType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
     const mapComponents = () => {
         const listToChange = []
         components.map(el => 
             listToChange.push({
-                label: el.type_name
+                label: el.type_name,
+                deleteElement: <DeleteComponent componentType={el.type_name}/>
             })
         )
         return listToChange
@@ -131,9 +199,9 @@ export default function MachineComponentTypes() {
 
       const mapMachines = () => {
         const listToChange=[]
-        if (machines===[]){
-            return [];
-        }
+        // if (machines===[]){
+        //     return [];
+        // }
         machines.map(el => {
             const itemList = []
             el.component_types.map(c => 
@@ -146,7 +214,8 @@ export default function MachineComponentTypes() {
                 label: el.type_name,
                 rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
                 footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
-                items: itemList
+                items: itemList,
+                deleteElement: <DeleteMachine machineType={el.type_name}/>
             })
         });
         return listToChange;
@@ -240,7 +309,6 @@ export default function MachineComponentTypes() {
 
         // retrieving index of required components
         const selectedComponents = machineTypeComponents.map(pluck('label'));
-        console.log(machineTypeComponents)
         let componentIndex = []
          selectedComponents.forEach(componentName => {
             const id = components.find(el => el.type_name === componentName).id;
@@ -254,7 +322,7 @@ export default function MachineComponentTypes() {
     return (
         <div className='errors'>
             <Group position="center" align="flex-start" spacing={50}>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Box size={20}/>
                         <Title order={5} ml="xs">
@@ -277,7 +345,7 @@ export default function MachineComponentTypes() {
                         {machineTypesItems}
                     </ScrollArea>
                 </div>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Components size={20}/>
                         <Title order={5} ml="xs">
@@ -300,7 +368,32 @@ export default function MachineComponentTypes() {
                         {componentTypesItems}
                     </ScrollArea>
                 </div>
+                <div style={{width: .2*window.innerWidth}}>
+                    <Group align="center" spacing={0} mb="md">
+                        <Components size={20}/>
+                        <Title order={5} ml="xs">
+                            Failing Reasons
+                        </Title>
+                    </Group>
+                    <TextInput
+                        placeholder="Enter Fail Reasons"
+                        label="New Fail Reason"
+                        required
+                        sx={{flexGrow: 1}}
+                        // {...newComponentForm.getInputProps('newComponentType')}
+                        // onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
+                        // rightSection={
+                        //     <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
+                        // }
+                        mb="md"
+                    />
+                    {/* <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                        {componentTypesItems}
+                    </ScrollArea> */}
+                </div>
             </Group>
+
+            {/* START OF DRAWERS */}
             <Drawer
                 opened={editDrawerOpened}
                 onClose={() => setEditDrawerOpened(false)}
