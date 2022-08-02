@@ -23,6 +23,7 @@ export default function MachineComponentTypes() {
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
+    const [failingReasons, setFailingReasons] = useState([]);
 
     const pluck = property => element => element[property];
 
@@ -49,6 +50,19 @@ export default function MachineComponentTypes() {
             const response = await $axios.get('machine_types');
             const types = response.data.result;
             setMachines(types);
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    };
+
+    const currentFailingReasons = async () => {
+        try{
+            const response = await $axios.get('failing_reasons_types');
+            const types = response.data.result;
+            console.log(types)
+            setFailingReasons(types);
         }
         catch(e){
             console.error(e);
@@ -84,6 +98,10 @@ export default function MachineComponentTypes() {
             }
         };
 
+    const createNewFailingReason = async (newFailingReason) => {
+        
+    }
+
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
         try{
@@ -99,11 +117,8 @@ export default function MachineComponentTypes() {
 
     const deleteMachine = async (machineType) => {
         const id = machines.find(el => el.type_name === machineType).id
-        console.log({id})
-        console.log({machineType})
         try{
             const remove = await $axios.delete(`machine_types/${id}`)
-            console.log(remove);
             currentMachines();
         }
         catch(e) {
@@ -114,8 +129,6 @@ export default function MachineComponentTypes() {
 
     const deleteComponent = async(componentType) => {
         const id = components.find(el => el.type_name === componentType).id
-        console.log({id})
-        console.log({componentType})
         try{
             const remove = await $axios.delete(`component_types/${id}`)
             console.log(remove);
@@ -260,6 +273,23 @@ export default function MachineComponentTypes() {
             }
         }
     })
+    const newFailingReasonForm = useForm({
+        initialValues:{
+            newFaiingReasonType: '',
+        },
+        validate: {
+            newFailingReasonType: value => {
+                const existingFailingReasonTypes = failingReasonTypes.map(el => el.label);
+                if (value.length <= 0) {
+                    return 'Failing reason is required';
+                }
+                if (existingMachineTypes.includes(value)) {
+                    return 'This reason already exists';
+                }
+                return null;
+            }
+        }
+    })
 
 
     const submitNewMachineType = async () => {
@@ -272,6 +302,7 @@ export default function MachineComponentTypes() {
         newMachineForm.reset();
         currentMachines();
     }
+
     const submitNewComponentType = async() => {
         const validation = newComponentForm.validate();
         if (validation.hasErrors) {
@@ -281,6 +312,17 @@ export default function MachineComponentTypes() {
         await createNewComponentType(newComponentForm.values.newComponentType);
         newComponentForm.reset();
         currentComponents();
+    }
+
+    const submitNewFailingReasonType = async () => {
+        const validation = newFailingReasonForm.validate();
+        if (validation.hasErrors) {
+            return;
+        }
+        const { newFailingReasonType } = newFailingReasonForm.values;
+        await createNewFailingReason(newFailingReasonType);
+        newFailingReasonType.reset();
+        currentFailingReasons();
     }
 
     const editMachineType = (machineType) => {
