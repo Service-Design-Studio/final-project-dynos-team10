@@ -7,9 +7,10 @@ import {
     addImagesArrayToComponent,
     updateComponentStatus,
     addFailingReasons,
-    putOrAddComponent
+    putOrAddComponent,
+    selectWorkorderComponents
 } from "../store/workorder/workorderSlice";
-import { Button, Modal, Text } from "@mantine/core";
+import { Button, Modal, Text, Center, Paper, Loader } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { $axios } from '../helpers/axiosHelper';
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ function ComponentStatus() {
 
     const [componentTypes, setComponentTypes] = useState([]);
     const workorderNumber = useSelector(selectWorkorderNumber);
+    const workorderComponents = useSelector(selectWorkorderComponents);
     useEffect(() => {
         (async() => {
             let response;
@@ -35,9 +37,11 @@ function ComponentStatus() {
     }, [workorderNumber])
 
     // const componentnames = ["label" , "wire", "xxx", "yyy"];
-    const [modalOpened, setModalOpened] = useState(false);
-
-    const [componentsReady, setComponentsReady] = useState(false);
+    const [modalOpened, setModalOpened] = useState(false); // modal for camera or upload photos
+    const [submitModal, setSubmitModal] = useState(false); // modal after submitting workorder successfully
+    const [cannotSubmit, setCannotSubmit] = useState(false); // modal if cannot submit workorder
+    const [submitting, setSubmitting] = useState(false); // loader when submitting
+    const [componentsReady, setComponentsReady] = useState(false); 
 
     const processExistingComponent = (componentData) => {
         const { componentId, componentStatus, componentName, images, componentFailingReasons, componentTypeId } = componentData;
@@ -108,14 +112,14 @@ function ComponentStatus() {
                 // when we do custom component adding, proboably need to change component creation at that point instead, and move creation of DEFAULT components there as well
                 const workorderId = response.data.result.id;
                 response = await $axios.get(`workorders/${workorderId}/components`);
-                console.log({response});
                 const components = response.data.result;
+                // console.log({components});
+
                 // 3a) if there are 0 components (akin to a new qc entry), simply proceed
                 // 3b) if there are components, for each component found, get images
                 if (components.length > 0) {
                     const items = components.map(async(el) => {
                         response = await $axios.get(`components/${el.id}/images`);
-                        console.log({response});
                         const images = response.data.result;
                         const formattedImages = images.map(imageEl => {
                             return {
@@ -161,16 +165,86 @@ function ComponentStatus() {
         })();
     }, [workorderNumber, componentTypes]);
 
+
+    const submitWorkorder = async() => {
+        setSubmitting(true);
+        let response;
+        try {
+            // 1) get workorder id, also checks if it is valid
+            response = await $axios.get(`workorders?workorder_number=${workorderNumber}`);
+            // 2) get components (that have been added ALREADY)
+            const workorderId = response.data.result.id;
+            response = await $axios.get(`workorders/${workorderId}`);
+            const components = response.data.result;
+            // console.log({components});
+            
+            const payload = {
+                completed: true
+            }
+
+            const submit = await $axios.patch(`workorders/${workorderId}`, payload);
+            console.log({submit});
+            setSubmitting(false);
+            setSubmitModal(true);
+
+        } catch(e) {
+            console.error(e);
+            console.log('cannot submit, at least 1 component with status not indicated');
+            setSubmitting(false);
+            setCannotSubmit(true);
+        }
+
+    }
+
+
+
     return (
         <>
-            <div style={{ display: "flex", flexDirection:"row", flexWrap: "wrap", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                {
-                    componentsReady &&
-                    componentTypes.map((componentTypeObj, index) => 
-                        <ComponentStatusButton key={index} component={componentTypeObj.type_name} />
-                    )
-                }
-            </div>
+        { 
+            componentTypes.length === 0 ?
+            <Center>
+                <Paper shadow="sm" p="md" m="sm" style={{margin: "5rem", padding: "1rem"}}>
+                    It seems like there are no component types for this machine yet
+                </Paper>
+            </Center> 
+            :
+            !submitting &&
+            <>
+                <div style={{ 
+                        display: "flex", 
+                        flexDirection:"row", 
+                        flexWrap: "wrap", 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                        height: "100%", 
+                        overflowY: 'scroll', 
+                        // maxHeight: .8*window.innerHeight
+                        maxHeight: "80vh"
+                        }}>
+                    {
+                        componentsReady &&
+                        componentTypes.map((componentTypeObj, index) => 
+                            <ComponentStatusButton key={index} component={componentTypeObj.type_name} />
+                        )
+                    }
+                </div> 
+                <Center>
+                    <Button onClick={submitWorkorder} style={{marginTop: "0.8rem"}}>
+                        Submit 
+                    </Button>
+                </Center>
+            </>
+        }
+            
+        { // loading screen when submitting
+            submitting && 
+            <Center style={{ height: 200, flexDirection: 'column' }}>
+                <Loader size="lg"/>
+                <Text weight={500} mt="xs">Submitting</Text>
+            </Center>
+        }
+        
+
             <Modal
                 centered
                 onClose={() => setModalOpened(false)}
@@ -183,6 +257,29 @@ function ComponentStatus() {
                 <Text>No work order was detected, please create a new work order or select an existing one.</Text>
                 <Button mt="md" onClick={() => navigate('/')}>Choose Work Order</Button>
             </Modal>
+            
+            <Modal
+                centered
+                onClose={() => setSubmitModal(false)}
+                opened={submitModal}
+                withCloseButton={false}
+                closeOnEscape={false}
+                closeOnClickOutside={false}
+                title="Workorder submitted successfully"
+            >
+                <Center> <Button onClick={() => {navigate("/");}}>Home</Button> </Center>
+            </Modal>
+
+            <Modal
+                centered
+                onClose={() => setCannotSubmit(false)}
+                opened={cannotSubmit}
+                title="Unable to submit Workorder"
+            >
+                <Text color="red" weight={500}>Not all component status updated</Text>
+            </Modal>
+
+
         </>
     )
 }
