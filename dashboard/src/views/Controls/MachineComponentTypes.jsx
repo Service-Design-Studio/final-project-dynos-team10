@@ -112,8 +112,20 @@ export default function MachineComponentTypes() {
         }
     };
 
-    const deleteComponent = async(componentName) => {
-
+    const deleteComponent = async(componentType) => {
+        const id = components.find(el => el.type_name === componentType).id
+        console.log({id})
+        console.log({componentType})
+        try{
+            const remove = await $axios.delete(`component_types/${id}`)
+            console.log(remove);
+            currentComponents();
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
     };
 
     ///------------------mapping data from axios to UI functions------------------------------
@@ -136,8 +148,7 @@ export default function MachineComponentTypes() {
         )
     }
 
-    const Delete =({ machineType, componentType }) => {
-        // if (machineTypes in machines){
+    const DeleteMachine =({ machineType}) => {
         return (
             <Tooltip
             label="Delete Machine"
@@ -153,7 +164,24 @@ export default function MachineComponentTypes() {
                 </ActionIcon>
             </Tooltip>
             )
-        // }
+    }
+
+    const DeleteComponent =({ componentType }) => {
+        return (
+            <Tooltip
+            label="Delete Component"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteComponent(componentType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
     }
 
     const mapComponents = () => {
@@ -161,7 +189,7 @@ export default function MachineComponentTypes() {
         components.map(el => 
             listToChange.push({
                 label: el.type_name,
-                deleteElement: <Delete componentType={el.type_name}/>
+                deleteElement: <DeleteComponent componentType={el.type_name}/>
             })
         )
         return listToChange
@@ -187,7 +215,7 @@ export default function MachineComponentTypes() {
                 rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
                 footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
                 items: itemList,
-                deleteElement: <Delete machineType={el.type_name}/>
+                deleteElement: <DeleteMachine machineType={el.type_name}/>
             })
         });
         return listToChange;
