@@ -93,7 +93,7 @@ Given('I am on the photo review page of component {string}', (componentName) => 
     // reused step 1: I am on the {status of components} page
     cy.visit(buildRoute('status of components'));
     // reused step 2: I click on component {string} button
-    const componentButtonClass = buildClass(componentName);
+    const componentButtonClass = buildComponentButtonClass(componentName);
     cy.get(componentButtonClass).click();
     // (reused) step 3: Take at least 1 photo
     cy.get('.take-photo-btn').click();
@@ -358,9 +358,6 @@ And('I delete {string} failing reasons', (number) => {
     }
 })
 // scenario changing status 
-Then('I should be on the {string} page', (componentName) => {
-    cy.visit(buildRoute('status-report'));
-})
 Then('I click on edit button', () => {
     cy.get('.edit').click();
 })
