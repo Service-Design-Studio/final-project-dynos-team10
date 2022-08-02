@@ -5,11 +5,11 @@ Feature: Editing Components
         Given I am on the "home" page
         And I click on the drafts button
         Then I should be on the "drafts" page
-        When I select the "sample" workorder
-        Then I should see "proceed with work order sample"
+        When I select the "test" workorder
+        Then I should see "proceed with work order test"
         When I click on the "Continue" button
         Then I should be on the "status of components" page
-        And I should see "sample" 
+        And I should see "test" 
         When I click on component "wire" button
         And I click on the camera button
         Then I should be on the "camera" page
