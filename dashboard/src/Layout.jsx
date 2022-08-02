@@ -9,10 +9,12 @@ import {
 } from 'tabler-icons-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Layout.css';
-import { useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-import CableConsumerCotext, { consumer } from './helpers/ActionCable';
+import CableConsumerContext, { getSocketUrl } from './helpers/ActionCable';
+import { AuthContext } from './router';
+import { createConsumer } from '@rails/actioncable';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -39,7 +41,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-
+const NAVBAR_WIDTH = 80;
 
 function NavbarLink({ icon: Icon, label, active, onClick }) {
     const { classes, cx } = useStyles();
@@ -68,15 +70,36 @@ const routeMapStatic = {
     '/account': { icon: User, label: 'Account' },
 }
 
-export default function Layout() {
+function Layout() {
     const { classes } = useNavbarStyles();
     const navigate = useNavigate();
     const location = useLocation();
+    const { setIsAuthenticated, setAccessToken, accessToken } = useContext(AuthContext);
 
     const tryNavigate = (route) => {
         if (location.pathname !== route) {
             navigate(route);
         }
+    }
+
+    const consumer = useMemo(() => createConsumer(getSocketUrl(accessToken)), [accessToken]);
+    useEffect(() => {
+        if (consumer) {
+            console.log('creating a new subscription');
+            // if there isn't any subscription YET, then we create one. This is expected to run only once
+            consumer.subscriptions.create({ channel: "MainChannel" }, {
+                received(data) {
+                    // received a message
+                    console.log({data});
+                }
+            })
+        }
+    }, [consumer])
+
+    const logout = () => {
+        setIsAuthenticated(false);
+        setAccessToken('');
+        navigate('/login');
     }
 
     const links = useMemo(() => {
@@ -116,19 +139,21 @@ export default function Layout() {
                 </Navbar.Section>
                 <Navbar.Section>
                     <Group direction="column" align="center" spacing={0}>
-                        <NavbarLink icon={Logout} label="Logout" />
+                        <NavbarLink onClick={logout} icon={Logout} label="Logout" />
                     </Group>
                 </Navbar.Section>
             </Navbar>
             <div style={{padding: '1rem', flexGrow: 1}}>
                 <MantineProvider withNormalizeCSS withGlobalStyles>
                     <NotificationsProvider>
-                        <CableConsumerCotext.Provider value={consumer}>
+                        <CableConsumerContext.Provider value={consumer}>
                             <Outlet />
-                        </CableConsumerCotext.Provider>
+                        </CableConsumerContext.Provider>
                     </NotificationsProvider>
                 </MantineProvider>
             </div>
         </Group>
     )
 }
+
+export { Layout as default, NAVBAR_WIDTH };
