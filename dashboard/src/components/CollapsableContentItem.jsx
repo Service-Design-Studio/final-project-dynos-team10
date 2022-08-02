@@ -1,6 +1,6 @@
 import { Box, createStyles, Text, UnstyledButton, Collapse, Group } from "@mantine/core";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from 'tabler-icons-react';
+import { ChevronLeft, ChevronRight, X } from 'tabler-icons-react';
 
 const useStyles = createStyles(theme => ({
     control: {
@@ -39,20 +39,22 @@ const useStyles = createStyles(theme => ({
     }
 }))
 
-export function ContentGroup({ label, items, footer, rightElementIfEmpty }) {
+export function ContentGroup({ label, items, footer, rightElementIfEmpty, customItemElBuilder, deleteElement }) {
     const { classes, theme } = useStyles();
     const hasItems = Array.isArray(items) && items.length > 0;
     const [opened, setOpened] = useState(false);
     const ChevronIcon = theme.dir === 'ltr' ? ChevronRight : ChevronLeft;
+    
 
-
-    const itemsEl = (hasItems ? items : []).map((item) => (
+    const itemsEl = (hasItems ? items : []).map((item, i) => (
+        !customItemElBuilder ? 
         <Text
           className={classes.item}
           key={item.label}
         >
             {item.label}
-        </Text>
+        </Text> :
+        customItemElBuilder(item, i, theme)
     ));
 
     return (
@@ -60,17 +62,20 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty }) {
             <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
                 <Group position="apart" spacing={0}>
                     <Box>{label}</Box>
-                    {
-                        hasItems ?
-                        <ChevronIcon 
-                            className={classes.chevron}
-                            size={14}
-                            style={{
-                                transform: opened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
-                            }}
-                        /> :
-                        rightElementIfEmpty
-                    }
+                    <Group postion="right">
+                        {deleteElement}
+                        {
+                            hasItems ?
+                            <ChevronIcon 
+                                className={classes.chevron}
+                                size={14}
+                                style={{
+                                    transform: opened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
+                                }}
+                            /> :
+                            rightElementIfEmpty
+                        }
+                    </Group>
                 </Group>
             </UnstyledButton>
             {

@@ -223,6 +223,7 @@ export default function LabelResult() {
         // proceedWithDispute();
         // send to status to database
         updateComponentRecord();
+        navigate('/component-status');
 
     }
     

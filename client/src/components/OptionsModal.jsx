@@ -86,6 +86,7 @@ return (
             variant="light"
             style={{height: 150, width: 200}}
             onClick={() => navigate("/camera")}
+            className="camera-btn"
             >
                 <Stack
                 spacing="xs"

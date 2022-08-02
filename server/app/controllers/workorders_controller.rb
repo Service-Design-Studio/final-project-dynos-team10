@@ -1,3 +1,5 @@
+require "json"
+
 class WorkordersController < ApplicationController
     # TODO: permit params
     def index
@@ -20,6 +22,12 @@ class WorkordersController < ApplicationController
         # /workorders?page=
         page_number = params[:page]
         unless page_number.nil?
+            get_category = params[:completed]
+            unless get_category.nil?
+                get_completed = get_category.to_i == 1
+                render json: success_json(Workorder.find_completed_incomplete_paginated(page_number, get_completed))
+                return
+            end
             render json: success_json(Workorder.find_paginated(page_number))
             return
         end
@@ -46,7 +54,22 @@ class WorkordersController < ApplicationController
 
     def update
         @workorder = Workorder.find(params[:id])
-        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id))
+        marking_as_completed = params[:completed] == true # explicit check for this
+        if marking_as_completed
+            num_submitted_components = @workorder.components.length
+            expected_num_components = @workorder.machine_type.component_types.length
+            unless num_submitted_components == expected_num_components
+                render json: fail_json(errors: "Not all components submitted"), status: :unprocessable_entity
+                return
+            end
+        end
+
+        if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id,:completed))
+            # here means that update was successful, check if completed status was present and true
+            if !params[:completed].nil? && marking_as_completed
+                message_hash = {:id => @workorder.id}
+                PUBSUB.publish_to_topic("workorders", message_hash.to_json)
+            end
             render json: success_json(@workorder)
         else
             render json: fail_json(errors: @workorder.errors, data: @workorder), status: :unprocessable_entity
@@ -61,7 +84,13 @@ class WorkordersController < ApplicationController
     end
 
     def get_count
-        render json: success_json(Workorder.get_count)
+        get_category = params[:completed]
+        if get_category.nil?
+            render json: success_json(Workorder.get_count)
+            return
+        end
+        get_completed = get_category.to_i == 1
+        render json: success_json(Workorder.get_completed_incomplete_count(get_completed))
     end
 
     def get_one_components

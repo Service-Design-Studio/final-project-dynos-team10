@@ -16,6 +16,10 @@ class Workorder < ApplicationRecord
         Workorder.order(id: :desc).page page_number
     end
 
+    def self.find_completed_incomplete_paginated(page_number, completed)
+        Workorder.where(["completed = ?", completed]).order(id: :desc).page page_number
+    end
+
     def self.find_all
         Workorder.all
     end
@@ -32,8 +36,16 @@ class Workorder < ApplicationRecord
         Workorder.count
     end
 
+    def self.get_completed_incomplete_count(completed)
+        Workorder.where(["completed = ?", completed]).count
+    end
+
     def self.get_one_components(workorder_id)
         Workorder.find_by(id: workorder_id).components
+    end
+
+    def self.is_completed(workorder_id)
+        Workorder.find_by(id: workorder_id).completed
     end
 
     # TODO: test whether this works

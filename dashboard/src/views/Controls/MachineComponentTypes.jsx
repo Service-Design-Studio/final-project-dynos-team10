@@ -12,47 +12,24 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useListState } from '@mantine/hooks';
-import { useState,useEffect } from 'react';
-import { Box, Components, Plus } from 'tabler-icons-react';
+import { useState,useEffect, useMemo } from 'react';
+import { Box, Components, Plus, X } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
 import { $axios } from '../../helpers/axiosHelper';
 
 
 export default function MachineComponentTypes() {
-    const [machineTypes, machineTypesHandlers] = useListState([]);
-    const [componentTypes, componentTypesHandlers] = useListState([]);
     const [editDrawerOpened, setEditDrawerOpened] = useState(false);
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
-    const [checkComponent, setCheckComponent] = useState([]);
 
     const pluck = property => element => element[property];
 
     // machines = [{id: 1, type_name: string}]
     // components = [{id:1, type_name: string}]
 
-    const checkedComponents = async (machineName) => {
-        // const i = machines.indexOf(machineName)
-        const id = machines.find(el => el.type_name === machineName).id;
-        try{
-            const response = await $axios.get(`/machine_types/${id}/component_types`);
-            const c = response.data.result;
-            // const value = c.map(pluck('id'));
-            // c is the components that are linked to this machine
-            const componentList = c.map(pluck('type_name'));
-            // c.forEach(el => {
-            //     const name = components.find(x => x.id === el).type_name;
-            //     componentList.push(name)
-            // });
-            setCheckComponent(componentList);
-            return componentList;
-        }
-        catch(e){
-            console.error(e);
-            alert(e);
-        };
-    };
+///---------------------axios calls -----------------------------
 
     const currentComponents = async () => {
         try{
@@ -66,39 +43,24 @@ export default function MachineComponentTypes() {
             alert(e);
         }
     };
-
-    useEffect(()=> {
-        currentComponents();
-    }, [])
     
     const currentMachines = async () => {
         try{
             const response = await $axios.get('machine_types');
             const types = response.data.result;
-            // const value = types.map(pluck('type_name'));
-            // setMachines(value);
             setMachines(types);
-            // return value;
-            
         }
         catch(e){
             console.error(e);
             alert(e);
         }
     };
-
-    useEffect(() => {
-        renderAllMachines();
-    }, [machines])
-
-    useEffect(() => {
-        renderAllComponents();
-    }, [components])
+    
 
     useEffect(()=>{
         currentMachines();
+        currentComponents();
     }, [])
-
 
     const createNewComponentType = async (newComponent) => {
         try {
@@ -122,7 +84,6 @@ export default function MachineComponentTypes() {
             }
         };
 
-    //add components to a machine type
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
         try{
@@ -134,8 +95,136 @@ export default function MachineComponentTypes() {
             console.error(e);
             alert(e);
         };
+    };
+
+    const deleteMachine = async (machineType) => {
+        const id = machines.find(el => el.type_name === machineType).id
+        console.log({id})
+        console.log({machineType})
+        try{
+            const remove = await $axios.delete(`machine_types/${id}`)
+            console.log(remove);
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+
+    const deleteComponent = async(componentType) => {
+        const id = components.find(el => el.type_name === componentType).id
+        console.log({id})
+        console.log({componentType})
+        try{
+            const remove = await $axios.delete(`component_types/${id}`)
+            console.log(remove);
+            currentComponents();
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+
+    ///------------------mapping data from axios to UI functions------------------------------
+    const AddComponentButton = ({ machineType }) => {
+        return (
+            <Tooltip
+            label="Add Components"
+            withArrow
+            >
+                <ActionIcon
+                    component="div"
+                    variant="outline"
+                    color="blue"
+                    size={22}
+                    onClick={() => editMachineType(machineType)}
+                >
+                    <Plus/>
+                </ActionIcon>
+            </Tooltip>
+        )
     }
 
+    const DeleteMachine =({ machineType}) => {
+        return (
+            <Tooltip
+            label="Delete Machine"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteMachine(machineType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
+    const DeleteComponent =({ componentType }) => {
+        return (
+            <Tooltip
+            label="Delete Component"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteComponent(componentType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
+    const mapComponents = () => {
+        const listToChange = []
+        components.map(el => 
+            listToChange.push({
+                label: el.type_name,
+                deleteElement: <DeleteComponent componentType={el.type_name}/>
+            })
+        )
+        return listToChange
+    };
+  
+    let componentTypes = useMemo(() => mapComponents(), [components])
+
+      const mapMachines = () => {
+        const listToChange=[]
+        // if (machines===[]){
+        //     return [];
+        // }
+        machines.map(el => {
+            const itemList = []
+            el.component_types.map(c => 
+                itemList.push({
+                    label: c.type_name
+                })
+            );
+
+            listToChange.push({
+                label: el.type_name,
+                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
+                items: itemList,
+                deleteElement: <DeleteMachine machineType={el.type_name}/>
+            })
+        });
+        return listToChange;
+    }
+
+    let machineTypes = useMemo(() => mapMachines(), [machines])
+
+    ///------------------------start of the actual page--------------------------
+    
     const newMachineForm = useForm({
         initialValues:{
             newMachineType: '',
@@ -173,7 +262,6 @@ export default function MachineComponentTypes() {
     })
 
 
-
     const submitNewMachineType = async () => {
         const validation = newMachineForm.validate();
         if (validation.hasErrors) {
@@ -189,9 +277,6 @@ export default function MachineComponentTypes() {
         if (validation.hasErrors) {
             return;
         }
-        componentTypesHandlers.append({
-            label: newComponentForm.values.newComponentType
-        })
         
         await createNewComponentType(newComponentForm.values.newComponentType);
         newComponentForm.reset();
@@ -203,80 +288,10 @@ export default function MachineComponentTypes() {
         setEditDrawerOpened(true);
     }
 
-    const AddComponentButton = ({ machineType }) => {
-        return (
-            <Tooltip
-                label="Add Components"
-                withArrow
-            >
-                <ActionIcon
-                    component="div"
-                    variant="outline"
-                    color="blue"
-                    size={22}
-                    onClick={() => editMachineType(machineType)}
-                >
-                    <Plus/>
-                </ActionIcon>
-            </Tooltip>
-        )
-    }
-
-    const renderAllMachines = async() => {
-        const transformedMachineTypes = machines.map(el => {
-            return {
-                label: el.type_name,
-                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
-                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>
-            }
-        })
-        machineTypesHandlers.setState(transformedMachineTypes);
-
-        machines.forEach(el => { 
-            const machineTypeIndex = machineTypes.findIndex(component => component.label === el.type_name);
-            const machineTypeData = {...machineTypes[machineTypeIndex]};
-            let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
-
-            const p = Promise.resolve(checkedComponents(el.type_name));
-            // checked components returns array of component names linked to this machine
-            const listOfComponents = []
-            p.then(value=>{
-                value.forEach(name => 
-                    listOfComponents.push({label: name})
-                    )
-                }
-            ).catch(err => {
-                console.log(err);
-                }
-            )  
-
-            machineTypesHandlers.setItemProp(machineTypeIndex, 'items', listOfComponents);
-            }
-        )
-    }
-
-
-    const renderAllComponents = async() => {
-        const transformedComponentTypes = components.map(el => {
-            return {
-                    label: el.type_name
-            }
-        })
-        componentTypesHandlers.setState(transformedComponentTypes);
-    }
-
-    const classFunc = ()=> {
-        if (item.label === "Machine Type 1"){
-         return 'machine-type-1';
-        }
-        return;
-    }
-
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={classFunc} key={i} {...item} />)
-    const toggleComponentType = (event, machineType, componentType) => {
+    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
-        
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
         const machineTypeData = {...machineTypes[machineTypeIndex]};
         let machineTypeComponents = machineTypeData.items ? [...machineTypeData.items] : [];
@@ -291,7 +306,6 @@ export default function MachineComponentTypes() {
         } else {
             machineTypeComponents = machineTypeComponents.filter(el => el.label !== componentType);
         }
-        machineTypesHandlers.setItemProp(machineTypeIndex, 'items', machineTypeComponents);
 
         // retrieving index of required components
         const selectedComponents = machineTypeComponents.map(pluck('label'));
@@ -301,15 +315,14 @@ export default function MachineComponentTypes() {
             componentIndex.push(id);
         });
 
-        addComponentToMachine(componentIndex);
-        
-        
+        await addComponentToMachine(componentIndex);
+        currentMachines();
     }
 
     return (
         <div className='errors'>
             <Group position="center" align="flex-start" spacing={50}>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Box size={20}/>
                         <Title order={5} ml="xs">
@@ -332,7 +345,7 @@ export default function MachineComponentTypes() {
                         {machineTypesItems}
                     </ScrollArea>
                 </div>
-                <div style={{width: .4*window.innerWidth}}>
+                <div style={{width: .2*window.innerWidth}}>
                     <Group align="center" spacing={0} mb="md">
                         <Components size={20}/>
                         <Title order={5} ml="xs">
@@ -355,7 +368,32 @@ export default function MachineComponentTypes() {
                         {componentTypesItems}
                     </ScrollArea>
                 </div>
+                <div style={{width: .2*window.innerWidth}}>
+                    <Group align="center" spacing={0} mb="md">
+                        <Components size={20}/>
+                        <Title order={5} ml="xs">
+                            Failing Reasons
+                        </Title>
+                    </Group>
+                    <TextInput
+                        placeholder="Enter Fail Reasons"
+                        label="New Fail Reason"
+                        required
+                        sx={{flexGrow: 1}}
+                        // {...newComponentForm.getInputProps('newComponentType')}
+                        // onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
+                        // rightSection={
+                        //     <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
+                        // }
+                        mb="md"
+                    />
+                    {/* <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                        {componentTypesItems}
+                    </ScrollArea> */}
+                </div>
             </Group>
+
+            {/* START OF DRAWERS */}
             <Drawer
                 opened={editDrawerOpened}
                 onClose={() => setEditDrawerOpened(false)}

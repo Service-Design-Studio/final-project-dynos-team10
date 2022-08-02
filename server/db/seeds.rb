@@ -14,8 +14,8 @@ workorders =[{:workorder_number => "WO1", :machine_type_id => 1},
              {:workorder_number => "WO2", :machine_type_id => 1},
              {:workorder_number => "test", :machine_type_id => 2}]
 
-components = [{:workorder_id => 1, :status => false, :component_type_id => 1 , :failing_reasons => ["Wrong position"]},
-              {:workorder_id => 1, :status => false, :component_type_id => 2, :failing_reasons => ["Wrong position"]},
+components = [{:workorder_id => 1, :status => false, :component_type_id => 1},
+              {:workorder_id => 1, :status => false, :component_type_id => 2},
               {:workorder_id => 2, :status => true, :component_type_id => 1},
               {:workorder_id => 2, :status => true, :component_type_id => 2},
               {:workorder_id => 3, :status => false, :component_type_id => 1},
@@ -34,6 +34,8 @@ images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dy
           {:component_id => 6, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/41116b82-b017-4c6a-999b-255ea426c62f.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/41116b82-b017-4c6a-999b-255ea426c62f.png"},
           {:component_id => 6, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png"}]
 
+failing_reasons_types = [{:reason => "crumpled",:component_type_id => 1},{:reason => "scribbles",:component_type_id => 1},{:reason => "missing color",:component_type_id => 2}]
+
 machine_types.each do |machine_type|
   MachineType.create!(machine_type)
 end
@@ -41,13 +43,6 @@ end
 component_types.each do |component_type|
   ComponentType.create!(component_type)
 end
-
-MachineType.update_component_types(1,[1,2])
-MachineType.update_component_types(2,[2,3])
-ComponentType.update_machine_types(1,[1])
-ComponentType.update_machine_types(2,[1,2])
-ComponentType.update_machine_types(3,[2])
-
 
 workorders.each do |workorder|
   Workorder.create!(workorder)
@@ -60,4 +55,19 @@ end
 images.each do |image|
   Image.create!(image)
 end
+
+failing_reasons_types.each do |failing_reasons_type|
+  FailingReasonsType.create!(failing_reasons_type)
+end
+
+MachineType.update_component_types(1,[1,2])
+MachineType.update_component_types(2,[2,3])
+
+ComponentType.update_machine_types(1,[1])
+ComponentType.update_machine_types(2,[1,2])
+ComponentType.update_machine_types(3,[2])
+
+Component.update_failing_reasons_types(1,[1,2])
+Component.update_failing_reasons_types(2,[3])
+Component.update_failing_reasons_types(3,[2])
 

@@ -89,6 +89,24 @@ exports.workordersEtl = async (message, context) => {
         const workorder = await getWorkorder(pool, workorderId);
         console.log({workorder: workorder[0]});
         const { id: workorder_id, workorder_number, user_id, machine_type_id } = workorder[0];
+
+        // validate if there are duplicate entries (what about updating???)
+        const sqlQuery = `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            WHERE workorder_id = @id
+        `
+        const options = {
+            query: sqlQuery,
+            location: 'asia-southeast1',
+            params: { id: parseInt(workorder_id, 10) }
+        }
+        const response = await bigquery.query(options);
+        if (response[0].length > 0) {
+            console.log('existing record found');
+            return;
+        }
+
         const { type_name: machine_type_name } = (await getMachineType(pool, machine_type_id))[0];
         const components = await getComponents(pool, workorder_id);
         // TODO: for now, passed workorders means all components pass, which makes logical sense
@@ -122,4 +140,42 @@ exports.workordersEtl = async (message, context) => {
     } catch (e) {
         console.error(e);
     }
+}
+
+/**
+ * Responds to HTTP request to get BigQuery data
+ * @param {object} req HTTP request context 
+ * @param {object} res HTTP response context
+ */
+exports.queryAllByDateRange = async (req, res) => {
+    // Set CORS headers for preflight requests
+    // Allows GETs from any origin with the Content-Type header
+    // and caches preflight response for 3600s
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        // Send response to OPTIONS requests
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    }
+
+    const { start, end } = req.query;
+    if (!(start && end)) {
+        res.status(400).send('Missing start and end query params');
+    }
+
+    const sqlQuery = `
+        SELECT *
+        FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+        WHERE submitted_datetime BETWEEN @start AND @end
+    `
+    const options = {
+        query: sqlQuery,
+        location: 'asia-southeast1',
+        params: { start, end }
+    }
+    //const response = await bigquery.dataset(DATASET_ID).table(TABLE_ID).query(options);
+    const response = await bigquery.query(options);
+    res.status(200).send(response);
 }

@@ -44,7 +44,7 @@ export default function QCList() {
     useEffect(() => {
         (async() => {
             setIsLoading(true);
-            const response = await $axios.get('workorders/total');
+            const response = await $axios.get('workorders/total?completed=0');
             setWorkordersTotal(response.data.result);
             setIsLoading(false);
         })()
@@ -53,8 +53,9 @@ export default function QCList() {
         (async() => {
             if (workordersTotal) {
                 setIsLoading(true);
-                const response = await $axios.get(`workorders/page/${currentPage}`);
+                const response = await $axios.get(`workorders/page/${currentPage}?completed=0`);
                 setWorkorders(response.data.result);
+                console.log(response.data.result);
                 setIsLoading(false);
             }
         })();
@@ -64,6 +65,8 @@ export default function QCList() {
         dispatch(startNewWorkorder(selectedWorkorderNumber));
         navigate('/component-status');
     }
+
+    // console.log("workorders array" + workorders.filter(el => console.log(el.completed === false)));
 
     return (
         <div>
@@ -85,6 +88,7 @@ export default function QCList() {
                                 )
                             })
                         }
+
                     </div>
                 }
             </Stack>
@@ -98,7 +102,7 @@ export default function QCList() {
                     Are you sure you want to proceed with work order
                     <Text component='span' weight={500}> {selectedWorkorderNumber}</Text>?
                 </Text>
-                <Button mt="md" onClick={commitSelectedWorkorder}>Continue</Button>
+                <Button className="continue-btn" mt="md" onClick={commitSelectedWorkorder}>Continue</Button>
             </Modal>
         </div>
     )

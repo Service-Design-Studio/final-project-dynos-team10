@@ -9,7 +9,12 @@ const descriptionToRouteMap = {
     'register': 'register',
     'login': 'login',
     'drafts': 'qc-list',
+<<<<<<< HEAD
     'status-report': 'status-report'
+=======
+    'camera': 'camera',
+    'status report': 'status-report'
+>>>>>>> 3d374d43faa9a0de10d51788aa42a3e1551102da
 }
 
 /**
