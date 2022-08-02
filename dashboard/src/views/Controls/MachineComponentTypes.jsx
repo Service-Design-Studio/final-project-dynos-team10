@@ -95,7 +95,26 @@ export default function MachineComponentTypes() {
             console.error(e);
             alert(e);
         };
-    }
+    };
+
+    const deleteMachine = async (machineType) => {
+        const id = machines.find(el => el.type_name === machineType).id
+        console.log({id})
+        console.log({machineType})
+        try{
+            const remove = await $axios.delete(`machine_types/${id}`)
+            console.log(remove);
+            currentMachines();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+
+    const deleteComponent = async(componentName) => {
+
+    };
 
     ///------------------mapping data from axios to UI functions------------------------------
     const AddComponentButton = ({ machineType }) => {
@@ -117,23 +136,24 @@ export default function MachineComponentTypes() {
         )
     }
 
-    const Delete =({ machineType }) => {
+    const Delete =({ machineType, componentType }) => {
+        // if (machineTypes in machines){
         return (
             <Tooltip
             label="Delete Machine"
             withArrow
             >
-   
-            <ActionIcon
+                <ActionIcon
                 component="div"
                 color="red"
                 size={22}
-                // onClick={() => editMachineType(machineType)}
-            >
-                <X/>
-            </ActionIcon>
-        </Tooltip>
-        )
+                onClick={() => deleteMachine(machineType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+        // }
     }
 
     const mapComponents = () => {
@@ -141,7 +161,7 @@ export default function MachineComponentTypes() {
         components.map(el => 
             listToChange.push({
                 label: el.type_name,
-                deleteElement: <Delete machineType={el.type_name}/>
+                deleteElement: <Delete componentType={el.type_name}/>
             })
         )
         return listToChange
@@ -161,7 +181,6 @@ export default function MachineComponentTypes() {
                     label: c.type_name
                 })
             );
-            console.log({itemList})
 
             listToChange.push({
                 label: el.type_name,
