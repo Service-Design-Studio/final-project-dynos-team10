@@ -4,7 +4,7 @@ import usePassFailAnalytics from "../../hooks/usePassFailAnalytics";
 import { useNavigate } from 'react-router-dom';
 
 export default function Analytics() {
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction } = usePassFailAnalytics();
+    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction } = usePassFailAnalytics(2);
     const navigate = useNavigate();
 
     return (

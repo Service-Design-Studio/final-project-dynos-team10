@@ -1,14 +1,18 @@
-import { Navbar, Tooltip, UnstyledButton, createStyles, Group } from '@mantine/core';
+import { Navbar, Tooltip, UnstyledButton, createStyles, Group, Center } from '@mantine/core';
 import {
     Home2,
     DeviceDesktopAnalytics,
     User,
     Adjustments,
-    Logout
+    Logout,
+    ListSearch
 } from 'tabler-icons-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Layout.css';
 import { useEffect, useMemo } from 'react';
+import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+import CableConsumerCotext, { consumer } from './helpers/ActionCable';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -59,6 +63,7 @@ const useNavbarStyles = createStyles((theme) => ({
 const routeMapStatic = {
     '/': { icon: Home2, label: 'Home' },
     '/analytics': { icon: DeviceDesktopAnalytics, label: 'Analytics' },
+    '/workorders': { icon: ListSearch, label: 'View Work Orders' },
     '/controls': { icon: Adjustments, label: 'System Controls' },
     '/account': { icon: User, label: 'Account' },
 }
@@ -116,7 +121,13 @@ export default function Layout() {
                 </Navbar.Section>
             </Navbar>
             <div style={{padding: '1rem', flexGrow: 1}}>
-                <Outlet />
+                <MantineProvider withNormalizeCSS withGlobalStyles>
+                    <NotificationsProvider>
+                        <CableConsumerCotext.Provider value={consumer}>
+                            <Outlet />
+                        </CableConsumerCotext.Provider>
+                    </NotificationsProvider>
+                </MantineProvider>
             </div>
         </Group>
     )
