@@ -24,6 +24,7 @@ export default function MachineComponentTypes() {
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
     const [failingReasons, setFailingReasons] = useState([]);
+    const [editingComponentType, setEditingComponentType] = useState('');
 
     const pluck = property => element => element[property];
 
@@ -74,6 +75,7 @@ export default function MachineComponentTypes() {
     useEffect(()=>{
         currentMachines();
         currentComponents();
+        currentFailingReasons();
     }, [])
 
     const createNewComponentType = async (newComponent) => {
@@ -108,7 +110,7 @@ export default function MachineComponentTypes() {
                 alert(e);
                 }
             };
-    }
+    
 
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
@@ -149,11 +151,45 @@ export default function MachineComponentTypes() {
         }
     };
 
+    const deleteFailingReason = async(failingReasonType) => {
+        console.log(failingReasonType)
+        const id = failingReasons.find(el => el.reason === failingReasonType).id
+        try{
+            const remove = await $axios.delete(`failing_reasons_types/${id}`)
+            console.log(remove);
+            currentFailingReasons();
+            currentComponents();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+
     ///------------------mapping data from axios to UI functions------------------------------
     const AddComponentButton = ({ machineType }) => {
         return (
             <Tooltip
             label="Add Components"
+            withArrow
+            >
+                <ActionIcon
+                    component="div"
+                    variant="outline"
+                    color="blue"
+                    size={22}
+                    onClick={() => editMachineType(machineType)}
+                >
+                    <Plus/>
+                </ActionIcon>
+            </Tooltip>
+        )
+    }
+
+    const AddReasonButton = ({ componentType }) => {
+        return (
+            <Tooltip
+            label="Add Failing Reasons"
             withArrow
             >
                 <ActionIcon
@@ -205,12 +241,31 @@ export default function MachineComponentTypes() {
             )
     }
 
+    const DeleteFailingReason =({ failingReasonType }) => {
+        return (
+            <Tooltip
+            label="Delete Reason"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteFailingReason(failingReasonType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
     const mapComponents = () => {
         const listToChange = []
         components.map(el => 
             listToChange.push({
                 label: el.type_name,
-                deleteElement: <DeleteComponent componentType={el.type_name}/>
+                deleteElement: <DeleteComponent componentType={el.type_name}/>,
+                
             })
         )
         return listToChange
@@ -243,6 +298,20 @@ export default function MachineComponentTypes() {
     }
 
     let machineTypes = useMemo(() => mapMachines(), [machines])
+
+    const mapFailingReasons = () => {
+        const listToChange = []
+        failingReasons.map(el => 
+            listToChange.push({
+                label: el.reason,
+                deleteElement: <DeleteFailingReason failingReasonType={el.reason}/>,
+            })
+        )
+        console.log(listToChange)
+        return listToChange
+    };
+
+    let failingReasonTypes = useMemo(() => mapFailingReasons(), [failingReasons])
 
     ///------------------------start of the actual page--------------------------
     
@@ -288,10 +357,11 @@ export default function MachineComponentTypes() {
         validate: {
             newFailingReasonType: value => {
                 const existingFailingReasonTypes = failingReasonTypes.map(el => el.label);
+                console.log({value})
                 if (value.length <= 0) {
                     return 'Failing reason is required';
                 }
-                if (existingMachineTypes.includes(value)) {
+                if (existingFailingReasonTypes.includes(value)) {
                     return 'This reason already exists';
                 }
                 return null;
@@ -340,6 +410,7 @@ export default function MachineComponentTypes() {
 
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
@@ -437,9 +508,9 @@ export default function MachineComponentTypes() {
                         }
                         mb="md"
                     />
-                    {/* <ScrollArea className="failing-reasons-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
-                        {componentTypesItems}
-                    </ScrollArea> */}
+                    <ScrollArea className="failing-reasons-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                        {failingReasonsItems}
+                    </ScrollArea>
                 </div>
             </Group>
 
