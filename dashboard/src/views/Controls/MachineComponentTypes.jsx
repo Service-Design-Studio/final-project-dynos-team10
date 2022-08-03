@@ -99,7 +99,15 @@ export default function MachineComponentTypes() {
         };
 
     const createNewFailingReason = async (newFailingReason) => {
-        
+        try {
+            const result = await $axios.post("/failing_reasons_types", {
+                reason: newFailingReason});
+                } 
+             catch(e) {
+                console.error(e);
+                alert(e);
+                }
+            };
     }
 
     const addComponentToMachine = async (componentIndex) =>{
@@ -321,7 +329,7 @@ export default function MachineComponentTypes() {
         }
         const { newFailingReasonType } = newFailingReasonForm.values;
         await createNewFailingReason(newFailingReasonType);
-        newFailingReasonType.reset();
+        newFailingReasonForm.reset();
         currentFailingReasons();
     }
 
@@ -422,14 +430,14 @@ export default function MachineComponentTypes() {
                         label="New Fail Reason"
                         required
                         sx={{flexGrow: 1}}
-                        // {...newComponentForm.getInputProps('newComponentType')}
-                        // onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
-                        // rightSection={
-                        //     <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
-                        // }
+                        {...newFailingReasonForm.getInputProps('newFailingReasonType')}
+                        onKeyUp={(e) => {if (e.key === 'Enter') submitNewFailingReasonType()}}
+                        rightSection={
+                            <ActionIcon className='add-component-btn' onClick={submitNewFailingReasonType}><Plus/></ActionIcon>
+                        }
                         mb="md"
                     />
-                    {/* <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                    {/* <ScrollArea className="failing-reasons-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
                         {componentTypesItems}
                     </ScrollArea> */}
                 </div>
