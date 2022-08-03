@@ -23,6 +23,9 @@ export default function MachineComponentTypes() {
     const [editingMachineType, setEditingMachineType] = useState('');
     const [components, setComponents] = useState([]);
     const [machines, setMachines] = useState([]);
+    const [failingReasons, setFailingReasons] = useState([]);
+    const [editingComponentType, setEditingComponentType] = useState('');
+    const [editComponentDrawerOpened, setEditComponentDrawerOpened] = useState(false);
 
     const pluck = property => element => element[property];
 
@@ -55,11 +58,24 @@ export default function MachineComponentTypes() {
             alert(e);
         }
     };
+
+    const currentFailingReasons = async () => {
+        try{
+            const response = await $axios.get('failing_reasons_types');
+            const types = response.data.result;
+            setFailingReasons(types);
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        }
+    };
     
 
     useEffect(()=>{
         currentMachines();
         currentComponents();
+        currentFailingReasons();
     }, [])
 
     const createNewComponentType = async (newComponent) => {
@@ -84,6 +100,18 @@ export default function MachineComponentTypes() {
             }
         };
 
+    const createNewFailingReason = async (newFailingReason) => {
+        try {
+            const result = await $axios.post("/failing_reasons_types", {
+                reason: newFailingReason});
+                } 
+             catch(e) {
+                console.error(e);
+                alert(e);
+                }
+            };
+    
+
     const addComponentToMachine = async (componentIndex) =>{
         const id = machines.find(el => el.type_name === editingMachineType).id
         try{
@@ -97,13 +125,23 @@ export default function MachineComponentTypes() {
         };
     };
 
+    const adddFailingReasonToMachine = async (failingReasonIndex) =>{
+        const id = components.find(el => el.type_name === editingComponentType).id
+        try{
+            const toUpdate = await $axios.patch(`component_types/${id}`, 
+            {id, failing_reasons_type_ids: failingReasonIndex});
+            console.log(toUpdate)
+        }
+        catch(e){
+            console.error(e);
+            alert(e);
+        };
+    };
+
     const deleteMachine = async (machineType) => {
         const id = machines.find(el => el.type_name === machineType).id
-        console.log({id})
-        console.log({machineType})
         try{
             const remove = await $axios.delete(`machine_types/${id}`)
-            console.log(remove);
             currentMachines();
         }
         catch(e) {
@@ -114,8 +152,6 @@ export default function MachineComponentTypes() {
 
     const deleteComponent = async(componentType) => {
         const id = components.find(el => el.type_name === componentType).id
-        console.log({id})
-        console.log({componentType})
         try{
             const remove = await $axios.delete(`component_types/${id}`)
             console.log(remove);
@@ -128,23 +164,55 @@ export default function MachineComponentTypes() {
         }
     };
 
+    const deleteFailingReason = async(failingReasonType) => {
+        const id = failingReasons.find(el => el.reason === failingReasonType).id
+        try{
+            const remove = await $axios.delete(`failing_reasons_types/${id}`)
+            console.log(remove);
+            currentFailingReasons();
+            currentComponents();
+        }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+    };
+    
     ///------------------mapping data from axios to UI functions------------------------------
-    const AddComponentButton = ({ machineType }) => {
+    const AddButton = ({ machineType, componentType }) => {
+        if (componentType === undefined) {
+            return (
+                <Tooltip
+                label="Add Components"
+                withArrow
+                >
+                    <ActionIcon
+                        component="div"
+                        variant="outline"
+                        color="blue"
+                        size={22}
+                        onClick={() => editMachineType(machineType)}
+                    >
+                        <Plus/>
+                    </ActionIcon>
+                </Tooltip>
+            )
+        }
         return (
             <Tooltip
-            label="Add Components"
-            withArrow
-            >
-                <ActionIcon
-                    component="div"
-                    variant="outline"
-                    color="blue"
-                    size={22}
-                    onClick={() => editMachineType(machineType)}
+                label="Add Failing Reasons"
+                withArrow
                 >
-                    <Plus/>
-                </ActionIcon>
-            </Tooltip>
+                    <ActionIcon
+                        component="div"
+                        variant="outline"
+                        color="blue"
+                        size={22}
+                        onClick={() => editComponentType(componentType)}
+                    >
+                        <Plus/>
+                    </ActionIcon>
+                </Tooltip>
         )
     }
 
@@ -184,14 +252,43 @@ export default function MachineComponentTypes() {
             )
     }
 
+    const DeleteFailingReason =({ failingReasonType }) => {
+        return (
+            <Tooltip
+            label="Delete Reason"
+            withArrow
+            >
+                <ActionIcon
+                component="div"
+                color="red"
+                size={22}
+                onClick={() => deleteFailingReason(failingReasonType)}
+                >
+                    <X/>
+                </ActionIcon>
+            </Tooltip>
+            )
+    }
+
     const mapComponents = () => {
         const listToChange = []
-        components.map(el => 
+        components.map(el => {
+
+            const itemList = []
+            el.failing_reasons_types.map(c => 
+                itemList.push({
+                    label: c.reason
+                })
+            );
+
             listToChange.push({
                 label: el.type_name,
-                deleteElement: <DeleteComponent componentType={el.type_name}/>
+                rightElementIfEmpty: <AddButton componentType={el.type_name}/>,
+                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editComponentType(el.type_name)}>Edit Failing Reasons</Button>,
+                deleteElement: <DeleteComponent componentType={el.type_name}/>,
+                items: itemList
             })
-        )
+        })
         return listToChange
     };
   
@@ -212,7 +309,7 @@ export default function MachineComponentTypes() {
 
             listToChange.push({
                 label: el.type_name,
-                rightElementIfEmpty: <AddComponentButton machineType={el.type_name}/>,
+                rightElementIfEmpty: <AddButton machineType={el.type_name}/>,
                 footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
                 items: itemList,
                 deleteElement: <DeleteMachine machineType={el.type_name}/>
@@ -222,6 +319,19 @@ export default function MachineComponentTypes() {
     }
 
     let machineTypes = useMemo(() => mapMachines(), [machines])
+
+    const mapFailingReasons = () => {
+        const listToChange = []
+        failingReasons.map(el => 
+            listToChange.push({
+                label: el.reason,
+                deleteElement: <DeleteFailingReason failingReasonType={el.reason}/>,
+            })
+        )
+        return listToChange
+    };
+
+    let failingReasonTypes = useMemo(() => mapFailingReasons(), [failingReasons])
 
     ///------------------------start of the actual page--------------------------
     
@@ -260,6 +370,23 @@ export default function MachineComponentTypes() {
             }
         }
     })
+    const newFailingReasonForm = useForm({
+        initialValues:{
+            newFailingReasonType: '',
+        },
+        validate: {
+            newFailingReasonType: value => {
+                const existingFailingReasonTypes = failingReasonTypes.map(el => el.label);
+                if (value.length <= 0) {
+                    return 'Failing reason is required';
+                }
+                if (existingFailingReasonTypes.includes(value)) {
+                    return 'This reason already exists';
+                }
+                return null;
+            }
+        }
+    })
 
 
     const submitNewMachineType = async () => {
@@ -272,6 +399,7 @@ export default function MachineComponentTypes() {
         newMachineForm.reset();
         currentMachines();
     }
+
     const submitNewComponentType = async() => {
         const validation = newComponentForm.validate();
         if (validation.hasErrors) {
@@ -283,13 +411,30 @@ export default function MachineComponentTypes() {
         currentComponents();
     }
 
+    const submitNewFailingReasonType = async () => {
+        const validation = newFailingReasonForm.validate();
+        if (validation.hasErrors) {
+            return;
+        }
+        await createNewFailingReason(newFailingReasonForm.values.newFailingReasonType);
+        newFailingReasonForm.reset();
+        currentFailingReasons();
+    }
+
     const editMachineType = (machineType) => {
         setEditingMachineType(machineType);
         setEditDrawerOpened(true);
     }
 
+    const editComponentType = (componentType) => {
+        setEditingComponentType(componentType);
+        setEditComponentDrawerOpened(true);
+    }
+
     const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
     const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    
     const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
         const machineTypeIndex = machineTypes.findIndex(el => el.label === machineType);
@@ -317,6 +462,36 @@ export default function MachineComponentTypes() {
 
         await addComponentToMachine(componentIndex);
         currentMachines();
+    };
+
+     
+    const toggleFailingReasonType = async(event, componentType, failingReasonType) => {
+        const checked = event.currentTarget.checked;
+        const componentTypeIndex = componentTypes.findIndex(el => el.label === componentType);
+        const componentTypeData = {...componentTypes[componentTypeIndex]};
+        let componentTypeReasons = componentTypeData.items ? [...componentTypeData.items] : [];
+        if (checked === !!componentTypeReasons.find(el => el.label === failingReasonType)) {
+            // just to make sure we are not in a situation of UNCHECKING BUT it was already not selected
+            // or checking but it was already selected
+            return;
+        }
+
+        if (checked) {
+            componentTypeReasons.push({label: failingReasonType});
+        } else {
+            componentTypeReasons = componentTypeReasons.filter(el => el.label !== failingReasonType);
+        }
+
+        // retrieving index of required components
+        const selectedComponents = componentTypeReasons.map(pluck('label'));
+        let failingReasonIndex = []
+         selectedComponents.forEach(reasonName => {
+            const id = failingReasons.find(el => el.reason === reasonName).id;
+            failingReasonIndex.push(id);
+        });
+
+        await adddFailingReasonToMachine(failingReasonIndex);
+        currentComponents();
     }
 
     return (
@@ -380,16 +555,16 @@ export default function MachineComponentTypes() {
                         label="New Fail Reason"
                         required
                         sx={{flexGrow: 1}}
-                        // {...newComponentForm.getInputProps('newComponentType')}
-                        // onKeyUp={(e) => {if (e.key === 'Enter') submitNewComponentType()}}
-                        // rightSection={
-                        //     <ActionIcon className='add-component-btn' onClick={submitNewComponentType}><Plus/></ActionIcon>
-                        // }
+                        {...newFailingReasonForm.getInputProps('newFailingReasonType')}
+                        onKeyUp={(e) => {if (e.key === 'Enter') submitNewFailingReasonType()}}
+                        rightSection={
+                            <ActionIcon className='add-component-btn' onClick={submitNewFailingReasonType}><Plus/></ActionIcon>
+                        }
                         mb="md"
                     />
-                    {/* <ScrollArea className="component-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
-                        {componentTypesItems}
-                    </ScrollArea> */}
+                    <ScrollArea className="failing-reasons-list" offsetScrollbars type="hover" style={{height: .65*window.innerHeight}}>
+                        {failingReasonsItems}
+                    </ScrollArea>
                 </div>
             </Group>
 
@@ -415,6 +590,32 @@ export default function MachineComponentTypes() {
                             key={i}
                             mb="sm"
                             onChange={event => toggleComponentType(event, editingMachineType, el.label)}
+                        />
+                    ))}
+                </ScrollArea>
+            </Drawer>
+
+            <Drawer
+                opened={editComponentDrawerOpened}
+                onClose={() => setEditComponentDrawerOpened(false)}
+                title={`Edit Component Type: ${editingComponentType}`}
+                position="right"
+                size="xl"
+                closeOnEscape={false}
+                closeOnClickOutside={false}
+                padding="lg"
+            >
+                <Text weight={500} mb="md">Choose failing reasons</Text>
+                <ScrollArea offsetScrollbars type="hover" style={{height: .5*window.innerHeight}}>
+                    {failingReasonTypes.map((el, i) => (
+                        <Checkbox
+                            checked={
+                                !!componentTypes.find(component => component.label === editingComponentType)?.items?.find(reason => reason.label === el.label)
+                            }
+                            label={el.label}
+                            key={i}
+                            mb="sm"
+                            onChange={event => toggleFailingReasonType(event, editingComponentType, el.label)}
                         />
                     ))}
                 </ScrollArea>
