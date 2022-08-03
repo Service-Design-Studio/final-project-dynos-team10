@@ -38,7 +38,7 @@ function Router() {
     }, [])
     useEffect(() => {
         // whenever accessToken changes, store in localStorage
-        console.log('access token changed!', accessToken);
+        // console.log('access token changed!', accessToken);
         localStorage.setItem(TOKEN_IDENTIFIER, accessToken);
     }, [accessToken])
 

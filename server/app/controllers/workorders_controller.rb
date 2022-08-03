@@ -64,11 +64,16 @@ class WorkordersController < ApplicationController
             end
         end
 
+        # evaluate and save whether this workorder is a pass or fail
+        workorder_has_passed = Workorder.evaluate_pass_fail params[:id]
+        @workorder.passed = workorder_has_passed # Mode.saved will be called in the update method below
+
         if @workorder.update(params.require(:workorder).permit(:workorder_number,:machine_type_id,:completed))
             # here means that update was successful, check if completed status was present and true
             if !params[:completed].nil? && marking_as_completed
-                message_hash = {:id => @workorder.id}
+                message_hash = {:id => @workorder.id, :workorder_number => @workorder.workorder_number, :passed => @workorder.passed}
                 PUBSUB.publish_to_topic("workorders", message_hash.to_json)
+                ActionCable.server.broadcast("main", { title: "new-workorder", body: message_hash.to_json })
             end
             render json: success_json(@workorder)
         else

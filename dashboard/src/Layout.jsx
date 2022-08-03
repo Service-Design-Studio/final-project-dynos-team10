@@ -1,17 +1,19 @@
-import { Navbar, Tooltip, UnstyledButton, createStyles, Group, Center } from '@mantine/core';
+import { Navbar, Tooltip, UnstyledButton, createStyles, Group, Center, Button, Text } from '@mantine/core';
 import {
     Home2,
     DeviceDesktopAnalytics,
     User,
     Adjustments,
     Logout,
-    ListSearch
+    ListSearch,
+    Check,
+    X
 } from 'tabler-icons-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Layout.css';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { MantineProvider } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
+import { hideNotification, NotificationsProvider, showNotification } from '@mantine/notifications';
 import CableConsumerContext, { getSocketUrl } from './helpers/ActionCable';
 import { AuthContext } from './router';
 import { createConsumer } from '@rails/actioncable';
@@ -71,7 +73,7 @@ const routeMapStatic = {
 }
 
 function Layout() {
-    const { classes } = useNavbarStyles();
+    const { classes, theme } = useNavbarStyles();
     const navigate = useNavigate();
     const location = useLocation();
     const { setIsAuthenticated, setAccessToken, accessToken } = useContext(AuthContext);
@@ -84,13 +86,40 @@ function Layout() {
 
     const consumer = useMemo(() => createConsumer(getSocketUrl(accessToken)), [accessToken]);
     useEffect(() => {
-        if (consumer) {
+        if (consumer && !consumer.subscriptions.subscriptions.find(el => el.identifier.includes("MainChannel"))) {
             console.log('creating a new subscription');
-            // if there isn't any subscription YET, then we create one. This is expected to run only once
+            // if there isn't any subscription for MainChannel YET, then we create one. This is expected to run only once
             consumer.subscriptions.create({ channel: "MainChannel" }, {
-                received(data) {
+                received(message) {
                     // received a message
-                    console.log({data});
+                    console.log({message});
+
+                    if (message.title === 'new-workorder') {
+                        const workorderObj = JSON.parse(message.body);
+                        const notificationId = `${message.title}--${workorderObj.id}`;
+                        const handleNotificationClick = () => {
+                            navigate(`/workorders/${workorderObj.id}`);
+                            hideNotification(notificationId);
+                        }
+                        showNotification({
+                            id: notificationId,
+                            title: "New Work Order Submitted",
+                            message: <Group position="apart">
+                                <Text>
+                                    Work Order "{workorderObj.workorder_number}" has been submitted with status: {workorderObj.passed ? 'PASSED' : 'FAILED'}
+                                </Text>
+                                <Button fullWidth onClick={handleNotificationClick}>View More</Button>
+                            </Group>,
+                            icon: workorderObj.passed ? <Check/> : <X/>,
+                            autoClose: 7500,
+                            color: workorderObj.passed ? "cyan" : "red",
+                            styles: theme => ({
+                                root: {
+                                    alignItems: 'flex-start'
+                                }
+                            })
+                        })
+                    }
                 }
             })
         }
