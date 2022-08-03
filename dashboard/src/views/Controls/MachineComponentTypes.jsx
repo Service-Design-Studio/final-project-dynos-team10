@@ -63,7 +63,6 @@ export default function MachineComponentTypes() {
         try{
             const response = await $axios.get('failing_reasons_types');
             const types = response.data.result;
-            console.log(types)
             setFailingReasons(types);
         }
         catch(e){
@@ -166,10 +165,9 @@ export default function MachineComponentTypes() {
     };
 
     const deleteFailingReason = async(failingReasonType) => {
-        console.log(failingReasonType)
         const id = failingReasons.find(el => el.reason === failingReasonType).id
         try{
-            const remove = await $axios.delete(`component_types/${id}`)
+            const remove = await $axios.delete(`failing_reasons_types/${id}`)
             console.log(remove);
             currentFailingReasons();
             currentComponents();
@@ -180,7 +178,6 @@ export default function MachineComponentTypes() {
         }
     };
     
-    console.log(components)
     ///------------------mapping data from axios to UI functions------------------------------
     const AddButton = ({ machineType, componentType }) => {
         if (componentType === undefined) {
@@ -277,19 +274,19 @@ export default function MachineComponentTypes() {
         const listToChange = []
         components.map(el => {
 
-            // const itemList = []
-            // el.failing_reasons_types.map(c => 
-            //     itemList.push({
-            //         label: c.reason
-            //     })
-            // );
+            const itemList = []
+            el.failing_reasons_types.map(c => 
+                itemList.push({
+                    label: c.reason
+                })
+            );
 
             listToChange.push({
                 label: el.type_name,
                 rightElementIfEmpty: <AddButton componentType={el.type_name}/>,
                 footer: <Button className="edit" fullWidth mt="sm" onClick={() => editComponentType(el.type_name)}>Edit Failing Reasons</Button>,
                 deleteElement: <DeleteComponent componentType={el.type_name}/>,
-                // items: itemList,
+                items: itemList
             })
         })
         return listToChange
@@ -375,12 +372,11 @@ export default function MachineComponentTypes() {
     })
     const newFailingReasonForm = useForm({
         initialValues:{
-            newFaiingReasonType: '',
+            newFailingReasonType: '',
         },
         validate: {
             newFailingReasonType: value => {
                 const existingFailingReasonTypes = failingReasonTypes.map(el => el.label);
-                console.log({value})
                 if (value.length <= 0) {
                     return 'Failing reason is required';
                 }
@@ -420,8 +416,7 @@ export default function MachineComponentTypes() {
         if (validation.hasErrors) {
             return;
         }
-        const { newFailingReasonType } = newFailingReasonForm.values;
-        await createNewFailingReason(newFailingReasonType);
+        await createNewFailingReason(newFailingReasonForm.values.newFailingReasonType);
         newFailingReasonForm.reset();
         currentFailingReasons();
     }
@@ -488,16 +483,15 @@ export default function MachineComponentTypes() {
         }
 
         // retrieving index of required components
-        console.log(componentTypeReasons)
         const selectedComponents = componentTypeReasons.map(pluck('label'));
-        let componentIndex = []
-         selectedComponents.forEach(componentName => {
-            const id = components.find(el => el.type_name === componentName).id;
-            componentIndex.push(id);
+        let failingReasonIndex = []
+         selectedComponents.forEach(reasonName => {
+            const id = failingReasons.find(el => el.reason === reasonName).id;
+            failingReasonIndex.push(id);
         });
 
-        // await adddFailingReasonToMachine(failingReasonIndex);
-        // currentFailingReasons();
+        await adddFailingReasonToMachine(failingReasonIndex);
+        currentComponents();
     }
 
     return (
