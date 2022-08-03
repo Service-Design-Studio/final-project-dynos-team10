@@ -8,10 +8,14 @@ RSpec.describe "ComponentTypes", type: :request do
   describe "GET /get_all_failing_reasons_types" do
     it 'returns all the failing reasons types records for given component type id' do
       @component_type = ComponentType.create_record("box")
-      @failing_reasons_type1 = FailingReasonsType.create_record("damaged",@component_type.id)
-      @failing_reasons_type2 = FailingReasonsType.create_record("not sealed",@component_type.id)
+      # @failing_reasons_type1 = FailingReasonsType.create_record("damaged",@component_type.id)
+      # @failing_reasons_type2 = FailingReasonsType.create_record("not sealed",@component_type.id)
+      @failing_reasons_type1 = FailingReasonsType.create_record "damaged"
+      @failing_reasons_type2 = FailingReasonsType.create_record "not sealed"
+      ComponentType.update_failing_reasons_types(@component_type.id, [@failing_reasons_type1.id, @failing_reasons_type2.id])
       get failing_reasons_types_component_type_path(@component_type), params: {id: @component_type.id}
-      expected_json = {"success"=>true, "result"=>[{"id"=>@failing_reasons_type1.id, "reason"=>"damaged", "created_at"=>@failing_reasons_type1.created_at, "updated_at"=>@failing_reasons_type1.updated_at, "component_type_id"=>@component_type.id}, {"id"=>@failing_reasons_type2.id, "reason"=>"not sealed", "created_at"=>@failing_reasons_type2.created_at, "updated_at"=>@failing_reasons_type2.created_at, "component_type_id"=>@component_type.id}]}
+      # expected_json = {"success"=>true, "result"=>[{"id"=>@failing_reasons_type1.id, "reason"=>"damaged", "created_at"=>@failing_reasons_type1.created_at, "updated_at"=>@failing_reasons_type1.updated_at, "component_type_id"=>@component_type.id}, {"id"=>@failing_reasons_type2.id, "reason"=>"not sealed", "created_at"=>@failing_reasons_type2.created_at, "updated_at"=>@failing_reasons_type2.created_at, "component_type_id"=>@component_type.id}]}
+      expected_json = {"success"=>true, "result"=>[{"id"=>@failing_reasons_type1.id, "reason"=>"damaged", "created_at"=>@failing_reasons_type1.created_at, "updated_at"=>@failing_reasons_type1.updated_at}, {"id"=>@failing_reasons_type2.id, "reason"=>"not sealed", "created_at"=>@failing_reasons_type2.created_at, "updated_at"=>@failing_reasons_type2.created_at}]}
       expected_json = JSON.parse(expected_json.to_json)
       expect(JSON.parse(response.body)).to eq(expected_json)
 
@@ -69,6 +73,24 @@ RSpec.describe "ComponentTypes", type: :request do
 
       expect(JSON.parse(response.body)).to eq(expected_json)
 
+    end
+
+    it 'returns updated status as true after updating the failing reasons types' do
+      failing_reasons_type_1 = FailingReasonsType.create_record "reason 1"
+      failing_reasons_type_2 = FailingReasonsType.create_record "reason 2"
+      failing_reasons_type_3 = FailingReasonsType.create_record "reason 3"
+
+      component_type = ComponentType.create_record("zzzz")
+      ComponentType.update_failing_reasons_types(component_type.id, [failing_reasons_type_1.id, failing_reasons_type_2.id, failing_reasons_type_3.id])
+
+      put component_type_path(component_type), params: { component_type: {:type_name => "gggg"}, failing_reasons_type_ids: [failing_reasons_type_3.id]}
+      component_type.reload
+
+      expected_json =  {"success"=>true, "result"=>{"type_name"=>"gggg", "id"=>component_type.id, "created_at"=>component_type.created_at, "updated_at"=>component_type.updated_at}}
+      expected_json = JSON.parse(expected_json.to_json)
+
+      expect(JSON.parse(response.body)).to eq(expected_json)
+      expect(component_type.failing_reasons_types.map{|f| {"id" => f.id, "reason"=> f.reason}}).to eq([{"id"=> failing_reasons_type_3.id, "reason"=> failing_reasons_type_3.reason }])
     end
   end
 end
