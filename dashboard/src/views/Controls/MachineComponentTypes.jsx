@@ -129,8 +129,8 @@ export default function MachineComponentTypes() {
     const adddFailingReasonToMachine = async (failingReasonIndex) =>{
         const id = components.find(el => el.type_name === editingComponentType).id
         try{
-            const toUpdate = await $axios.patch(`failing_reasons_types/${id}`, 
-            {id, failing_reasons_type_ids: componentIndex});
+            const toUpdate = await $axios.patch(`component_types/${id}`, 
+            {id, failing_reasons_type_ids: failingReasonIndex});
             console.log(toUpdate)
         }
         catch(e){
@@ -169,7 +169,7 @@ export default function MachineComponentTypes() {
         console.log(failingReasonType)
         const id = failingReasons.find(el => el.reason === failingReasonType).id
         try{
-            const remove = await $axios.delete(`failing_reasons_types/${id}`)
+            const remove = await $axios.delete(`component_types/${id}`)
             console.log(remove);
             currentFailingReasons();
             currentComponents();
@@ -179,7 +179,8 @@ export default function MachineComponentTypes() {
             alert(e);
         }
     };
-
+    
+    console.log(components)
     ///------------------mapping data from axios to UI functions------------------------------
     const AddButton = ({ machineType, componentType }) => {
         if (componentType === undefined) {
@@ -487,6 +488,7 @@ export default function MachineComponentTypes() {
         }
 
         // retrieving index of required components
+        console.log(componentTypeReasons)
         const selectedComponents = componentTypeReasons.map(pluck('label'));
         let componentIndex = []
          selectedComponents.forEach(componentName => {
