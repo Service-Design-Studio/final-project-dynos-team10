@@ -34,6 +34,8 @@ class ComponentTypesController < ApplicationController
 
   def show
     component_type_rec = ComponentType.get_one_component_type_from_id params[:id]
+    component_type_json = component_type_rec.as_json
+    component_type_json[:failing_reasons_types] = component_type_rec.failing_reasons_types
     render json: success_json(component_type_rec)
   end
 
@@ -41,7 +43,8 @@ class ComponentTypesController < ApplicationController
   def update
       @component_type = ComponentType.find(params[:id])
       if @component_type.update(params.require(:component_type).permit(:type_name))
-        ComponentType.update_machine_types(@component_type.id,params[:machine_type_ids])
+        ComponentType.update_machine_types(@component_type.id,params[:machine_type_ids]) unless params[:machine_type_ids].nil?
+        ComponentType.update_failing_reasons_types(@component_type.id, params[:failing_reasons_type_ids]) unless params[:failing_reasons_type_ids].nil?
         render json: success_json(@component_type)
       else
         render json: fail_json(errors: @component_type.errors, data: @component_type), status: :unprocessable_entity

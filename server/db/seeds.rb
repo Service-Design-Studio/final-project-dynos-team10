@@ -34,7 +34,8 @@ images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dy
           {:component_id => 6, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/41116b82-b017-4c6a-999b-255ea426c62f.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/41116b82-b017-4c6a-999b-255ea426c62f.png"},
           {:component_id => 6, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png"}]
 
-failing_reasons_types = [{:reason => "crumpled",:component_type_id => 1},{:reason => "scribbles",:component_type_id => 1},{:reason => "missing color",:component_type_id => 2}]
+# failing_reasons_types = [{:reason => "crumpled",:component_type_id => 1},{:reason => "scribbles",:component_type_id => 1},{:reason => "missing color",:component_type_id => 2}]
+failing_reasons_types = [{:reason => "crumpled"},{:reason => "scribbles"},{:reason => "missing color"}]
 
 machine_types.each do |machine_type|
   MachineType.create!(machine_type)

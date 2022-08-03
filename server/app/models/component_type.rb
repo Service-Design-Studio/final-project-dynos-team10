@@ -1,6 +1,7 @@
 class ComponentType < ApplicationRecord
   has_many :components
-  has_many :failing_reasons_types
+  #has_many :failing_reasons_types
+  has_and_belongs_to_many :failing_reasons_types
   has_and_belongs_to_many :machine_types, dependent: :destroy
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
@@ -70,5 +71,27 @@ class ComponentType < ApplicationRecord
 
   def self.get_all_failing_reasons_types(component_type_id)
     ComponentType.find_by(id: component_type_id).failing_reasons_types
+  end
+
+  def self.add_failing_reasons_type(failing_reasons_type_id, component_type_id)
+    @comp_type = ComponentType.find_by(id: component_type_id)
+    @failing_reasons_type = FailingReasonsType.find_by(id: failing_reasons_type_id)
+    @comp_type.failing_reasons_types.push(@failing_reasons_type) unless @comp_type.failing_reasons_types.include?(@failing_reasons_type)
+    @comp_type.save
+  end
+
+  def self.remove_failing_reasons_type(failing_reasons_type_id, component_type_id)
+    @comp_type = ComponentType.find_by(id: component_type_id)
+    @failing_reasons_type = FailingReasonsType.find_by(id: failing_reasons_type_id)
+    @comp_type.failing_reasons_types.delete(@failing_reasons_type)
+    @comp_type.save
+  end
+
+  def self.update_failing_reasons_types(component_type_id, failing_reasons_type_ids)
+    @comp_type = ComponentType.find_by(id: component_type_id)
+    @comp_type.failing_reasons_types.clear
+    failing_reasons_type_ids.each do |failing_reasons_type_id|
+      ComponentType.add_failing_reasons_type(failing_reasons_type_id, component_type_id)
+    end
   end
 end

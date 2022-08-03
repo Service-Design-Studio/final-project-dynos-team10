@@ -30,8 +30,7 @@ const getAllWorkorders = async pool => {
     return await pool.select().from('workorders');
 }
 const getWorkorder = async (pool, id) => {
-    // TODO: add
-    return await pool('workorders').where('id', id).select('id', 'workorder_number', 'user_id', 'machine_type_id').limit(1);
+    return await pool('workorders').where('id', id).select('id', 'workorder_number', 'user_id', 'machine_type_id', 'passed').limit(1);
 }
 const getMachineType = async (pool, machineTypeId) => {
     return await pool('machine_types').where('id', machineTypeId).select('id', 'type_name').limit(1);
@@ -88,7 +87,7 @@ exports.workordersEtl = async (message, context) => {
         
         const workorder = await getWorkorder(pool, workorderId);
         console.log({workorder: workorder[0]});
-        const { id: workorder_id, workorder_number, user_id, machine_type_id } = workorder[0];
+        const { id: workorder_id, workorder_number, user_id, machine_type_id, passed } = workorder[0];
 
         // validate if there are duplicate entries (what about updating???)
         const sqlQuery = `
@@ -109,9 +108,6 @@ exports.workordersEtl = async (message, context) => {
 
         const { type_name: machine_type_name } = (await getMachineType(pool, machine_type_id))[0];
         const components = await getComponents(pool, workorder_id);
-        // TODO: for now, passed workorders means all components pass, which makes logical sense
-        // BUT we might need a way in the dashboard to manually set workorder status so this should be a DB implementation
-        const passed = components.every(componentObj => componentObj.status);
         const processedFailingReasons = transformFailingReasons(components.map(el => el.failing_reasons));
         
         // ----------- TRANSFORM ---------------

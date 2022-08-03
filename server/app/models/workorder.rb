@@ -48,6 +48,11 @@ class Workorder < ApplicationRecord
         Workorder.find_by(id: workorder_id).completed
     end
 
+    def self.evaluate_pass_fail(workorder_id)
+        workorder_components = get_one_components workorder_id
+        workorder_components.length > 0 ? workorder_components.all? { |component_rec| component_rec.status } : false
+    end
+
     # TODO: test whether this works
     #doesnt work as intended while doing rspec testing
     # def self.get_failing_reasons(workorder_id)
