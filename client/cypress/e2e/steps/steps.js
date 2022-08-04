@@ -357,6 +357,27 @@ And('I delete {string} failing reasons', (number) => {
         cy.get('.delete-failing-reasons-btn--0').click(); 
     }
 })
+// scenario changing status 
+Then('I click on edit button', () => {
+    cy.get('.edit').click();
+})
+And('I click on the change status button', () => {
+    cy.get('.change_status').click();
+})
+Then('I should see a failing reasons box', () => {
+    cy.get('.failing_reasons').contains(text);
+})  
+And('I click the save button', () => {
+    cy.get('.save-btn').click();
+})
+
+//scenario updating photos
+And('I click on the add photo button', () => {
+    cy.get('.add-photo').click();
+})
+Then('I click on camera button', () => {
+    cy.get('.camera').click();
+})
 
 // -------------- qr_work_order.feature --------------
 Then('I click on the Scan QR Code button', () => {
@@ -376,4 +397,27 @@ When('I click on the "Continue" button', () => {
 
 When('I click on the camera button', () => {
     cy.get('.camera-btn').click();
+})
+
+When('I choose "1" image file(s)', function () {
+    cy.visit('http://localhost:3000/status-report')
+    const filepath = 'images/evening.png'
+    cy.get('input[type="file"]').attachFile(filepath)
+    cy.get('#file-submit').click()
+    cy.get('#uploaded-files').contains('evening.png')
+})
+When('Uploading a non-image file among images', function () {
+    cy.visit('http://localhost:3000/status-report')
+    const filepath = 'images/evening.png'
+    //cy.get('input[type="file"]').attachFile(filepath)
+    // cy.get('input[type="file"]').attachFile({
+    //     mimeType: 'image/png'
+    // })
+    // cy.get('#file-submit').click()
+    // cy.get('#uploaded-files').contains('evening.png')
+    cy.get('input[type="file"]').attachFile(filepath)
+    cy.get('input[type="file"]').attachFile({
+        mimeType: !'image/png'
+    })
+    cy.get('body').contains("Non-image file(s) detected");
 })
