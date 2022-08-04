@@ -194,7 +194,7 @@ function StatusReport() {
         // Issue 2 (SOLVED): component status changes to yellow when using camera, if got use camera to add photos, then this will detect status change (to yellow), which is not submittable
         // to solve these 2 issues, we do a deep clone of the currentComponent object, and set the status to the current state.chosenStatus (from routing)
         const currentComponentChanges = cloneDeep(currentComponent);
-        currentComponentChanges.status = chosenStatus; 
+        currentComponentChanges.status = chosenStatus;
         currentComponentChanges.failingReasons = reasons;
 
         // Issue 3 (OVERLOOKED): figure out why "differences" is weird when we delete images, check the images array
@@ -211,7 +211,10 @@ function StatusReport() {
             return;
         }
         const payload = {
-            component_id: currentComponentChanges.id
+            // need to do this as for some reason controller is complaning now that component is missing/empty in the payload
+            component: {
+                component_type_id: currentComponentChanges.componentTypeId
+            }
         }
 
         if (differences.images) {
@@ -226,10 +229,10 @@ function StatusReport() {
         }
 
         if (differences.status) {
-            payload.status = currentComponentChanges.status === 'green';
+            payload.component.status = currentComponentChanges.status === 'green';
         }
         if (differences.failingReasons) {
-            payload.failing_reasons = payload.status ? [] : currentComponentChanges.failingReasons;
+            payload.failing_reasons_type_ids = payload.component.status ? [] : currentComponentChanges.failingReasons.map(el => el.failingReasonTypeId);
         }
         console.log({payload});
 
@@ -347,6 +350,7 @@ function StatusReport() {
                         editReport={editReport}
                         reasons={reasons}
                         setReasons={setReasons}
+                        componentTypeId={currentComponent.componentTypeId}
                         />
                 }
 

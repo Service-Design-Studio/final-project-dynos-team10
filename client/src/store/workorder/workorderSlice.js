@@ -7,6 +7,7 @@ interface Component {
     status: 'green' | 'red' | 'yellow' | 'blue'
     failingReasons: string[],
     id: number | null, // null to indicate this has not yet been in the DB
+    componentTypeId: number
 }
 
 interface Image {
@@ -20,9 +21,14 @@ interface Image {
 interface Component {
     images: Image[],
     status: 'green' | 'red' | 'yellow' | 'blue'
-    failingReasons: string[],
+    failingReasons: FailingReason[], // this is for actual instances of failing reasons for a component, not for component types
     id: number | null, // null to indicate this has not yet been in the DB
     componentTypeId: number
+}
+
+interface FailingReason {
+    failingReasonTypeId: number,
+    failingReasonName: string
 }
 */
 

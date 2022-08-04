@@ -8,12 +8,14 @@ class Component < ApplicationRecord
     # TODO: validate uniqueness of the above 2 AS a whole unit
     validates :status, inclusion: [true, false] # detection of boolean field presence, different validation because of under the hood ops
     # shud i make status default false
-    def self.create_record(workorder_id, component_type_id, status)
-        new_component = Component.create(status: status, workorder_id: workorder_id,component_type_id: component_type_id)
-        # return new_component
-        # if new_component.nil?
-        #
-        # end
+    def self.create_record(workorder_id, component_type_id, status, failing_reasons_type_ids=[])
+        new_component = Component.create(status: status, workorder_id: workorder_id, component_type_id: component_type_id)
+        unless failing_reasons_type_ids.nil?
+            failing_reasons_type_ids.each do |failing_reasons_type_id|
+                add_failing_reasons_type new_component.id, failing_reasons_type_id
+            end
+        end
+        new_component
     end
 
     def self.find_one(component_id)
@@ -67,11 +69,14 @@ class Component < ApplicationRecord
         @failing_reasons_type.components.delete(@component)
     end
 
-    def self.update_failing_reasons_types(component_id, failing_reasons_type_ids)
+    def self.update_failing_reasons_types(component_id, failing_reasons_type_ids, status)
         @component = Component.find_by(id: component_id)
         @component.failing_reasons_type.clear
-        failing_reasons_type_ids.each do |failing_reasons_type_id|
-            Component.add_failing_reasons_type(component_id,failing_reasons_type_id)
+        # if status is false, we just clear the failing reasons types and exit
+        unless status
+            failing_reasons_type_ids.each do |failing_reasons_type_id|
+                Component.add_failing_reasons_type(component_id,failing_reasons_type_id)
+            end
         end
     end
 end

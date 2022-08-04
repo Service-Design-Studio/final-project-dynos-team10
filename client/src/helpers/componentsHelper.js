@@ -20,6 +20,7 @@ interface Image {
  * @returns
  */
 const buildComponentObjWithImages = function(component, images) {
+    console.log({component});
     const formattedImages = images.map(imageEl => {
         return {
             id: imageEl.id,
@@ -31,7 +32,8 @@ const buildComponentObjWithImages = function(component, images) {
         id: component.id,
         status: component.status ? 'green' : 'red',
         images: formattedImages,
-        failingReasons: component.status ? [] : component.failing_reasons
+        componentTypeId: component.component_type_id,
+        failingReasons: component.status ? [] : component.failing_reasons_types.map(el => ({failingReasonTypeId: el.id, failingReasonName: el.reason}))
     }
 
     return componentObj;

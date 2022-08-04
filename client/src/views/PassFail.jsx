@@ -18,7 +18,8 @@ import {
     selectCurrentComponentName, 
     selectWorkorderNumber, 
     updateCurrentComponentStatus,
-    replaceCurrentComponentImageArray
+    replaceCurrentComponentImageArray,
+    addFailingReasons
 } from "../store/workorder/workorderSlice";
 import { deepCompare } from "../helpers/objectHelper";
 import { buildComponentObjWithImages } from "../helpers/componentsHelper";
@@ -45,6 +46,14 @@ export default function PassFail() {
     useEffect(() => {
         setReasons.setState(currentComponent.failingReasons);
     }, [])
+    useEffect(() => {
+        // whenever reasons change, we update redux
+        // (only applicable to the pass fail page that happens before any component submission)
+        dispatch(addFailingReasons({
+            componentName: currentComponentName,
+            failingReasons: reasons
+        }))
+    }, [reasons])
 
     const UploadButton = () => {
         if (reasons.length > 0) {
@@ -75,7 +84,7 @@ export default function PassFail() {
         if (isPass) {
             payload.status = true;
         } else {
-            payload.failing_reasons = reasons;
+            payload.failing_reasons_type_ids = reasons.map(el => el.failingReasonTypeId);
         }
 
         let response;
@@ -241,7 +250,8 @@ export default function PassFail() {
                         setReasons={setReasons}
                         style={{margin: "2rem", paddingTop: "1.25rem", paddingBottom: "1.25rem" }}
                         scrollHeight={180}
-                        />
+                        componentTypeId={currentComponent.componentTypeId}
+                    />
                 // </div>
                 
             }

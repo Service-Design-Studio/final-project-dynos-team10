@@ -108,7 +108,7 @@ export default function LabelResult() {
         if (!noLabel) {
             payload.status = true;
         } else {
-            payload.failing_reasons = reasons;
+            payload.failing_reasons_type_ids = reasons.map(el => el.failingReasonTypeId);
         }
 
         let response;
@@ -201,11 +201,17 @@ export default function LabelResult() {
             updateImages(currentComponentChanges.id, dbComponentWithImages.images, currentComponentChanges.images);
         }
 
+        // const payload = {
+        //     component_id: currentComponentChanges.id
+        // }
         const payload = {
-            component_id: currentComponentChanges.id
+            // need to do this as for some reason controller is complaning now that component is missing/empty in the payload
+            component: {
+                component_type_id: currentComponentChanges.componentTypeId
+            }
         }
         if (differences.status) {
-            payload.status = currentComponentChanges.status === 'green';
+            payload.component.status = currentComponentChanges.status === 'green';
         }
         // if (differences.failingReasons) {
         //     payload.failing_reasons = payload.status ? [] : currentComponentChanges.failingReasons;
@@ -334,6 +340,7 @@ export default function LabelResult() {
                                 reasons={reasons}
                                 setReasons={reasonsHandler}
                                 scrollHeight={150}
+                                componentTypeId={currentComponent.componentTypeId}
                             />
                         </Grid.Col>
                         <Button onClick={submitLabelResult} mt="md" fullWidth>Submit</Button>
