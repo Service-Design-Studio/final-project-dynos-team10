@@ -24,6 +24,13 @@ export default function WorkorderSingle() {
     const theme = useMantineTheme();
     const SECONDARY_COL_HEIGHT = PRIMARY_COL_HEIGHT / 2 - theme.spacing.md / 2;
 
+    const Status = () => {
+        if (workorder.completed === true) {
+            return ("Complete")
+        }
+        return ("Incomplete")
+    }
+
     // Graphs to include: 1) number of pass/fail COMPONENTS, 2) failing reasons categories
     
     return (
@@ -49,6 +56,10 @@ export default function WorkorderSingle() {
                             <tr>
                                 <td>Machine Type:</td>
                                 <td>{workorder.machineType}</td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td><Status/></td>
                             </tr>
                         </tbody>
                     </Table>
