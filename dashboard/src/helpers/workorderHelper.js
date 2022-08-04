@@ -2,7 +2,8 @@ import { $axios } from "./axiosHelper";
 
 export const getCompletedWorkorders = async (pageNum=1) => {
     let response = await $axios.get(`workorders/page/${pageNum}?completed=1`);
-    console.log(response.data.result);
+    // console.log(response.data.result);
+    return (response.data.result);
 }
 
 export const getWorkorder = async (workorderId) => {
