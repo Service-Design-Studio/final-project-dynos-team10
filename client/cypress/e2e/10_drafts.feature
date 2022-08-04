@@ -10,36 +10,35 @@ Feature: Work Order Drafts
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test"
-
-    Scenario: Taking some photos and uploading then, then swap to another, and swap back again. Progress is saved.
-        When I click on component "wire" button
-        And I click on the take photo button "5" times
+        When I click on component "xxxx" button
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
+        When I click on the take photo button "5" times
         And I click on the right arrow button
         Then I should be on the "photo review" page
+
+    Scenario: Taking some photos and uploading then, then swap to another, and swap back again. Progress is saved.
         Given I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
         When I click on the upload button
         Then I should see "Upload Successful"
         When I click on the close icon
-        Then the component "wire" button colour should be "green"
+        Then the component "xxxx" button colour should be "green"
         When I open the navbar
         And I select another work order
         When I select the "test" workorder
         And I click on the close icon
         Then I should be on the "status of components" page
-        And the component "wire" button colour should be "green"
+        And the component "xxxx" button colour should be "green"
 
     Scenario: SAD PATH: Taking some photos without uploading, then swap to another, and swap back again. Progress is not saved.
-        When I click on component "wire" button
-        And I click on the take photo button "5" times
-        And I click on the right arrow button
-        Then I should be on the "photo review" page
         Given I go to the "status of components" page with saved progress
-        Then the component "wire" button colour should be "yellow"
+        Then the component "xxxx" button colour should be "yellow"
         When I open the navbar
         And I select another work order
         When I select the "test" workorder
         And I click on the close icon
         Then I should be on the "status of components" page
-        And the component "wire" button colour should be "blue"
+        And the component "xxxx" button colour should be "blue"

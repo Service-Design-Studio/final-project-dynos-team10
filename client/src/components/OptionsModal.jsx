@@ -67,6 +67,7 @@ return (
     <Modal
     opened={optionsModal}
     onClose={()=>setOptionsModal(false)}
+    className="options-modal"
     >
     <input
     multiple={true}
@@ -86,7 +87,7 @@ return (
             variant="light"
             style={{height: 150, width: 200}}
             onClick={() => navigate("/camera")}
-            className="camera-btn"
+            className="options-modal__camera-btn"
             >
                 <Stack
                 spacing="xs"
@@ -109,6 +110,7 @@ return (
                 variant="light"
                 style={{height: 150, width: 200, marginBottom: "2rem"}}
                 component="span"
+                className="options-modal__upload-btn"
                 >
                     <Stack
                     spacing="xs"

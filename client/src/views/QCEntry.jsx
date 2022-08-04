@@ -38,7 +38,7 @@ function QCEntry() {
 
   const [formValues, setFormValues] = useState(
     { serialno: "", type: "" }
-    );
+  );
 
   const [formErrors, setFormErrors] = useState({});
   const [prevValue, setPrevValue] = useState({});

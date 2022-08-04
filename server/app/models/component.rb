@@ -69,7 +69,7 @@ class Component < ApplicationRecord
         @failing_reasons_type.components.delete(@component)
     end
 
-    def self.update_failing_reasons_types(component_id, failing_reasons_type_ids, status)
+    def self.update_failing_reasons_types(component_id, failing_reasons_type_ids, status=false)
         @component = Component.find_by(id: component_id)
         @component.failing_reasons_type.clear
         # if status is false, we just clear the failing reasons types and exit

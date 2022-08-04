@@ -1,7 +1,7 @@
 Feature: Editing Components
     I want to be able to edit the components that I have submitted, so that I can always update its information when there are changes or previously-made mistakes
 
-    Background: Selecting a workorder, uploading some photos for component "wire" and passing it
+    Background: Selecting a workorder, taking some photos for component "xxxx" and passing it
         Given I am on the "home" page
         And I click on the drafts button
         Then I should be on the "drafts" page
@@ -10,10 +10,11 @@ Feature: Editing Components
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test" 
-        When I click on component "wire" button
-        And I click on the camera button
-        Then I should be on the "camera" page
-        And I click on the take photo button "5" times
+        When I click on component "xxxx" button
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
+        When I click on the take photo button "5" times
         And I click on the right arrow button
         Then I should be on the "photo review" page
         Given I click on the pass button
@@ -22,14 +23,14 @@ Feature: Editing Components
         When I click on the upload button
         Then I should see "Upload Successful"
         When I click on the close icon
-        Then the component "wire" button colour should be "green"
+        Then the component "xxxx" button colour should be "green"
     
     Scenario: Being able to view the status report for a submitted component
-        When I click on component "wire" button
+        When I click on component "xxxx" button
         Then I should be on the "status report" page
 
     Scenario: Changing status
-        When I click on component "wire" button
+        When I click on component "xxxx" button
         Then I should be on the "status report" page
         Then I should see "PASS"
         And I click on the edit button
@@ -40,10 +41,10 @@ Feature: Editing Components
         And I click the save button
         Then I should see "Update Successful"
         When I click the close icon
-        Then the component "wire" button colour should be "red"
+        Then the component "xxxx" button colour should be "red"
 
     Scenario: Updating photos
-        When I click on component "wire" button
+        When I click on component "xxxx" button
         Then I should be on the "status report" page
         Then I should see "PASS"
         And I click on the edit button
@@ -59,7 +60,7 @@ Feature: Editing Components
         When I click the save button
         Then I should see "Update Successful"
         When I click the close icon
-        Then the component "wire" button colour should be "green"
-        When I click on component "wire" button
+        Then the component "xxxx" button colour should be "green"
+        When I click on component "xxxx" button
         Then I should be on the "status report" page
         And I should see "6" photos in the carousel

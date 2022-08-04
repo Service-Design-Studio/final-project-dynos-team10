@@ -43,12 +43,25 @@ When('I click on the {string} button', (buttonText) => {
 })
 
 // ----------- work_order.feature ------------------
-When('I click on the next button', () => {
+When('I click on the next button, expecting success', () => {
     cy.intercept('POST', 'workorders').as('createWorkorder');
     cy.get('.submit-workorder-btn').click();
     cy.wait('@createWorkorder');
 })
-
+When('I click on the next button', () => {
+    cy.get('.submit-workorder-btn').click();
+})
+And('I select {string} for machine type', (machineTypeVal) => {
+    cy.get(`input[placeholder="MACHINE TYPE"]`).click();
+    cy.contains(machineTypeVal).click();
+})
+Then('I should see camera or upload', () => {
+    cy.get('.options-modal').should('exist');
+})
+When('I choose {string} from the options', (option) => {
+    const optionButtonClass = `.options-modal__${option}-btn`;
+    cy.get(optionButtonClass).click();
+})
 
 
 // ------------- take_photo.feature ------------------

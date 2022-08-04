@@ -12,7 +12,7 @@ Feature: Upload Photos
         And I should see "test"
         When I click on component "XXX" button
         Then I should see camera or upload
-        And I choose upload
+        And I choose "upload" from the options
         
     # https://www.npmjs.com/package/cypress-file-upload
     

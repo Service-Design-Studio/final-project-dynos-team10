@@ -9,7 +9,7 @@
 Feature: Components
     I want to select a component from the status of components page and upload its status to the database
 
-    Background: Selecting a workorder and taking some photos for component "xxx"
+    Background: Selecting a workorder and taking some photos for component "xxxx"
         Given I am on the "home" page
         And I click on the drafts button
         Then I should be on the "drafts" page
@@ -18,7 +18,10 @@ Feature: Components
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test"
-        When I click on component "XXX" button
+        When I click on component "xxxx" button
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
         And I click on the take photo button "5" times
         And I click on the right arrow button
         Then I should be on the "photo review" page
@@ -28,18 +31,18 @@ Feature: Components
         And I click on the proceed button
         Then I should see "Passed"
         When I go to the "status of components" page with saved progress
-        Then the component "xxx" button colour should be "yellow"
+        Then the component "xxxx" button colour should be "yellow"
 
-    Scenario: component xxx passing manual check
+    Scenario: component xxxx passing manual check
         Given I click on the pass button
         And I click on the proceed button
         Then I should see "Passed"
         When I click on the upload button
         Then I should see "Upload Successful"
         When I click on the close icon
-        Then the component "xxx" button colour should be "green"
+        Then the component "xxxx" button colour should be "green"
         
-    Scenario: component xxx failing manual check
+    Scenario: component xxxx failing manual check
         Given I click on the fail button
         And I click on the proceed button
         Then I should see "Reasons for failing check"
@@ -47,8 +50,8 @@ Feature: Components
         And I click on the upload button
         Then I should see "Upload Successful"
         When I click on the close icon
-        Then the component "xxx" button colour should be "red" 
+        Then the component "xxxx" button colour should be "red" 
 
-    Scenario: SAD PATH: exiting component xxx check before submitting all photos of Component xxx
+    Scenario: SAD PATH: exiting component xxxx check before submitting all photos of Component xxxx
         Given I go to the "status of components" page with saved progress
-        Then the component "xxx" button colour should be "yellow"
+        Then the component "xxxx" button colour should be "yellow"

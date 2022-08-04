@@ -10,23 +10,21 @@ Feature: Take Picture
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test"
+        Given I click on component "xxxx" button
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
 
     Scenario: Opening the camera function
-        And I click on component "XXX" button
-        Then my camera should open
         And I should be on the "take photo" page
 
-    Scenario: Taking one photo of component xxx
-        Given I click on component "XXX" button
-        Then my camera should open
+    Scenario: Taking one photo of component xxxx
         When I click on the take photo button
         Then I should see the counter showing "1"
         When I click on the right arrow button
         Then I should be on the "photo review" page
 
-    Scenario: Taking multiple photos of component xxx
-        Given I click on component "XXX" button
-        Then my camera should open
+    Scenario: Taking multiple photos of component xxxx
         When I click on the take photo button
         Then I should see the counter showing "1"
         When I click on the take photo button "4" times
@@ -35,7 +33,6 @@ Feature: Take Picture
         Then I should be on the "photo review" page
 
     Scenario: Review the photos and mark pass/fail
-        Given I click on component "XXX" button
         When I click on the take photo button
         And I click on the right arrow button
         Then I should see all my photos in the carousel
