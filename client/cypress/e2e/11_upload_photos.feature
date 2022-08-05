@@ -10,28 +10,23 @@ Feature: Upload Photos
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test"
-        When I click on component "XXX" button
+        When I click on component "xxxx" button
         Then I should see camera or upload
         And I choose "upload" from the options
         
     # https://www.npmjs.com/package/cypress-file-upload
     
     Scenario: Uploading an image file
-        When I choose "1" image file(s)
+        When I choose "1" image files
         Then I should be on the "photo review" page
         And I should see "1" photos in the carousel
 
     Scenario: Uploading multiple image files
-        When I choose "5" image file(s)
+        When I choose "5" image files
         Then I should be on the "photo review" page
         And I should see "5" photos in the carousel
 
     Scenario: SAD PATH: Uploading a non-image file among images
-        When I choose "5" image file(s)
-        And I choose "1" non-image file(s)
+        When I choose "5" image files and "1" non-image files
         Then I should see "Non-image file(s) detected"
         And I should see camera or upload
-
-    Scenario: SAD PATH: Uploading nothing
-        When I cancel
-        Then I should see camera or upload

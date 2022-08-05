@@ -105,6 +105,7 @@ function QCEntry() {
   
   const handleResult = (result) => {
     if (result !== null) {
+      console.log({result, prevValue, formValues, opened})
       if (prevValue !== formValues && opened){
         console.log(typeof result)
         console.log(result)
@@ -125,6 +126,13 @@ function QCEntry() {
       // window.location.reload();
     }
   };
+  useEffect(() => {
+    if (process.env.REACT_APP_IS_TESTING === 'true') {
+      // only in testing mode we watch this and do something
+      console.log('from window', window.top.customQrCode);
+      handleResult(window.top.customQrCode);
+    }
+  }, [window.top.customQrCode])
 
   const handleError = err => {
     console.error(err)

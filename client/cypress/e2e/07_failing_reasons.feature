@@ -19,13 +19,13 @@ Feature: Failing Reasons Input
         Then I should be on the "photo review" page
         When I click on the fail button
         And I click on the proceed button
-        Then I should see "Reasons for failing check"
+        Then I should see "Fail Reason(s)"
 
-    Scenario: Creating multiple failing reasons
-        When I enter in "4" failing reasons
-        Then I should see "4" failing reasons
+    Scenario: Selecting failing reasons
+        When I select some failing reasons
+        Then I should see some failing reasons
 
     Scenario: Deleting failing reasons
-        When I enter in "5" failing reasons
-        And I delete "2" failing reasons
-        Then I should see "3" failing reasons
+        When I select "1" failing reasons
+        And I delete "1" failing reasons
+        Then I should see "0" failing reasons

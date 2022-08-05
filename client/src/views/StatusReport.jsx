@@ -339,6 +339,7 @@ function StatusReport() {
                                 marginTop: "0.5rem", 
                                 marginBottom: "0.5rem"}}
                             leftIcon={<BsPencilSquare size={18}/>}
+                            className="change-status-btn"
                             >
                             Change Status
                         </Button>
@@ -367,7 +368,9 @@ function StatusReport() {
                             style={{
                                 margin: "2rem", 
                                 marginTop: "0.5rem", 
-                                marginBottom: "0.5rem"}}>
+                                marginBottom: "0.5rem"}}
+                            className="edit-btn"
+                        >
                             Edit
                         </Button>
                     :

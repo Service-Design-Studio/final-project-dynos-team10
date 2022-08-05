@@ -65,6 +65,9 @@ When('I choose {string} from the options', (option) => {
 
 
 // ------------- take_photo.feature ------------------
+And('I click on the new entry button', () => {
+    cy.get('.home__new-entry-btn').click();
+})
 And('I click on the drafts button', () => {
     cy.get('.home__drafts-btn').click();
 })
@@ -75,6 +78,7 @@ When('I select the {string} workorder', (workorderNumber) => {
 // Scenario: Opening the camera function
 And('I click on component {string} button', (componentName) => {
     const componentButtonClass = buildComponentButtonClass(componentName);
+    cy.wait(2000);
     cy.get(componentButtonClass).click();
 });
 Then('my camera should open',() => {
@@ -324,43 +328,51 @@ And('I click on the proceed button', () => {
     cy.get('.proceed-btn').click();
 })
 And('I click on the upload button', () => {
-    cy.intercept('GET', 'workorders?workorder_number=**', req => {
-        req.reply({
-            fixture: 'pass-fail/query-workorder-id.json'
-        })
-    }).as('workorders');
-    cy.intercept('POST', 'components', req => {
-        req.reply({
-            fixture: 'pass-fail/create-component.json'
-        })
-    }).as('components');
-    cy.intercept('POST', 'images/batch', req => {
-        req.reply({
-            fixture: 'pass-fail/image-batch-create.json'
-        })
-    }).as('images-batch-create');
+    // cy.intercept('GET', 'workorders?workorder_number=**', req => {
+    //     req.reply({
+    //         fixture: 'pass-fail/query-workorder-id.json'
+    //     })
+    // }).as('workorders');
+    // cy.intercept('POST', 'components', req => {
+    //     req.reply({
+    //         fixture: 'pass-fail/create-component.json'
+    //     })
+    // }).as('components');
+    // cy.intercept('POST', 'images/batch', req => {
+    //     req.reply({
+    //         fixture: 'pass-fail/image-batch-create.json'
+    //     })
+    // }).as('images-batch-create');
     cy.get('.upload-btn').click();
-    cy.wait('@workorders');
-    cy.wait('@components');
-    cy.wait('@images-batch-create');
+    // cy.wait('@workorders');
+    // cy.wait('@components');
+    // cy.wait('@images-batch-create');
 })
-When('I enter in some failing reasons', () => {
-    const randomNum = generateRandIntEndsInclusive(1, 5);
-    for (let i = 0; i < randomNum; i++) {
-        cy.get(`textarea[placeholder="${failingReasonsTextAreaPlaceholder}"]`).type(`reason ${i}`);
-        cy.get('.enter-reason-btn').click();
-    }
+When('I select some failing reasons', () => {
+    cy.get(`input[placeholder="Scroll to Add Reasons"]`).click(); // click the select field to reveal dropdown
+    cy.get('.mantine-Select-item').each((item, index) => {
+        const randomNum = generateRandIntEndsInclusive(0, 1); // randomly decide to select this reason or not
+        if (randomNum === 1 || index === 0) cy.wrap(item).click(); // always select the first reason (ensures at least 1 reason selected)
+    })
 })
-When('I enter in {string} failing reasons', (number) => {
-    for (let i = 0; i < +number; i++) {
-        cy.get(`textarea[placeholder="${failingReasonsTextAreaPlaceholder}"]`).type(`reason ${i}`);
-        cy.get('.enter-reason-btn').click();
-    }
+When('I select {string} failing reasons', (number) => {
+    let counter = number;
+    cy.get(`input[placeholder="Scroll to Add Reasons"]`).click();
+    cy.get('.mantine-Select-item').each(item => {
+        if (counter > 0) {
+            cy.wrap(item).click();
+            counter--;
+        }
+    })
 })
 When('I click on the close icon', () => {
     cy.get('.mantine-Modal-close').click();
 })
-
+Then('I should see some failing reasons', () => {
+    cy.get('.reasons-list').children().should((list) => {
+        expect(list).to.have.length.of.at.least(1);
+    })
+})
 Then('I should see {string} failing reasons', (number) => {
     cy.get('.reasons-list').children().should('have.length', +number);
 })
@@ -371,15 +383,12 @@ And('I delete {string} failing reasons', (number) => {
     }
 })
 // scenario changing status 
-Then('I click on edit button', () => {
-    cy.get('.edit').click();
+Then('I click on the edit button', () => {
+    cy.get('.edit-btn').click();
 })
 And('I click on the change status button', () => {
-    cy.get('.change_status').click();
+    cy.get('.change-status-btn').click();
 })
-Then('I should see a failing reasons box', () => {
-    cy.get('.failing_reasons').contains(text);
-})  
 And('I click the save button', () => {
     cy.get('.save-btn').click();
 })
@@ -394,13 +403,23 @@ Then('I click on camera button', () => {
 
 // -------------- qr_work_order.feature --------------
 Then('I click on the Scan QR Code button', () => {
+    cy.wait(2000);
     cy.get('.qr-scanner-btn').click();
 });
 Then('the QR scanner should be {string}', (openedOrClosed) => {
     const shouldBeOpen = openedOrClosed === 'opened' ? 'exist' : 'not.exist';
     cy.get('.qr-scanner').should(shouldBeOpen);
 })
-
+And('I show a {string} work order QR code', (validOrInvalid) => {
+    // best we can do is to simulate input,
+    // and neither showing an actual QR code nor stubbing the handleResult callback of the qr code reader
+    const input = validOrInvalid === 'valid' ?
+        'WO12345,7595,m2,-,2.0000,JO12345' :
+        'WO12345';
+    cy.window().then(win => {
+        win.top.customQrCode = input;
+    })
+})
 // ------------- drafts.feature ---------------
 
 // ------------- editing.feature -------------------
@@ -412,25 +431,26 @@ When('I click on the camera button', () => {
     cy.get('.camera-btn').click();
 })
 
-When('I choose "1" image file(s)', function () {
-    cy.visit('http://localhost:3000/status-report')
-    const filepath = 'images/evening.png'
-    cy.get('input[type="file"]').attachFile(filepath)
-    cy.get('#file-submit').click()
-    cy.get('#uploaded-files').contains('evening.png')
+// ----------- upload.feature ---------------
+When('I choose {string} image files', (numFiles) => {
+    const filepath = 'files/sample.png';
+    if (+numFiles === 1) {
+        cy.get('#contained-button-file').attachFile(filepath);
+    } else {
+        const files = Array(+numFiles).fill(filepath);
+        cy.get('#contained-button-file').attachFile(files);
+    }
 })
-When('Uploading a non-image file among images', function () {
-    cy.visit('http://localhost:3000/status-report')
-    const filepath = 'images/evening.png'
-    //cy.get('input[type="file"]').attachFile(filepath)
-    // cy.get('input[type="file"]').attachFile({
-    //     mimeType: 'image/png'
-    // })
-    // cy.get('#file-submit').click()
-    // cy.get('#uploaded-files').contains('evening.png')
-    cy.get('input[type="file"]').attachFile(filepath)
-    cy.get('input[type="file"]').attachFile({
-        mimeType: !'image/png'
-    })
-    cy.get('body').contains("Non-image file(s) detected");
+And('I choose {string} image files and {string} non-image files', (numImageFiles, numOtherFiles) => {
+    const totalNumFiles = +numImageFiles + +numOtherFiles;
+    const files = Array(totalNumFiles);
+
+    for (let i = 0; i < totalNumFiles; i++) {
+        if (i < +numImageFiles) {
+            files[i] = 'files/sample.png';
+        } else {
+            files[i] = 'files/sample.txt';
+        }
+    }
+    cy.get('#contained-button-file').attachFile(files);
 })

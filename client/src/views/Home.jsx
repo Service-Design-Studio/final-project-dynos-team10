@@ -29,6 +29,7 @@ export default function Home() {
         variant="outline" 
         style={{marginTop: 30, marginInline: 20, height: 75}} 
         leftIcon={<AddBoxRoundedIcon style={{fontSize: 50}}/>}
+        className="home__new-entry-btn"
         onClick={() => navigate('/qc-entry')}
         fullWidth> 
         

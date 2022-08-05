@@ -4,8 +4,8 @@ import time
 import math
 
 random.seed(time.time())
-f = open("inputs.txt", "w")
-f.write("Fuzzing" + "\n")
+f = open("files/inputs.txt", "w")
+f.write("WO22020621" + "\n")
 f.close()
 def randomChar():
     index = random.randint(0,1000)
@@ -102,24 +102,25 @@ def trim(input):
 
 def generateInputs():
     mutators = [trim,changechar,randomString,flip]
-    noOfmutations = 5
-    while(noOfmutations):
+    noOfmutations = 1000
+    while(noOfmutations > 0):
         mutator = random.choice(mutators)
         # noOfmutations = noOfmutations -1
         addInput(mutator(randline()))
+        noOfmutations -= 1
 
 
 global line
 
 
 def randline():
-    f = open("inputs.txt",'r')
+    f = open("files/inputs.txt",'r')
     lines=f.read().splitlines()
     return random.choice(lines)
 
 
 def addInput(input):
-    f = open("inputs.txt","a")
+    f = open("files/inputs.txt","a")
     f.write(input+"\n")
     f.close()
 

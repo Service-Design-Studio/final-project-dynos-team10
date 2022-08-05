@@ -30,3 +30,10 @@ Cypress.on('fail', (error, runnable) => {
     }
     throw error;
 });
+// CATCHING QR SCANNER WEIRD BEHAVIOUR UNCAUGHT ERRORS
+Cypress.on('uncaught:exception', (error, runnable) => {
+    if (error.message.toLowerCase().includes('play() request was interrupted by a new load request')) {
+        return false;
+    }
+    throw error;
+});
