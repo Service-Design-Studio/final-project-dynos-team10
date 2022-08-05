@@ -32,6 +32,10 @@ class Workorder < ApplicationRecord
         Workorder.find_by(workorder_number: workorder_number)
     end
 
+    def self.search_by_workorder_number(search)
+        Workorder.where("workorder_number like ?","%#{search}%")
+    end
+
     def self.get_count
         Workorder.count
     end
