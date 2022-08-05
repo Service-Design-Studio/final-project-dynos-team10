@@ -1,15 +1,23 @@
 import PieChart from "../../components/PieChart";
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import usePassFailAnalytics from "../../hooks/usePassFailAnalytics";
-import { Group, Button, Text } from "@mantine/core";
+import { Group, Button, Text, Slider, RangeSlider } from "@mantine/core";
 import { ContentGroup } from "../../components/CollapsableContentItem";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 const WORKORDER_DETAILS_BTN_CLASS = 'view-workorder-btn';
 
 function WorkorderItemBuilder(item, i, theme) {
+    const [value, setValue] = useState(4);
+    const [rangeValue, setRangeValue] = useState([1, 7]);
+
     return (
+        <>
+{/*         
+        <Slider value={value} onChange={setValue} />
+        <RangeSlider value={rangeValue} onChange={setRangeValue} />
+         */}
         <Group
             position="apart"
             align="center"
@@ -43,6 +51,8 @@ function WorkorderItemBuilder(item, i, theme) {
                 View Details
             </Button>
         </Group>
+
+        </>
     )
 }
 

@@ -2,15 +2,15 @@ import { $axios } from "./axiosHelper";
 
 export const getCompletedWorkorders = async (pageNum=1) => {
     let response = await $axios.get(`workorders/page/${pageNum}?completed=1`);
-    // console.log(response.data.result);
+    console.log(response.data.result);
     return (response.data.result);
 }
 
 export const getWorkorder = async (workorderId) => {
     let response = await $axios.get(`workorders/${workorderId}`);
     console.log(response);
-    const { id, completed, workorder_number: workorderNumber, user_id: userId, machine_type_id } = response.data.result;
-    return { id, completed, workorderNumber, userId, machine_type_id };
+    const { id, completed, workorder_number: workorderNumber, user_id: userId, machine_type_id, passed } = response.data.result;
+    return { id, completed, workorderNumber, userId, machine_type_id, passed};
 }
 
 /**
@@ -53,7 +53,7 @@ export const getComponentImages = async (componentId) => {
  * @returns {Promise<object>} a promise that resolves to an object of a workorder
  */
 export const getFullWorkorder = async (workorderId) => {
-    const { id, completed, workorderNumber, userId, machine_type_id } = await getWorkorder(workorderId);
+    const { id, completed, workorderNumber, userId, machine_type_id, passed } = await getWorkorder(workorderId);
     
     const machineType = await getMachineType(machine_type_id);
     const componentsRaw = await getWorkorderComponents(id);
@@ -71,7 +71,8 @@ export const getFullWorkorder = async (workorderId) => {
         workorderNumber,
         userId,
         machineType,
-        components
+        components, 
+        passed
     }
     return workorder;
 }
