@@ -3,11 +3,12 @@ import { Button,
     Stack,
     Center,
     Text,
-Modal } from "@mantine/core";
+Modal, 
+Notification} from "@mantine/core";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useNavigate, useLocation } from "react-router-dom";
-import {useState} from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { 
 selectCurrentComponentName,
@@ -24,6 +25,8 @@ const location= useLocation();
 const currentComponentName = useSelector(selectCurrentComponentName);
 const currentComponent = useSelector(selectCurrentComponent);
 const dispatch = useDispatch();
+
+const [showFileErrorNotif, setShowFileErrorNotif] = useState(false);
 
 const count = useMemo(() => {
     return currentComponent.images.length;
@@ -52,6 +55,13 @@ const handleChange = (e) => {
     const file = Array.from(e.target.files);
     console.log("files: " + file)
     
+    // check if there exists a file that is not an image file
+    if (!file.every(el => el.type.match('image.*'))) {
+        console.log('non-image files detected!');
+        setShowFileErrorNotif(true);
+        return;
+    }
+
     file.forEach(i=>{
         getBase64(i)
 
@@ -67,6 +77,7 @@ return (
     <Modal
     opened={optionsModal}
     onClose={()=>setOptionsModal(false)}
+    className="options-modal"
     >
     <input
     multiple={true}
@@ -86,7 +97,7 @@ return (
             variant="light"
             style={{height: 150, width: 200}}
             onClick={() => navigate("/camera")}
-            className="camera-btn"
+            className="options-modal__camera-btn"
             >
                 <Stack
                 spacing="xs"
@@ -109,6 +120,7 @@ return (
                 variant="light"
                 style={{height: 150, width: 200, marginBottom: "2rem"}}
                 component="span"
+                className="options-modal__upload-btn"
                 >
                     <Stack
                     spacing="xs"
@@ -128,6 +140,16 @@ return (
             </label>
         </Stack>
     </Center>
+
+    {
+        showFileErrorNotif &&
+        <Notification
+            color="red"
+            onClose={() => setShowFileErrorNotif(false)}
+        >
+            Non-image file(s) detected! Please try again and upload only image files.
+        </Notification>
+    }
     
     </Modal>
  );
