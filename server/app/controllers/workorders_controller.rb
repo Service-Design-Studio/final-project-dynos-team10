@@ -102,4 +102,9 @@ class WorkordersController < ApplicationController
         components = Workorder.get_one_components params[:id]
         render json: success_json(components)
     end
+
+    def search_by_workorder_number
+        workorders = Workorder.search_by_workorder_number params[:containing]
+        render json: success_json(workorders)
+    end
 end
