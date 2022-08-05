@@ -32,6 +32,7 @@ function FailingReasonText({content}) {
 
 export default function ComponentCard({componentRecord}) {
     const { classes, theme } = useStyles();
+    console.log(componentRecord);
     const { componentType, failingReasons, images, status: isCompleted } = componentRecord;
     const [opened, setOpened] = useState(false);
 
@@ -57,8 +58,7 @@ export default function ComponentCard({componentRecord}) {
                             style={{height: 130}}
                             offsetScrollbars
                         >
-                            {/* {failingReasons.map((el, i) => <FailingReasonText key={i} content={el} />)} */}
-                            {['reason1', 'reason 2', 'reason 3', 'reason 4'].map((el, i) => <FailingReasonText key={i} content={el} />)}
+                            {failingReasons.map((el, i) => <FailingReasonText key={i} content={el.reason} />)}
                         </ScrollArea>
                     </Card.Section>
                 }
