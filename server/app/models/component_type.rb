@@ -55,7 +55,7 @@ class ComponentType < ApplicationRecord
   end
 
   def self.create_record(component_type_name)
-    ComponentType.create(type_name: component_type_name)
+    ComponentType.create(type_name: component_type_name.titleize)
   end
 
   def self.get_count
