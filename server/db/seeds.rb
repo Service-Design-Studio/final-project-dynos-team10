@@ -62,13 +62,14 @@ failing_reasons_types.each do |failing_reasons_type|
 end
 
 MachineType.update_component_types(1,[1,2])
-MachineType.update_component_types(2,[2,3])
+MachineType.update_component_types(2,[2,3,4])
 
 ComponentType.update_machine_types(1,[1])
 ComponentType.update_machine_types(2,[1,2])
 ComponentType.update_machine_types(3,[2])
+ComponentType.update_machine_types(4,[2])
 
-Component.update_failing_reasons_types(1,[1,2])
-Component.update_failing_reasons_types(2,[3])
-Component.update_failing_reasons_types(3,[2])
-
+ComponentType.update_failing_reasons_types(1,[1,2])
+ComponentType.update_failing_reasons_types(2,[3])
+ComponentType.update_failing_reasons_types(3,[2])
+ComponentType.update_failing_reasons_types(4,[2,3])

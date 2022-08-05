@@ -10,9 +10,11 @@ Feature: Delete Photo
         When I click on the "Continue" button
         Then I should be on the "status of components" page
         And I should see "test"
+        Given I click on component "xxxx" button
+        Then I should see camera or upload
+        And I choose "camera" from the options
     
     Scenario: Review the photos and delete one
-        Given I click on component "XXX" button
         And I click on the take photo button "5" times
         When I click on the right arrow button
         Then I should see all my photos in the carousel
@@ -22,7 +24,6 @@ Feature: Delete Photo
         And I should see "4" photos in the carousel
 
     Scenario: Take and review one photo, then deleting it
-        Given I click on component "XXX" button
         And I click on the take photo button
         When I click on the right arrow button
         Then I should see all my photos in the carousel

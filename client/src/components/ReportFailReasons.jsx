@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from 'react-router-dom';
 import { useListState, randomId } from '@mantine/hooks';
 import { updateCurrentComponentName, selectWorkorderComponents } from '../store/workorder/workorderSlice';
+import { $axios } from '../helpers/axiosHelper';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import {
@@ -18,33 +19,37 @@ import {
 } from "@mantine/core"
 
 
-function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight}) {
+function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight, componentTypeId}) {
     const theme = useMantineTheme();
     const [value, setValue] = useState('');
-    // selectedReasons = reasons;
-    const allReasons = [
-        'Crumpled', 
-        'Torn', 
-        'Slanted', 
-        'Wrong Position', 
-        'Wrong Text', 
-        'Markings', 
-    ];
 
-    // notSelectedReasons: reasons in the dropdown list 
-    // notSelectedReasons array = allReasons array - reasons array
-    // let difference = arr1.filter(x => !arr2.includes(x));
+    const [allReasons, setAllReasons] = useState([]);
+    useEffect(() => {
+        (async() => {
+            const possibleFailingReasons = (await $axios.get(`component_types/${componentTypeId}/failing_reasons_types`)).data.result;
+            setAllReasons(possibleFailingReasons.map(el => ({
+                failingReasonTypeId: el.id,
+                failingReasonName: el.reason
+            })))
+        })()
+    }, [componentTypeId])
+    useEffect(() => {
+        console.log({allReasons});
+    }, [allReasons])
 
     // useMemo - derived state that depends on other states (something liddat)
     const notSelectedReasons = useMemo(() => {
-        return allReasons.filter(x => !reasons.includes(x));
+        console.log({allReasons, reasons});
+        return allReasons.filter(x => !reasons.find(chosenReason => chosenReason.failingReasonTypeId === x.failingReasonTypeId));
     }, [allReasons, reasons])
 
   // add one or more items to the end of the list
     const selectReason = (value) => {
-        {setValue(value)}
-        if (!reasons.includes(value) && value!==null){
-            setReasons.append(value); // setReasons is in StatusReport.jsx 
+        // value is ID only
+        console.log({value, reasons});
+        setValue(value);
+        if (!reasons.find(chosenReason => chosenReason.failingReasonTypeId === value) && value !==null) {
+            setReasons.append(allReasons.find(reason => reason.failingReasonTypeId === value)); // setReasons is in StatusReport.jsx 
         }
     }
 
@@ -55,42 +60,42 @@ function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight
     const dispatch = useDispatch();
     const workorderComponents = useSelector(selectWorkorderComponents);
 
-    const listItems = reasons.map((reason, index)=> 
-        
-        <Paper
-            shadow="xs"
-            withBorder
-            style={{
-                display: "flex", 
-                justifyContent: "space-between", 
-                marginRight: "20%",
-                marginTop: 0, 
-                width: "97%" }}
-            key={index}>
+    const listItems = reasons.map((reason, index)=> {
+        console.log({reason, index});
+        return (
+            <Paper
+                shadow="xs"
+                withBorder
+                style={{
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    marginRight: "20%",
+                    marginTop: 0, 
+                    width: "97%" }}
+                key={index}>
 
-            <div style={{ overflowWrap: "break-word"}} >
-            <Text
-                size="sm"
-                style={{padding: 5, 
-                        marginLeft: "0.5rem",
-                        overflowWrap: "break-word",
-                        wordBreak: "break-all"}}>
-                {reason}
-            </Text> 
-            </div>
+                <div style={{ overflowWrap: "break-word"}} >
+                    <Text
+                        size="sm"
+                        style={{padding: 5, 
+                                marginLeft: "0.5rem",
+                                overflowWrap: "break-word",
+                                wordBreak: "break-all"}}>
+                        {allReasons.length > 0 && allReasons.find(el => el.failingReasonTypeId === reason.failingReasonTypeId).failingReasonName}
+                    </Text>
+                </div>
 
-            {
-                editReport && 
-                    <ClearIcon 
-                        className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`}
-                        style={{fontSize: 20, color: "black", padding: 7}} 
-                        onClick={() => remove(index)}/>
-            }
+                {
+                    editReport && 
+                        <ClearIcon 
+                            className={`delete-failing-reasons-btn delete-failing-reasons-btn--${index}`}
+                            style={{fontSize: 20, color: "black", padding: 7}} 
+                            onClick={() => remove(index)}/>
+                }
 
-        </Paper>
-        
-    );
-    
+            </Paper>
+        )
+    });
 
     return (
 
@@ -117,7 +122,7 @@ function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight
                         dropdownPosition="top"
                         nothingFound="No options"
                         // edit to return {value, label} 
-                        data={notSelectedReasons}
+                        data={notSelectedReasons.map(el => ({label: el.failingReasonName, value: el.failingReasonTypeId}))}
                         maxDropdownHeight = {120} 
                         style={{margin: "0.2rem", marginTop: 0, marginBottom: "0.4rem"}}
                     />

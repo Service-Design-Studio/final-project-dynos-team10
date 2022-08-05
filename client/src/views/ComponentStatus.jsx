@@ -3,10 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     selectWorkorderNumber,
     addNewComponent,
-    updateComponentId,
-    addImagesArrayToComponent,
-    updateComponentStatus,
-    addFailingReasons,
     putOrAddComponent,
     selectWorkorderComponents
 } from "../store/workorder/workorderSlice";
@@ -45,14 +41,7 @@ function ComponentStatus() {
 
     const processExistingComponent = (componentData) => {
         const { componentId, componentStatus, componentName, images, componentFailingReasons, componentTypeId } = componentData;
-        // if (!componentnames.includes(componentName)) {
-        //     // this means that a custom component was created by the user for this workorder
-        //     // we need to initialise it, and add the details
-        //     dispatch(addNewComponent(componentName));
 
-        //     // TODO: to check this again when feature to create custom components is added
-        //     // the dispatch above is not synchoronous and might affect the following code in this function
-        // }
         // since this is an existing component in the DB, we add a non-null ID to it
         const payload = { 
             componentName,
@@ -69,30 +58,6 @@ function ComponentStatus() {
         }
 
         dispatch(putOrAddComponent(payload));
-
-        // dispatch(updateComponentId({
-        //     componentName,
-        //     id: componentId
-        // }))
-
-        // dispatch(addImagesArrayToComponent({
-        //     componentName,
-        //     images: images.map(el => {
-        //         return {
-        //             id: el.imageId,
-        //             src: el.url
-        //         }
-        //     })
-        // }));
-        // const colorStatus = componentStatus ? 'green' : 'red';
-        // dispatch(updateComponentStatus({
-        //     componentName,
-        //     status: colorStatus
-        // }))
-        // dispatch(addFailingReasons({
-        //     componentName,
-        //     failingReasons: componentFailingReasons
-        // }));
     }
 
     useEffect(() => {
@@ -112,14 +77,15 @@ function ComponentStatus() {
                 // when we do custom component adding, proboably need to change component creation at that point instead, and move creation of DEFAULT components there as well
                 const workorderId = response.data.result.id;
                 response = await $axios.get(`workorders/${workorderId}/components`);
-                const components = response.data.result;
-                // console.log({components});
+                const componentIds = response.data.result.map(el => el.id);
+                // console.log({componentIds});
 
                 // 3a) if there are 0 components (akin to a new qc entry), simply proceed
                 // 3b) if there are components, for each component found, get images
-                if (components.length > 0) {
-                    const items = components.map(async(el) => {
-                        response = await $axios.get(`components/${el.id}/images`);
+                if (componentIds.length > 0) {
+                    const items = componentIds.map(async(componentId) => {
+                        const el = (await $axios.get(`components/${componentId}`)).data.result;
+                        response = await $axios.get(`components/${componentId}/images`);
                         const images = response.data.result;
                         const formattedImages = images.map(imageEl => {
                             return {
@@ -135,7 +101,7 @@ function ComponentStatus() {
                             componentName: componentTypeName,
                             componentStatus: el.status,
                             images: formattedImages,
-                            componentFailingReasons: el.failing_reasons || [],
+                            componentFailingReasons: el.failing_reasons_types.map(reasonEl => ({failingReasonTypeId: reasonEl.id, failingReasonName: reasonEl.reason})) || [],
                             componentTypeId
                         }
                         return componentObj;
@@ -153,9 +119,6 @@ function ComponentStatus() {
             componentTypes.forEach(componentTypeObj => {
                 dispatch(addNewComponent(componentTypeObj));
             })
-            // componentnames.forEach(componentName => {
-            //     dispatch(addNewComponent(componentName));
-            // });
             // --------------------
             if (componentsWithImages.length > 0) {
                 // if there are existing records of components for this workorder, we process them

@@ -19,7 +19,13 @@ class ComponentTypesController < ApplicationController
     end
 
     all_component_types = ComponentType.find_all
-    render json: success_json(all_component_types)
+    all_component_types_arr = []
+    all_component_types.each do |component_type|
+      component_type_json = component_type.as_json
+      component_type_json[:failing_reasons_types] = component_type.failing_reasons_types
+      all_component_types_arr << component_type_json
+    end
+    render json: success_json(all_component_types_arr)
   end
 
   def create
@@ -36,7 +42,7 @@ class ComponentTypesController < ApplicationController
     component_type_rec = ComponentType.get_one_component_type_from_id params[:id]
     component_type_json = component_type_rec.as_json
     component_type_json[:failing_reasons_types] = component_type_rec.failing_reasons_types
-    render json: success_json(component_type_rec)
+    render json: success_json(component_type_json)
   end
 
 
