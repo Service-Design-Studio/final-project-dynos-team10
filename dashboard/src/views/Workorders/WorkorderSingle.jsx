@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFullWorkorder } from '../../helpers/workorderHelper';
 import ComponentCard from '../../components/ComponentCard';
-import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text } from '@mantine/core';
+import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text, Center } from '@mantine/core';
 import { NAVBAR_WIDTH } from '../../Layout';
+import { Carousel } from '@mantine/carousel';
 
 export default function WorkorderSingle() {
     const workorderId = parseInt(useParams().workorderId, 10);
@@ -64,9 +65,19 @@ export default function WorkorderSingle() {
                         </tbody>
                     </Table>
                     <Text size="lg" weight={700}>Components & Images</Text>
-                    <Group align="flex-end">
-                        {workorder?.components.map((el, i) => <ComponentCard componentRecord={el} key={i} />)}
-                    </Group>
+                    <Center>
+                        <Carousel
+                        align="center"
+                        sx={{width: 400}}
+                        >
+                            {workorder?.components.map((el, i) => 
+                                <Carousel.Slide> 
+                                    <Center>   
+                                    <ComponentCard componentRecord={el} key={i} />
+                                    </Center>
+                                </Carousel.Slide>    )}
+                        </Carousel>
+                    </Center>
                 </div> :
                 <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" />
             }
