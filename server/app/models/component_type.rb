@@ -6,6 +6,10 @@ class ComponentType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
+  before_save do
+    self.type_name = type_name.titleize
+  end
+
   # def self.get_all_workorders(component_type_id)
   #   Workorder.where(component_type_id:component_type_id)
   # end
@@ -47,12 +51,12 @@ class ComponentType < ApplicationRecord
   end
 
   def self.get_all_machine_types_from_type(component_type_name)
-    @comp_type = ComponentType.find_by(type_name: component_type_name)
+    @comp_type = ComponentType.find_by(type_name: component_type_name.titleize)
     @comp_type.machine_types
   end
   
   def self.find_one_by_type_name(component_type_name)
-    ComponentType.find_by(type_name: component_type_name)
+    ComponentType.find_by(type_name: component_type_name.titleize)
   end
 
   def self.create_record(component_type_name)
