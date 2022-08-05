@@ -1,4 +1,6 @@
-import { Card, Image, Text, Group, Badge, Button, createStyles, Paper, ScrollArea } from '@mantine/core';
+import { Carousel } from '@mantine/carousel';
+import { Card, Image, Text, Group, Badge, Button, createStyles, Paper, ScrollArea, Modal } from '@mantine/core';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -31,36 +33,54 @@ function FailingReasonText({content}) {
 export default function ComponentCard({componentRecord}) {
     const { classes, theme } = useStyles();
     const { componentType, failingReasons, images, status: isCompleted } = componentRecord;
+    const [opened, setOpened] = useState(false);
 
     return (
-        <Card withBorder radius="md" p="sm" className={classes.card}>
-            <Card.Section>
-                <Image src={images[0].public_url} alt="Image" />
-            </Card.Section>
-            <Card.Section className={classes.section} p="sm">
-                <Group position="apart">
-                    <Text size="lg" weight={500}>{componentType.charAt(0).toUpperCase() + componentType.slice(1)}</Text>
-                    <Badge size="sm" color={isCompleted ? "teal" : "red"}>
-                        {isCompleted ? "Passed" : "Failed"}
-                    </Badge>
-                </Group>
-            </Card.Section>
-            {
-                !isCompleted &&
-                <Card.Section className={classes.section} mt="md">
-                    <Text size="sm" color="gray">Failing Reasons</Text>
-                    <ScrollArea
-                        style={{height: 130}}
-                        offsetScrollbars
-                    >
-                        {/* {failingReasons.map((el, i) => <FailingReasonText key={i} content={el} />)} */}
-                        {['reason1', 'reason 2', 'reason 3', 'reason 4'].map((el, i) => <FailingReasonText key={i} content={el} />)}
-                    </ScrollArea>
+        <div>
+            <Card withBorder radius="md" p="sm" className={classes.card}>
+                <Card.Section>
+                    <Image src={images[0].public_url} alt="Image" />
                 </Card.Section>
-            }
-            <Button radius="sm" mt="xs" fullWidth>
-                View Images
-            </Button>
-        </Card>
+                <Card.Section className={classes.section} p="sm">
+                    <Group position="apart">
+                        <Text size="lg" weight={500}>{componentType.charAt(0).toUpperCase() + componentType.slice(1)}</Text>
+                        <Badge size="sm" color={isCompleted ? "teal" : "red"}>
+                            {isCompleted ? "Passed" : "Failed"}
+                        </Badge>
+                    </Group>
+                </Card.Section>
+                {
+                    !isCompleted &&
+                    <Card.Section className={classes.section} mt="md">
+                        <Text size="sm" color="gray">Failing Reasons</Text>
+                        <ScrollArea
+                            style={{height: 130}}
+                            offsetScrollbars
+                        >
+                            {/* {failingReasons.map((el, i) => <FailingReasonText key={i} content={el} />)} */}
+                            {['reason1', 'reason 2', 'reason 3', 'reason 4'].map((el, i) => <FailingReasonText key={i} content={el} />)}
+                        </ScrollArea>
+                    </Card.Section>
+                }
+                <Button radius="sm" mt="xs" fullWidth onClick={()=>setOpened(true)}>
+                    View Images
+                </Button>
+            </Card>
+
+            <Modal
+            opened={opened}
+            onClose={()=>setOpened(false)}
+            title={componentType.charAt(0).toUpperCase() + componentType.slice(1) + " Images"}
+            >
+                <Carousel
+                withIndicators>
+                {images.map((el,i) => 
+                    <Carousel.Slide>
+                        <Image src={el.public_url} alt="Image" />
+                    </Carousel.Slide>
+                )}
+                </Carousel>
+            </Modal>
+        </div>
     )
 }
