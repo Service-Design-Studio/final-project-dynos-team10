@@ -32,10 +32,6 @@ class Workorder < ApplicationRecord
         Workorder.find_by(workorder_number: workorder_number)
     end
 
-    def self.search_by_workorder_number(search)
-        Workorder.where("workorder_number like ?","%#{search}%")
-    end
-
     def self.get_count
         Workorder.count
     end
@@ -55,6 +51,10 @@ class Workorder < ApplicationRecord
     def self.evaluate_pass_fail(workorder_id)
         workorder_components = get_one_components workorder_id
         workorder_components.length > 0 ? workorder_components.all? { |component_rec| component_rec.status } : false
+    end
+
+    def self.search_by_workorder_number(search)
+        Workorder.where("workorder_number like ?","%#{search}%")
     end
 
     # TODO: test whether this works
