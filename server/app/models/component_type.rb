@@ -50,6 +50,7 @@ class ComponentType < ApplicationRecord
     @comp_type = ComponentType.find_by(type_name: component_type_name)
     @comp_type.machine_types
   end
+  
   def self.find_one_by_type_name(component_type_name)
     ComponentType.find_by(type_name: component_type_name)
   end
