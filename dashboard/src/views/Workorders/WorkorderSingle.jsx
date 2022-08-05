@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFullWorkorder } from '../../helpers/workorderHelper';
 import ComponentCard from '../../components/ComponentCard';
-import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text } from '@mantine/core';
+import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text, Center } from '@mantine/core';
 import { NAVBAR_WIDTH } from '../../Layout';
+import { Carousel } from '@mantine/carousel';
 
 export default function WorkorderSingle() {
     const workorderId = parseInt(useParams().workorderId, 10);
@@ -23,6 +24,13 @@ export default function WorkorderSingle() {
     const PRIMARY_COL_HEIGHT = .85*window.innerHeight;
     const theme = useMantineTheme();
     const SECONDARY_COL_HEIGHT = PRIMARY_COL_HEIGHT / 2 - theme.spacing.md / 2;
+
+    const Status = () => {
+        if (workorder.completed === true) {
+            return ("Complete")
+        }
+        return ("Incomplete")
+    }
 
     // Graphs to include: 1) number of pass/fail COMPONENTS, 2) failing reasons categories
     
@@ -50,12 +58,26 @@ export default function WorkorderSingle() {
                                 <td>Machine Type:</td>
                                 <td>{workorder.machineType}</td>
                             </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td><Status/></td>
+                            </tr>
                         </tbody>
                     </Table>
                     <Text size="lg" weight={700}>Components & Images</Text>
-                    <Group align="flex-end">
-                        {workorder?.components.map((el, i) => <ComponentCard componentRecord={el} key={i} />)}
-                    </Group>
+                    <Center>
+                        <Carousel
+                        align="center"
+                        sx={{width: 400}}
+                        >
+                            {workorder?.components.map((el, i) => 
+                                <Carousel.Slide> 
+                                    <Center>   
+                                    <ComponentCard componentRecord={el} key={i} />
+                                    </Center>
+                                </Carousel.Slide>    )}
+                        </Carousel>
+                    </Center>
                 </div> :
                 <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" />
             }
