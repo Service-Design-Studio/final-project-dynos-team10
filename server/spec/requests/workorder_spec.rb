@@ -12,6 +12,20 @@ RSpec.describe "Workorders", type: :request do
     end
   end
 
+  describe "GET /search_workorder" do
+    it ' finds a workorder containing a given text in their workorder number ' do
+      machine_type = MachineType.create_record("m10")
+      workorder1 = Workorder.create_record("WOP1",machine_type.id)
+      workorder2 = Workorder.create_record("WOP2",machine_type.id)
+      workorder3 = Workorder.create_record("WOP3",machine_type.id)
+
+      get search_workorders_path(), params: {:containing => "OP"}
+      expected_json =  {"success"=>true, "result"=>[{"id"=>workorder1.id, "created_at"=>workorder1.created_at, "updated_at"=>workorder1.updated_at, "workorder_number"=>"WOP1", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false},{"id"=>workorder2.id, "created_at"=>workorder2.created_at, "updated_at"=>workorder2.updated_at, "workorder_number"=>"WOP2", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false},{"id"=>workorder3.id, "created_at"=>workorder3.created_at, "updated_at"=>workorder3.updated_at, "workorder_number"=>"WOP3", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false}]}
+      expected_json = JSON.parse(expected_json.to_json)
+      expect(JSON.parse(response.body)).to eq(expected_json)
+    end
+  end
+
   describe "POST /create" do
     it ' creates a workorder with given workorder number and machine type id' do
       machine_type = MachineType.create_record("m10")
