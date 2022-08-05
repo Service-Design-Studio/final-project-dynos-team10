@@ -11,7 +11,6 @@ import {
     Checkbox
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useListState } from '@mantine/hooks';
 import { useState,useEffect, useMemo } from 'react';
 import { Box, Components, Plus, X } from 'tabler-icons-react';
 import { ContentGroup } from '../../components/CollapsableContentItem';
