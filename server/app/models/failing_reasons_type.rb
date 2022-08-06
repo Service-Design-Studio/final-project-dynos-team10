@@ -5,14 +5,14 @@ class FailingReasonsType < ApplicationRecord
   validates :reason, presence: true, uniqueness: true
 
   after_initialize do
-    self.reason = reason.titleize
+    self.reason = reason.downcase.titleize
   end
   # def self.create_record(reason,component_type_id)
   #   FailingReasonsType.create(reason:reason, component_type_id: component_type_id)
   # end
 
   def self.create_record(reason)
-    FailingReasonsType.create(reason: reason.titleize)
+    FailingReasonsType.create(reason: reason.downcase.titleize)
   end
 
   def self.get_components(failing_reasons_type_id)

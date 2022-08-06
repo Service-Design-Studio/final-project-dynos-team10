@@ -7,7 +7,7 @@ class ComponentType < ApplicationRecord
   validates :type_name, uniqueness: true
 
   after_initialize do
-    self.type_name = type_name.titleize
+    self.type_name = type_name.downcase.titleize
   end
 
   # def self.get_all_workorders(component_type_id)
@@ -55,16 +55,16 @@ class ComponentType < ApplicationRecord
   end
 
   def self.get_all_machine_types_from_type(component_type_name)
-    @comp_type = ComponentType.find_by(type_name: component_type_name.titleize)
+    @comp_type = ComponentType.find_by(type_name: component_type_name.downcase.titleize)
     @comp_type.machine_types
   end
   
   def self.find_one_by_type_name(component_type_name)
-    ComponentType.find_by(type_name: component_type_name.titleize)
+    ComponentType.find_by(type_name: component_type_name.downcase.titleize)
   end
 
   def self.create_record(component_type_name)
-    ComponentType.create(type_name: component_type_name.titleize)
+    ComponentType.create(type_name: component_type_name.downcase.titleize)
   end
 
   def self.get_count

@@ -38,10 +38,10 @@ images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dy
 failing_reasons_types = [{:reason => "crumpled"},{:reason => "scribbles"},{:reason => "missing color"}]
 
 machine_types.each do |machine_type|
-  puts "i am creating this type"
-  puts machine_type
+  # puts "i am creating this type"
+  # puts machine_type
   MachineType.create!(machine_type)
-  puts "i am done "
+  # puts "i am done "
 end
 
 component_types.each do |component_type|
