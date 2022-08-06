@@ -9,9 +9,9 @@ RSpec.describe "Components", type: :request do
 
   describe "PUT #update" do
     it 'returns updated status after updating the component values' do
-      machine_type = MachineType.create_record("m10")
-      component_type1 = ComponentType.create_record("zzzz")
-      component_type2 = ComponentType.create_record("ssss")
+      machine_type = MachineType.create_record("M10")
+      component_type1 = ComponentType.create_record("Zzzz")
+      component_type2 = ComponentType.create_record("Ssss")
       ComponentType.add_machine_type(machine_type.id,component_type1.id)
       ComponentType.add_machine_type(machine_type.id,component_type2.id)
       work_order_initial = Workorder.create_record("W10",machine_type.id)
