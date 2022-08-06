@@ -34,8 +34,8 @@ RSpec.describe "ComponentTypes", type: :request do
       delete component_type_path(@component_type)
       @machine_type2.reload
       @machine_type1.reload
-      expect(@machine_type1.component_types).to be_empty
-      expect(@machine_type2.component_types).to be_empty
+      expect(@machine_type1.component_types.size()).to be_equal(2)
+      expect(@machine_type2.component_types.size()).to be_equal(2)
       expect(JSON.parse(response.body)).to eq(expected_json)
     end
   end

@@ -4,6 +4,16 @@ class MachineType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
+  after_save do
+    if ComponentType.find_one_by_type_name("Label").nil? or ComponentType.find_one_by_type_name("Wire").nil?
+      self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
+      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    else
+      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    end
+
+  end
+
   before_save do
     self.type_name = type_name.upcase
   end
