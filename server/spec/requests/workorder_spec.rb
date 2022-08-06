@@ -12,9 +12,10 @@ RSpec.describe "Workorders", type: :request do
       workorder12 = Workorder.create_record("WOP21",machine_type.id)
       workorder22 = Workorder.create_record("WOP23",machine_type.id)
       workorder33 = Workorder.create_record("WOP34",machine_type.id)
-      get workorders_path(), params: {:workorder_number => "03", :page => 1}
+      get workorders_path(), params: {:workorder_number => "03", :page => 1, :completed => '0'}
       expected_json =  {"result"=>[{"completed"=>false, "passed"=> false, "created_at"=>workorder.created_at, "id"=>workorder.id, "machine_type_id" => machine_type.id, "updated_at"=> workorder.updated_at , "user_id"=>nil, "workorder_number"=>"W03"}], "success"=>true}
       expected_json = JSON.parse(expected_json.to_json)
+      puts JSON.parse(response.body)
       expect(JSON.parse(response.body)).to eq(expected_json)
     end
   end
