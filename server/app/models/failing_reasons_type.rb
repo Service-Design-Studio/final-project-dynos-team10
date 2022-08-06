@@ -4,12 +4,15 @@ class FailingReasonsType < ApplicationRecord
   has_and_belongs_to_many :components
   validates :reason, presence: true, uniqueness: true
 
+  before_save do
+    self.reason = reason.titleize
+  end
   # def self.create_record(reason,component_type_id)
   #   FailingReasonsType.create(reason:reason, component_type_id: component_type_id)
   # end
 
   def self.create_record(reason)
-    FailingReasonsType.create(reason: reason)
+    FailingReasonsType.create(reason: reason.titleize)
   end
 
   def self.get_components(failing_reasons_type_id)
