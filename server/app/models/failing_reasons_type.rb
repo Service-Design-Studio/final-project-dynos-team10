@@ -7,6 +7,9 @@ class FailingReasonsType < ApplicationRecord
   after_initialize do
     self.reason = reason.downcase.titleize
   end
+  before_save do
+    self.reason = reason.downcase.titleize
+  end
   # def self.create_record(reason,component_type_id)
   #   FailingReasonsType.create(reason:reason, component_type_id: component_type_id)
   # end

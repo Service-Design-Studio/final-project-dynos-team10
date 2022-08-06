@@ -31,6 +31,10 @@ class MachineType < ApplicationRecord
     self.type_name = type_name.upcase
   end
 
+  before_save do
+    self.type_name = type_name.upcase
+  end
+
   # def self.get_all_machine_types_for_component_type(component_type_id)
   #   MachineType.find_by(component_type_id: component_type_id)
   # end

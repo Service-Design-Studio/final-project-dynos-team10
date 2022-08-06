@@ -10,6 +10,10 @@ class ComponentType < ApplicationRecord
     self.type_name = type_name.downcase.titleize
   end
 
+  before_save do
+    self.type_name = type_name.downcase.titleize
+  end
+
   # def self.get_all_workorders(component_type_id)
   #   Workorder.where(component_type_id:component_type_id)
   # end
