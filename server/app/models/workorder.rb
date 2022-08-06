@@ -29,7 +29,7 @@ class Workorder < ApplicationRecord
     end
 
     def self.find_one_by_workorder_number(workorder_number)
-        Workorder.find_by(workorder_number: workorder_number)
+        Workorder.where(workorder_number: workorder_number)
     end
 
     def self.get_count
