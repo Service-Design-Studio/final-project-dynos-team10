@@ -35,7 +35,7 @@ Feature: Editing Components
         When I click on component "xxxx" button
         Then I should be on the "status report" page
 
-    Scenario: Changing status
+    Scenario: Changing status from pass to fail
         When I click on component "xxxx" button
         Then I should be on the "status report" page
         And I should see "PASS"
@@ -45,8 +45,34 @@ Feature: Editing Components
         When I select some failing reasons
         And I click the save button
         Then I should see "Update Successful"
-        When I click the close icon
+        When I click on the close icon
         Then the component "xxxx" button colour should be "red"
+
+    Scenario: Changing status from fail to pass
+        When I click on component "yyyy" button
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
+        When I click on the take photo button "5" times
+        And I click on the right arrow button
+        Then I should be on the "photo review" page
+        Given I click on the fail button
+        And I click on the proceed button
+        Then I should see "Fail Reason(s)"
+        When I select some failing reasons
+        And I click on the upload button
+        Then I should see "Upload Successful"
+        When I click on the close icon
+        Then the component "yyyy" button colour should be "red"
+        When I click on component "yyyy" button
+        Then I should be on the "status report" page
+        And I should see "FAIL"
+        When I click on the edit button
+        And I click on the change status button
+        And I click the save button
+        Then I should see "Update Successful"
+        When I click on the close icon
+        Then the component "yyyy" button colour should be "green"
 
     Scenario: Updating photos
         When I click on component "xxxx" button
@@ -54,17 +80,18 @@ Feature: Editing Components
         Then I should see "PASS"
         And I click on the edit button
         And I click on the add photo button
-        And I click on camera button
-        Then I should be on the "camera" page
+        Then I should see camera or upload
+        When I choose "camera" from the options
+        Then my camera should open
         When I click on the take photo button "3" times
         And I click on the right arrow button
         Then I should be on the "status report" page
         And I should see "8" photos in the carousel
-        When I click on the delete photo button "2" times
+        When I click on the delete button "2" times
         Then I should see "6" photos in the carousel
         When I click the save button
         Then I should see "Update Successful"
-        When I click the close icon
+        When I click on the close icon
         Then the component "xxxx" button colour should be "green"
         When I click on component "xxxx" button
         Then I should be on the "status report" page

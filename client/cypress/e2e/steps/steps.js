@@ -24,7 +24,9 @@ When('I go to the {string} page with saved progress', (pageDescription) => {
     });
 });
 And('I should be on the {string} page', (pageDescription) => {
-    cy.url().should('eq', buildRoute(pageDescription));
+    // cy.url().should('eq', buildRoute(pageDescription));
+    const startingMatcher = new RegExp('^' + buildRoute(pageDescription));
+    cy.url().should('match', startingMatcher);
 });
 
 // general helpers
@@ -132,6 +134,11 @@ When('I am viewing a photo', () => {
 })
 And('I click on the delete button', () => {
     cy.get('.photo-review-delete-btn').click();
+});
+And('I click on the delete button {string} times', (times) => {
+    for (let i = 0; i < +times; i++) {
+        cy.get('.photo-review-delete-btn').click();
+    }
 });
 Then('the photo is removed from the carousel', () => {
 
@@ -315,6 +322,9 @@ Then('the component {string} button colour should be {string}', (componentName, 
         case 'yellow':
             backgroundColor = 'rgb(255, 249, 219)';
             break;
+        case 'blue':
+            backgroundColor = 'rgb(231, 245, 255)';
+            break;
     }
     cy.get(componentButtonClass).should('have.css', 'background-color', backgroundColor);
 })
@@ -343,17 +353,27 @@ And('I click on the upload button', () => {
     //         fixture: 'pass-fail/image-batch-create.json'
     //     })
     // }).as('images-batch-create');
+    cy.intercept('GET', 'workorders?workorder_number=**').as('workorders');
+    cy.intercept('POST', 'components').as('components');
+    cy.intercept('POST', 'images/batch').as('images-batch-create');
     cy.get('.upload-btn').click();
-    // cy.wait('@workorders');
-    // cy.wait('@components');
-    // cy.wait('@images-batch-create');
+    cy.wait('@workorders');
+    cy.wait('@components');
+    cy.wait('@images-batch-create');
 })
 When('I select some failing reasons', () => {
-    cy.get(`input[placeholder="Scroll to Add Reasons"]`).click(); // click the select field to reveal dropdown
-    cy.get('.mantine-Select-item').each((item, index) => {
-        const randomNum = generateRandIntEndsInclusive(0, 1); // randomly decide to select this reason or not
-        if (randomNum === 1 || index === 0) cy.wrap(item).click(); // always select the first reason (ensures at least 1 reason selected)
-    })
+    const clickSelectInput = () => {
+        cy.get(`input[placeholder="Scroll to Add Reasons"]`).click();
+    }
+    clickSelectInput(); // click the select field to reveal dropdown
+    cy.get('.mantine-Select-item').then($els => {
+        const numberFailingReasons = $els.length;
+        for (let i = 0; i < numberFailingReasons; i++) {
+            clickSelectInput(); // always reveal dropdown before selecting, because upon previous selection the dropdown closes
+            const randomNum = generateRandIntEndsInclusive(0, 1); 
+            if (randomNum === 1 || i === 0) cy.get('.mantine-Select-item').first().click(); //guarantee at least 1 reason (first reason)
+        }
+    });
 })
 When('I select {string} failing reasons', (number) => {
     let counter = number;
@@ -421,6 +441,23 @@ And('I show a {string} work order QR code', (validOrInvalid) => {
     })
 })
 // ------------- drafts.feature ---------------
+When('I open the navbar', () => {
+    cy.get('.navbar-btn').click();
+})
+And('I close the navbar', () => {
+    cy.get('.mantine-Drawer-closeButton').click();
+})
+And('I select another work order other than {string}', (exludedWorkorder) => {
+    cy.wait(2000);
+    cy.get('.list-drafts-btn').click();
+    let alreadyClicked = false;
+    cy.get(`.draft-workorder-btn:not([data-workorder-number="${exludedWorkorder}"])`).each(item => {
+        if (!alreadyClicked) {
+            cy.wrap(item).click();
+            alreadyClicked = true;
+        }
+    })
+})
 
 // ------------- editing.feature -------------------
 When('I click on the "Continue" button', () => {
