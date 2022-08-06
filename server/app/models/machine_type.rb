@@ -5,7 +5,12 @@ class MachineType < ApplicationRecord
   validates :type_name, uniqueness: true
 
   after_save do
-    self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
+    if ComponentType.all.empty?
+      self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
+    else
+      self.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    end
+
   end
 
   before_save do
