@@ -4,6 +4,19 @@ class MachineType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
+  after_save do
+    if ComponentType.find_one_by_type_name("Label").nil? or ComponentType.find_one_by_type_name("Wire").nil?
+      self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
+      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    else
+      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    end
+
+  end
+
+  before_save do
+    self.type_name = type_name.upcase
+  end
 
   # def self.get_all_machine_types_for_component_type(component_type_id)
   #   MachineType.find_by(component_type_id: component_type_id)
@@ -37,16 +50,16 @@ class MachineType < ApplicationRecord
   end
 
   def self.get_all_component_types_from_type(machine_type_name)
-    @machine_type = MachineType.find_by(type_name: machine_type_name)
+    @machine_type = MachineType.find_by(type_name: machine_type_name.upcase)
     @machine_type.component_types
   end
 
   def self.find_one_by_type_name(machine_type_name)
-    MachineType.find_by(type_name: machine_type_name)
+    MachineType.find_by(type_name: machine_type_name.upcase)
   end
 
   def self.create_record(machine_type_name)
-    MachineType.create(type_name: machine_type_name)
+    MachineType.create(type_name: machine_type_name.upcase)
   end
 
   def self.find_one(machine_type_id)

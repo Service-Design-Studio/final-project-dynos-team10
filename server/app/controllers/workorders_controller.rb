@@ -5,19 +5,26 @@ class WorkordersController < ApplicationController
     def index
         # /workorders?workorder_number=
         workorder_number = params[:workorder_number]
+
+        all_workorders = Workorder.find_all
+
+        # render json: success_json(all_workorders)
+
         unless workorder_number.nil?
-            workorder_record = Workorder.find_one_by_workorder_number(workorder_number)
-            if workorder_record.nil?
+            workorder_record = Workorder.search_by_workorder_number(workorder_number)
+            if workorder_record.empty?
                 begin
+                    puts workorder_record.errors
                     errors = workorder_record.errors
                 rescue NoMethodError
                     errors = "Workorder does not exist"
                 end
-                render json: fail_json(errors: errors, data: workorder_record), status: :unprocessable_entity
+                # render json: fail_json(errors: errors, data: workorder_record), status: :unprocessable_entity
             else
-                render json: success_json(workorder_record)
+                # render json: success_json(workorder_record)
             end
-            return
+        else
+            workorder_record = all_workorders
         end
         # /workorders?page=
         page_number = params[:page]
@@ -25,15 +32,26 @@ class WorkordersController < ApplicationController
             get_category = params[:completed]
             unless get_category.nil?
                 get_completed = get_category.to_i == 1
-                render json: success_json(Workorder.find_completed_incomplete_paginated(page_number, get_completed))
-                return
+                page_completion = Workorder.find_completed_incomplete_paginated(page_number, get_completed)
+                # render json: success_json(Workorder.find_completed_incomplete_paginated(page_number, get_completed))
+                # return
+            else
+                page_completion = Workorder.find_paginated(page_number)
             end
-            render json: success_json(Workorder.find_paginated(page_number))
-            return
+            # render json: success_json(Workorder.find_paginated(page_number))
+        else
+            page_completion = all_workorders
         end
-        # /workorders
-        all_workorders = Workorder.find_all
-        render json: success_json(all_workorders)
+
+        results = workorder_record.merge(page_completion)
+        query_results = all_workorders.merge(results)
+
+        if query_results.empty?
+            render json: fail_json(errors: errors, data: query_results), status: :unprocessable_entity
+        else
+            render json: success_json(query_results)
+        end
+
     end
 
     def create

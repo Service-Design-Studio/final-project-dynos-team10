@@ -132,6 +132,7 @@ export default function Layout() {
                                 <Button
                                 color="dark"
                                 variant="subtle"
+                                className="list-drafts-btn"
                                 >
                                     Drafts
                                 </Button>}
@@ -197,7 +198,13 @@ export default function Layout() {
         const { workorder_number: workorderNumber } = workorder;
        
         return (
-            <Button fullWidth color="dark" variant="subtle" onClick={() => commitSelectedWorkorder(workorderNumber)} >
+            <Button
+                data-workorder-number={workorderNumber}
+                className="draft-workorder-btn"
+                fullWidth color="dark"
+                variant="subtle"
+                onClick={() => commitSelectedWorkorder(workorderNumber)}
+            >
                 {workorderNumber}
             </Button>
         )
@@ -255,6 +262,7 @@ export default function Layout() {
                                     size="sm"
                                     color={theme.colors.gray[6]}
                                     mr="sm"
+                                    className="navbar-btn"
                                     />
                             </MediaQuery>
 

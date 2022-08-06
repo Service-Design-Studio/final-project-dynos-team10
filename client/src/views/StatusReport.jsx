@@ -270,7 +270,9 @@ function StatusReport() {
                         href="#" 
                         variant="outline" 
                         onClick={() => setOptionsModal(true)} 
-                        leftIcon={<BsCameraFill size={18}/>}>
+                        leftIcon={<BsCameraFill size={18}/>}
+                        className="add-photo"
+                    >
                         Add Photo
                     </Button>
                     <Button 
@@ -279,7 +281,9 @@ function StatusReport() {
                         href="#" 
                         variant="outline" 
                         onClick={deleteActivePhoto} 
-                        leftIcon={<IoTrashSharp size={18}/>}>
+                        leftIcon={<IoTrashSharp size={18}/>}
+                        className="photo-review-delete-btn"
+                    >
                         Delete Photo
                     </Button>
                 </div>

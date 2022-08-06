@@ -20,7 +20,7 @@ export const getWorkorder = async (workorderId) => {
  */
 export const getMachineType = async(machine_type_id) => {
     let response = await $axios.get(`machine_types/${machine_type_id}`);
-    console.log(response);
+    // console.log(response);
     return response.data.result.type_name;
 }
 
@@ -37,14 +37,20 @@ export const getComponentType = async(component_type_id) => {
  */
 export const getWorkorderComponents = async (workorderId) => {
     let response = await $axios.get(`workorders/${workorderId}/components`);
-    console.log(response);
+    // console.log(response);
     return response.data.result;
 }
 
 export const getComponentImages = async (componentId) => {
     let response = await $axios.get(`components/${componentId}/images`);
-    console.log(response);
+    // console.log(response);
     return response.data.result;
+}
+
+export const getComponentFailReasons = async (component_type_id) => {
+    let response = await $axios.get(`component_types/${component_type_id}`);
+    console.log(response);
+    return response.data.result.failing_reasons_types;
 }
 
 /**
@@ -57,10 +63,11 @@ export const getFullWorkorder = async (workorderId) => {
     
     const machineType = await getMachineType(machine_type_id);
     const componentsRaw = await getWorkorderComponents(id);
+    console.log(componentsRaw)
     const components = await Promise.all(componentsRaw.map(async(el) => ({
         id: el.id,
         status: el.status,
-        failingReasons: el.failing_reasons,
+        failingReasons: await getComponentFailReasons(el.component_type_id),
         componentType: await getComponentType(el.component_type_id),
         images: await getComponentImages(el.id)
     })))

@@ -36,27 +36,46 @@ const getMachineType = async (pool, machineTypeId) => {
     return await pool('machine_types').where('id', machineTypeId).select('id', 'type_name').limit(1);
 }
 const getComponents = async (pool, workorderId) => {
-    return await pool('components').where('workorder_id', workorderId).select('id', 'status', 'failing_reasons');
+    return await pool('components').where('workorder_id', workorderId).select('id', 'status');
 }
+const getComponentFailingReasons = async (pool, componentId) => {
+    let failing_reasons_type_ids = await pool('components_failing_reasons_types').where('component_id', componentId).select('failing_reasons_type_id');
+    failing_reasons_type_ids = failing_reasons_type_ids.map(el => +el.failing_reasons_type_id);
+    // console.log({failing_reasons_type_ids});
+    return await pool('failing_reasons_types').whereIn('id', failing_reasons_type_ids).select('id', 'reason');
+} 
 // --------------------------------------------------
 
-const transformFailingReasons = (workorderFailingReasons) => {
+const getTransformedFailingReasons = async (pool, componentIds) => {
     // for now, failingReasons is string[][], but will eventually be FailingReason[][] as its own model
     // might not be the most efficient way to count occurences
     const occurenceMap = {};
-    workorderFailingReasons.forEach(componentFailingReasons => {
-        if (componentFailingReasons && componentFailingReasons.length > 0) {
-            componentFailingReasons.forEach(failingReason => {
-                occurenceMap[failingReason] = (occurenceMap[failingReason] || 0) + 1;
-            })
-        }
-    })
+    for (const componentId of componentIds) {
+        const componentFailingReasons = await getComponentFailingReasons(pool, componentId);
+        console.log({componentFailingReasons});
+        componentFailingReasons.forEach(failingReason => {
+            const id = +failingReason.id;
+            let updatedObj;
+            if (id in occurenceMap) {
+                updatedObj = {
+                    reason: failingReason.reason,
+                    number: occurenceMap[id].number + 1
+                }
+            } else {
+                updatedObj = {
+                    reason: failingReason.reason,
+                    number: 1
+                }
+            }
+            occurenceMap[id] = updatedObj;
+        })
+    }
     const transformed = [];
-    for (const [failingReasonCategory, occurences] of Object.entries(occurenceMap)) {
+    for (const [failingReasonId, occurence] of Object.entries(occurenceMap)) {
         transformed.push({
-            // id: null, // for now no id, until there is a FailingReason model
-            name: failingReasonCategory,
-            occurences
+            id: failingReasonId,
+            name: occurence.reason,
+            occurences: occurence.number
         })
     }
     return transformed;
@@ -108,7 +127,7 @@ exports.workordersEtl = async (message, context) => {
 
         const { type_name: machine_type_name } = (await getMachineType(pool, machine_type_id))[0];
         const components = await getComponents(pool, workorder_id);
-        const processedFailingReasons = transformFailingReasons(components.map(el => el.failing_reasons));
+        const processedFailingReasons = await getTransformedFailingReasons(pool, components.map(el => el.id));
         
         // ----------- TRANSFORM ---------------
         const rowData = {
