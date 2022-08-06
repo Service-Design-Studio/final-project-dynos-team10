@@ -59,13 +59,19 @@ class ComponentTypesController < ApplicationController
 
  def destroy
    @component_type = ComponentType.find(params[:id])
-   machine_types = ComponentType.get_all_machine_types_from_id(@component_type.id)
-   machine_types.each do |machine_type|
-     ComponentType.remove_machine_type(machine_type.id,@component_type.id)
+   unless @component_type.type_name == "Label" or @component_type.type_name == "Wire"
+     machine_types = ComponentType.get_all_machine_types_from_id(@component_type.id)
+     machine_types.each do |machine_type|
+       ComponentType.remove_machine_type(machine_type.id,@component_type.id)
+     end
+     @component_type.save
+     @component_type.destroy
+     render json: success_json(@component_type)
+   else
+     errors = "Cannot delete component type "+@component_type.type_name
+     render json: fail_json(errors: errors, data: @component_type), status: :unprocessable_entity
    end
-   @component_type.save
-   @component_type.destroy
-   render json: success_json(@component_type)
+
  end
 
  def get_count
