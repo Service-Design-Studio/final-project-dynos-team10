@@ -4,6 +4,10 @@ class MachineType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
+  after_save do
+    self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
+  end
+
 
   # def self.get_all_machine_types_for_component_type(component_type_id)
   #   MachineType.find_by(component_type_id: component_type_id)
