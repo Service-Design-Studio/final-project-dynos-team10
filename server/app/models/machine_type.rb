@@ -6,11 +6,9 @@ class MachineType < ApplicationRecord
 
   after_save do
     if ComponentType.all.empty?
-      puts ComponentType.all.empty?
       self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
-      puts ComponentType.all.empty?
-    else
 
+    else
       MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
     end
 
