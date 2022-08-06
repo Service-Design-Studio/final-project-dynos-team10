@@ -6,7 +6,7 @@ class ComponentType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
-  before_save do
+  after_initialize do
     self.type_name = type_name.titleize
   end
 
@@ -38,10 +38,14 @@ class ComponentType < ApplicationRecord
 
   def self.update_machine_types(component_type_id,machine_type_ids)
     @comp_type = ComponentType.find_by(id: component_type_id)
-    @comp_type.machine_types.clear
-    machine_type_ids.each do |machine_type_id|
-      ComponentType.add_machine_type(machine_type_id,component_type_id)
+    unless @comp_type.type_name == "Label" or @comp_type.type_name == "Wire"
+      @comp_type.machine_types.clear
+      machine_type_ids.each do |machine_type_id|
+        ComponentType.add_machine_type(machine_type_id,component_type_id)
+      end
+
     end
+
   end
 
 
@@ -69,6 +73,7 @@ class ComponentType < ApplicationRecord
   def self.get_one_components(component_type_id)
     ComponentType.find_by(id: component_type_id).components
   end
+
 
   def self.find_all
     ComponentType.all
