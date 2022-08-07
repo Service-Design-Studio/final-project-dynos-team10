@@ -11,7 +11,7 @@ class FailingReasonsTypesController < ApplicationController
     # failing_reasons_type = FailingReasonsType.create_record reason, component_type_id
     failing_reasons_type = FailingReasonsType.create_record reason
     if failing_reasons_type.id.nil?
-      render json: fail_json(errors: failing_reasons_type.errors)
+      render json: fail_json(errors: failing_reasons_type.errors) , status: :unprocessable_entity
       return
     end
     render json: success_json(failing_reasons_type)

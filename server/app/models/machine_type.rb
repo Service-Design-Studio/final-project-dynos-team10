@@ -5,13 +5,30 @@ class MachineType < ApplicationRecord
   validates :type_name, uniqueness: true
 
   after_save do
-    if ComponentType.find_one_by_type_name("Label").nil? or ComponentType.find_one_by_type_name("Wire").nil?
-      self.component_types.create([{type_name: "label"}, {type_name: "wire"}])
-      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
-    else
-      MachineType.update_component_types(self.id,[ComponentType.find_one_by_type_name("Label").id,ComponentType.find_one_by_type_name("Wire").id])
+    if ComponentType.find_one_by_type_name("Label").nil?
+      # puts "label doesnt exist"
+      # puts self.type_name
+      # puts ComponentType.all
+      self.component_types.create_record("label")
     end
+    if  ComponentType.find_one_by_type_name("Wire").nil?
+      # puts "wire doesnt exist"
+      # puts self.type_name
+      #
+      # puts ComponentType.all
+      self.component_types.create_record("wire")
+    end
+    # puts self.type_name
+    # puts self.id
+    # puts ComponentType.find_one_by_type_name("Label").id
 
+    MachineType.add_component_type(self.id,ComponentType.find_one_by_type_name("Label").id)
+    MachineType.add_component_type(self.id,ComponentType.find_one_by_type_name("Wire").id)
+
+  end
+
+  after_initialize do
+    self.type_name = type_name.upcase
   end
 
   before_save do
@@ -23,10 +40,14 @@ class MachineType < ApplicationRecord
   # end
 
   def self.add_component_type(machine_type_id,component_type_id)
+    # puts "inside add"
     @comp_type = ComponentType.find_by(id: component_type_id)
     @machine_type = MachineType.find_by(id: machine_type_id)
     @machine_type.component_types.push(@comp_type) unless @machine_type.component_types.include?(@comp_type)
     @comp_type.machine_types.push(@machine_type) unless @comp_type.machine_types.include?(@machine_type)
+    # puts @comp_type.type_name
+    # puts @machine_type.type_name
+    # puts @machine_type.component_types
   end
 
   def self.remove_component_type(machine_type_id,component_type_id)
@@ -42,6 +63,7 @@ class MachineType < ApplicationRecord
     component_type_ids.each do |component_type_id|
       MachineType.add_component_type(machine_type_id,component_type_id)
     end
+    @machine_type.save
   end
 
   def self.get_all_component_types_from_id(machine_type_id)
