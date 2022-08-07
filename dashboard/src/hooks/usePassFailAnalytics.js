@@ -5,29 +5,8 @@ import { $functionsAxios } from '../helpers/axiosHelper';
 import { useMantineTheme } from '@mantine/core';
 
 export default function usePassFailAnalytics(numDays=1) {
-    const [viewingWorkorders, setViewingWorkorders] = useState([]);
     const theme = useMantineTheme();
-
-    // should this be done via cloud functions or here?
-    const binaryCategorisedWorkorders = useMemo(() => {
-        const categorised = [
-            {label: 'Passed', workorders: []},
-            {label: 'Failed', workorders: []}
-        ]
-        for (const workorder of viewingWorkorders) {
-            if (workorder.passed) {
-                categorised[0].workorders.push(workorder);
-            } else {
-                categorised[1].workorders.push(workorder);
-            }
-        }
-        
-        // count occurences
-        categorised.forEach((category, i) => {
-            categorised[i].occurences = category.workorders.length;
-        })
-        return categorised
-    }, [viewingWorkorders])
+    const [binaryCategorisedWorkorders, setBinaryCategorisedWorkorders] = useState([]);
 
     const getPreviousDaysWorkorders = async (numDays=1) => {
         const now = new Date();
@@ -42,8 +21,8 @@ export default function usePassFailAnalytics(numDays=1) {
     useEffect(() => {
         (async() => {
             const result = await getPreviousDaysWorkorders(numDays);
-            console.log(result.data[0]);
-            setViewingWorkorders(result.data[0]);
+            console.log(result.data);
+            setBinaryCategorisedWorkorders(result.data);
         })()
     }, [])
 
@@ -57,5 +36,6 @@ export default function usePassFailAnalytics(numDays=1) {
 
     const valueAccessorFunction = d => d.occurences;
 
-    return { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders };
+    // return { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders };
+    return { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction };
 }
