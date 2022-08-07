@@ -23,7 +23,7 @@ function ComponentStatus() {
             let response;
             try {
                 response = await $axios.get(`workorders?workorder_number=${workorderNumber}`);
-                const machineTypeId = response.data.result.machine_type_id;
+                const machineTypeId = response.data.result[0].machine_type_id;
                 response = await $axios.get(`machine_types/${machineTypeId}/component_types`);
                 setComponentTypes(response.data.result)
             } catch (e) {
@@ -75,7 +75,7 @@ function ComponentStatus() {
                 // 2) get components (that have been added ALREADY)
                 // TODO: for now, component records are committed to DB at point of upload, along with imges
                 // when we do custom component adding, proboably need to change component creation at that point instead, and move creation of DEFAULT components there as well
-                const workorderId = response.data.result.id;
+                const workorderId = response.data.result[0].id;
                 response = await $axios.get(`workorders/${workorderId}/components`);
                 const componentIds = response.data.result.map(el => el.id);
                 // console.log({componentIds});
@@ -136,7 +136,7 @@ function ComponentStatus() {
             // 1) get workorder id, also checks if it is valid
             response = await $axios.get(`workorders?workorder_number=${workorderNumber}`);
             // 2) get components (that have been added ALREADY)
-            const workorderId = response.data.result.id;
+            const workorderId = response.data.result[0].id;
             response = await $axios.get(`workorders/${workorderId}`);
             const components = response.data.result;
             // console.log({components});

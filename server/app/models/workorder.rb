@@ -12,12 +12,15 @@ class Workorder < ApplicationRecord
         Workorder.create(workorder_number: workorder_number, machine_type_id: machine_type_id)
     end
 
-    def self.find_paginated(page_number)
-        Workorder.order(id: :desc).page page_number
+    def self.get_paginated(records, page_number, res_per_page)
+        unless res_per_page.nil?
+            return records.page(page_number).per(res_per_page.to_i)
+        end
+        records.page page_number
     end
 
-    def self.find_completed_incomplete_paginated(page_number, completed)
-        Workorder.where(["completed = ?", completed]).order(id: :desc).page page_number
+    def self.find_completed_incomplete(records, completed)
+        records.where(["completed = ?", completed])
     end
 
     def self.find_all
@@ -34,10 +37,6 @@ class Workorder < ApplicationRecord
 
     def self.get_count
         Workorder.count
-    end
-
-    def self.get_completed_incomplete_count(completed)
-        Workorder.where(["completed = ?", completed]).count
     end
 
     def self.get_one_components(workorder_id)

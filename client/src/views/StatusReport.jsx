@@ -164,7 +164,7 @@ function StatusReport() {
         try {
             const { data: response } = await $axios.get(`workorders?workorder_number=${currentWorkorderNumber}`);
             console.log({response});
-            return response.result.id;
+            return response.result[0].id;
         } catch(e) {
             console.error(e);
             console.log('cannot find current workorder');
