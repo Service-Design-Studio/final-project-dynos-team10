@@ -47,7 +47,12 @@ export const getComponentImages = async (componentId) => {
     return response.data.result;
 }
 
-export const getComponentFailReasons = async (component_type_id) => {
+export const getComponentFailReasons = async (componentId) => {
+    let response = await $axios.get(`components/${componentId}`);
+    return response.data.result.failing_reasons_types;
+}
+
+export const getComponentFailReasonsTypes = async (component_type_id) => {
     let response = await $axios.get(`component_types/${component_type_id}`);
     console.log(response);
     return response.data.result.failing_reasons_types;
@@ -67,7 +72,7 @@ export const getFullWorkorder = async (workorderId) => {
     const components = await Promise.all(componentsRaw.map(async(el) => ({
         id: el.id,
         status: el.status,
-        failingReasons: await getComponentFailReasons(el.component_type_id),
+        failingReasons: await getComponentFailReasons(el.id),
         componentType: await getComponentType(el.component_type_id),
         images: await getComponentImages(el.id)
     })))

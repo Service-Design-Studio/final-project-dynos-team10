@@ -5,7 +5,7 @@ Feature: New Work Order
     Scenario: SAD PATH: Starting a new work order that already exists
         Given I am on the "qc entry" page
         Then I fill in the input field for "MACHINE S/N" with "test"
-        And I select "m1" for machine type
+        And I select "M1" for machine type
         When I click on the next button, expecting success
         Then I should see "workorder number is taken"
         And I should be on the "qc entry" page
@@ -13,7 +13,7 @@ Feature: New Work Order
     Scenario: Starting a new and unqiue work order
         Given I am on the "qc entry" page
         Then I fill in the input field for "MACHINE S/N" with unique input
-        And I select "m1" for machine type
+        And I select "M1" for machine type
         When I click on the next button, expecting success
         Then I should be on the "status of components" page
 
@@ -26,7 +26,7 @@ Feature: New Work Order
 
     Scenario: SAD PATH: Starting a new work order with machine s/n not filled in
         Given I am on the "qc entry" page
-        Then I select "m1" for machine type
+        Then I select "M1" for machine type
         When I click on the next button
         Then I should see "Serial number is required"
         And I should be on the "qc entry" page
