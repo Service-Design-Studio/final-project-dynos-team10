@@ -8,7 +8,7 @@
 
 machine_types = [{type_name:"m1"},{type_name:"m2"},{type_name:"m3"},{type_name:"m4"}]
 
-component_types = [{type_name:"label"},{type_name:"wire"},{type_name:"xxxx"},{type_name:"yyyy"}]
+component_types = [{type_name:"xxxx"},{type_name:"yyyy"}]
 
 workorders =[{:workorder_number => "WO1", :machine_type_id => 1},
              {:workorder_number => "WO2", :machine_type_id => 1},
@@ -38,7 +38,10 @@ images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dy
 failing_reasons_types = [{:reason => "crumpled"},{:reason => "scribbles"},{:reason => "missing color"}]
 
 machine_types.each do |machine_type|
+  # puts "i am creating this type"
+  # puts machine_type
   MachineType.create!(machine_type)
+  # puts "i am done "
 end
 
 component_types.each do |component_type|
