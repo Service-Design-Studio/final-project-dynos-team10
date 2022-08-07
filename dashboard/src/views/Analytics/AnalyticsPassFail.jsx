@@ -130,7 +130,7 @@ export default function AnalyticsPassFail() {
                 
                 <Box style={{margin: "2rem 0 2rem"}}>
                     <h3 style={{margin: 0}}>Select number of days</h3>
-                    <p style={{margin: 0}}>e.g. 1: past 24 hours <br></br> e.g. 2: past 48 hours</p>
+                    <p style={{margin: 0}}> Examples: <br></br> 1: past 24 hours <br></br> 2: past 48 hours</p>
                     <Slider
                         label={(val) => MARKS.find((mark) => mark.value === val).label}
                         defaultValue={0}

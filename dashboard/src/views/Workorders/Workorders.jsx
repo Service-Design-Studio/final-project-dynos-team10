@@ -1,8 +1,8 @@
 import { $axios } from '../../helpers/axiosHelper';
 import { useEffect, useState, useMemo } from "react"
 import { getCompletedWorkorders, getFullWorkorder } from "../../helpers/workorderHelper"
-
-
+import { debounce } from 'lodash';
+import React, { useCallback } from 'react';
 import { 
     TextInput, 
     Checkbox, 
@@ -35,9 +35,9 @@ export default function Workorders() {
     const [workordersTotal, setWorkordersTotal] = useState(); // total number of workorders completed
     const [currentPage, setCurrentPage] = useState(1); // page number starts from 1 not 0
     const [filterStatus, setFilterStatus] = useState("Passed")
-    const RESULTS_PER_PAGE = 5; 
+    const RESULTS_PER_PAGE = 10; 
 
-    const numPages = useMemo(() => {
+    const numPages = useMemo(() => { // calculate number of pages
         let pages = Math.floor(workordersTotal/RESULTS_PER_PAGE);
         if (workordersTotal % RESULTS_PER_PAGE !== 0) {
             pages += 1;
@@ -45,7 +45,7 @@ export default function Workorders() {
         return pages;
     }, [workordersTotal]);
     
-    useEffect(() => {
+    useEffect(() => { // get total number of workorders
         (async() => {
             setIsLoading(true);
             const response = await $axios.get('workorders/total?completed=1');
@@ -53,20 +53,61 @@ export default function Workorders() {
         })()
     }, [])
 
+    // if query (searched item) changes,
+    // 1. workordersTotal changes -> pagination changes
+    // 2. workorders array changes -> return table result changes
+
     useEffect(() => {
         (async() => {
-            setIsLoading(true);
-            setWorkorders(await getCompletedWorkorders(currentPage));
-            // console.log(await getCompletedWorkorders()); 
-            // workorders.map( async (el) => { // this method is bad :(
-            //     fullWorkorders.push(await getFullWorkorder(el.id));
-            // })
+            if (query.length > 0) {
+                const response = await $axios.get(`workorders/total?workorder_number=${query}&completed=1`)
+                console.log(response.data.result);
+                setWorkordersTotal(response.data.result);
+                setCurrentPage(1); // start from page 1 in pagination
+                const response_workorders = await $axios.get(`/workorders/page/${currentPage}?res_per_page=10&workorder_number=${query}&completed=1`);
+                console.log(response_workorders.data.result);
+                setWorkorders(response_workorders.data.result);
+            } else {
+                const response = await $axios.get('workorders/total?completed=1');
+                setWorkordersTotal(response.data.result);
+                setWorkorders(await getCompletedWorkorders(currentPage));
+            }
         })();
-    }, [currentPage, workordersTotal]);
+    },[query]);
 
+    // this only changes when user clicks on pagination or after refresh
+    useEffect(() => {
+        (async() => {
+            if (query.length > 0) {
+                const response = await $axios.get(`/workorders/page/${currentPage}?res_per_page=10&workorder_number=${query}&completed=1`);
+                console.log(response.data.result);
+                setWorkorders(response.data.result);
+            } else {
+                setWorkorders(await getCompletedWorkorders(currentPage));
+            }
+            
+        })();
+    }, [currentPage]);
+    
+    // useEffect(() => {
+    //     (async() => {
+    //         setIsLoading(true);
+    //         setWorkorders(await getCompletedWorkorders(currentPage));
+    //         // console.log(await getCompletedWorkorders()); 
+    //         // workorders.map( async (el) => { // this method is bad :(
+    //         //     fullWorkorders.push(await getFullWorkorder(el.id));
+    //         // })
+    //     })();
+    // }, [currentPage, workordersTotal]);
+
+    const handleSearch = debounce((text) => { 
+        setQuery(text);
+    }, 900);
+
+    // get full workorders
     useEffect(() => { 
         (async() => {
-            // console.log(workorders);
+            console.log(workorders);
             setIsLoading(true);
             let formattedWorkorders = await Promise.all(workorders.map(async (el) => {
                 return await getFullWorkorder(el.id);
@@ -76,7 +117,7 @@ export default function Workorders() {
             setIsLoading(false);
         })();
         
-    }, [workorders, workordersTotal]);
+    }, [workorders]);
 
     const form = useForm({
         initialValues: {
@@ -105,18 +146,17 @@ export default function Workorders() {
     }
 
 
-
     return (
         <div>
 
-            <Box sx={{ maxWidth: 500, alignItems: "flex-start", marginTop: "2rem"}}>
-                <form style={{ height: "4rem"}} onSubmit={form.onSubmit((values) => console.log(values))}>
+            <Box sx={{ maxWidth: 500, alignItems: "flex-start", marginTop: "1rem"}}>
+                <form style={{ height: "3.3rem"}} onSubmit={form.onSubmit((values) => console.log(values))}>
                     <TextInput
                         icon={<AiOutlineSearch size={20} stroke={1.5} />}
                         placeholder="Search"
-                        {...form.getInputProps('workorder')}
-                        value={query}
-                        onChange={(e) => {setQuery(e.target.value)}}
+                        // {...form.getInputProps('workorder')}
+                        // value={query}
+                        onChange={(e) => handleSearch(e.target.value)}
                     />
                 </form>
             </Box>
@@ -140,23 +180,14 @@ export default function Workorders() {
                             </tr>
                         </thead>
                         <tbody>{
-                            fullWorkorders.filter((el) => 
-                                el.workorderNumber.toLowerCase().includes(query.toLowerCase())
-                            ).map( (el, index) => {
+                            fullWorkorders.map(el => {
                                 return (
                                     <WorkorderRow
-                                        key={el.id} // each child in a list should have a unique key prop
+                                        key={el.id}
                                         workorder={el}
                                     />
                                 )
                             })
-                            // workorders.map(el => {
-                            //     return (
-                            //         <WorkorderRow
-                            //             workorder={el}
-                            //         />
-                            //     )
-                            // })
                         }</tbody>
                         
                     </Table>
