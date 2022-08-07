@@ -12,24 +12,32 @@ RSpec.describe "Workorders", type: :request do
       workorder12 = Workorder.create_record("WOP21",machine_type.id)
       workorder22 = Workorder.create_record("WOP23",machine_type.id)
       workorder33 = Workorder.create_record("WOP34",machine_type.id)
+      workorder4 = Workorder.create_record("W033",machine_type.id)
       get workorders_path(), params: {:workorder_number => "03", :page => 1, :completed => '0'}
-      expected_json =  {"result"=>[{"completed"=>false, "passed"=> false, "created_at"=>workorder.created_at, "id"=>workorder.id, "machine_type_id" => machine_type.id, "updated_at"=> workorder.updated_at , "user_id"=>nil, "workorder_number"=>"W03"}], "success"=>true}
+      expected_json =  {"result"=>[
+        {
+          "completed"=>false,
+          "passed"=> false,
+          "created_at"=>workorder4.created_at,
+          "id"=>workorder4.id,
+          "machine_type_id" => machine_type.id,
+          "updated_at"=> workorder4.updated_at ,
+          "user_id"=>nil,
+          "workorder_number"=>"W033"
+        },
+        {
+          "completed"=>false,
+          "passed"=> false,
+          "created_at"=>workorder.created_at,
+          "id"=>workorder.id,
+          "machine_type_id" => machine_type.id,
+          "updated_at"=> workorder.updated_at ,
+          "user_id"=>nil,
+          "workorder_number"=>"W03"
+        }
+      ], "success"=>true}
       expected_json = JSON.parse(expected_json.to_json)
       puts JSON.parse(response.body)
-      expect(JSON.parse(response.body)).to eq(expected_json)
-    end
-  end
-
-  describe "GET /search_workorder" do
-    it ' finds a workorder containing a given text in their workorder number ' do
-      machine_type = MachineType.create_record("m10")
-      workorder1 = Workorder.create_record("WOP1",machine_type.id)
-      workorder2 = Workorder.create_record("WOP2",machine_type.id)
-      workorder3 = Workorder.create_record("WOP3",machine_type.id)
-
-      get search_workorders_path(), params: {:containing => "OP"}
-      expected_json =  {"success"=>true, "result"=>[{"id"=>workorder1.id, "created_at"=>workorder1.created_at, "updated_at"=>workorder1.updated_at, "workorder_number"=>"WOP1", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false},{"id"=>workorder2.id, "created_at"=>workorder2.created_at, "updated_at"=>workorder2.updated_at, "workorder_number"=>"WOP2", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false},{"id"=>workorder3.id, "created_at"=>workorder3.created_at, "updated_at"=>workorder3.updated_at, "workorder_number"=>"WOP3", "user_id"=>nil, "machine_type_id"=>machine_type.id, "completed"=>false, "passed"=>false}]}
-      expected_json = JSON.parse(expected_json.to_json)
       expect(JSON.parse(response.body)).to eq(expected_json)
     end
   end

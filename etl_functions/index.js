@@ -176,21 +176,117 @@ exports.queryAllByDateRange = async (req, res) => {
     }
 
     const { start, end } = req.query;
-    if (!(start && end)) {
-        res.status(400).send('Missing start and end query params');
+
+    if (!!start === !!end) {
+        // if both params are either both supplied or none
+        const sqlQuery = !!start ? `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            WHERE submitted_datetime BETWEEN @start AND @end
+            ORDER BY workorder_id DESC
+        ` : `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            ORDER BY workorder_id DESC
+        `;
+        const options = {
+            query: sqlQuery,
+            location: 'asia-southeast1'
+        }
+        if (!!start) options.params = { start, end };
+
+        const response = await bigquery.query(options);
+        let results = response[0];
+
+        const categorised = [
+            {label: 'Passed', workorders: [], occurences: 0},
+            {label: 'Failed', workorders: [], occurences: 0}
+        ]
+        for (const workorder of results) {
+            if (workorder.passed) {
+                categorised[0].workorders.push(workorder);
+            } else {
+                categorised[1].workorders.push(workorder);
+            }
+        }
+        // count occurences
+        categorised.forEach((category, i) => {
+            categorised[i].occurences = category.workorders.length;
+        })
+
+        res.status(200).send(categorised);
+    } else {
+        res.status(400).send('Short of start/end query params');
+        return;
+    }
+}
+
+exports.queryAcrossMachineTypes = async (req, res) => {
+    // Set CORS headers for preflight requests
+    // Allows GETs from any origin with the Content-Type header
+    // and caches preflight response for 3600s
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        // Send response to OPTIONS requests
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
     }
 
-    const sqlQuery = `
-        SELECT *
-        FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
-        WHERE submitted_datetime BETWEEN @start AND @end
-    `
-    const options = {
-        query: sqlQuery,
-        location: 'asia-southeast1',
-        params: { start, end }
+    const { start, end, machineTypeId } = req.query;
+
+    if (!machineTypeId) {
+        res.status(400).send('Missing Machine Type ID param');
+        return;
     }
-    //const response = await bigquery.dataset(DATASET_ID).table(TABLE_ID).query(options);
-    const response = await bigquery.query(options);
-    res.status(200).send(response);
+
+    if (!!start === !!end) {
+        // if both params are either both supplied or none
+        const sqlQuery = !!start ? `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            WHERE machine_type_id = @machineTypeId
+            AND submitted_datetime BETWEEN @start AND @end
+            ORDER BY workorder_id DESC
+        ` : `
+            SELECT *
+            FROM \`tsh-qc.${DATASET_ID}.${TABLE_ID}\`
+            WHERE machine_type_id = @machineTypeId
+            ORDER BY workorder_id DESC
+        `;
+        const options = {
+            query: sqlQuery,
+            location: 'asia-southeast1',
+            params: { machineTypeId }
+        }
+        if (!!start) {
+            options.params.start = start;
+            options.params.end = end;
+        }
+
+        const response = await bigquery.query(options);
+        let results = response[0];
+
+        const categorised = [
+            {label: 'Passed', workorders: [], occurences: 0},
+            {label: 'Failed', workorders: [], occurences: 0}
+        ]
+        for (const workorder of results) {
+            if (workorder.passed) {
+                categorised[0].workorders.push(workorder);
+            } else {
+                categorised[1].workorders.push(workorder);
+            }
+        }
+        // count occurences
+        categorised.forEach((category, i) => {
+            categorised[i].occurences = category.workorders.length;
+        })
+
+        res.status(200).send(categorised);
+    } else {
+        res.status(400).send('Short of start/end query params');
+        return;
+    }
 }

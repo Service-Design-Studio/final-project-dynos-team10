@@ -48,32 +48,33 @@ function WorkorderItemBuilder(item, i, theme) {
 
 export default function AnalyticsPassFail() {
     const navigate = useNavigate();
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics(3);
+    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction } = usePassFailAnalytics(3);
     const chartSize = .3 * window.innerWidth;
 
     const workordersFormatted = useMemo(() => {
         const formatted = [];
 
-        const passedWorkorders = viewingWorkorders.filter(el => el.passed);
-        const failedWorkorders = viewingWorkorders.filter(el => !el.passed);
+        if (binaryCategorisedWorkorders.length === 0) {
+            return formatted;
+        }
 
         formatted.push({
             label: 'Passed Work Orders',
-            items: passedWorkorders.map(el => ({
+            items: binaryCategorisedWorkorders.find(el => el.label === 'Passed').workorders.map(el => ({
                 label: el.workorder_number,
                 workorder_id: el.workorder_id
             }))
         })
         formatted.push({
             label: 'Failed Work Orders',
-            items: failedWorkorders.map(el => ({
+            items: binaryCategorisedWorkorders.find(el => el.label === 'Failed').workorders.map(el => ({
                 label: el.workorder_number,
                 workorder_id: el.workorder_id
             }))
         })
 
         return formatted;
-    }, [viewingWorkorders])
+    }, [binaryCategorisedWorkorders])
 
     const handleClick = e => {
         const el = e.target.closest(`.${WORKORDER_DETAILS_BTN_CLASS}`);
