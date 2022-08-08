@@ -17,15 +17,14 @@ import os
 import numpy as np
 from PIL import Image, ImageOps
 
-import json
-from flask import Flask, redirect, render_template, request, url_for, Response, jsonify
+from flask import Flask, redirect, request, url_for
 from flask_cors import CORS
 import tensorflow
 from tensorflow.keras.models import load_model
 
-from google.cloud import datastore
-from google.cloud import storage
-from google.cloud import vision
+# from google.cloud import datastore
+# from google.cloud import storage
+# from google.cloud import vision
 from google.cloud import automl
 
 from io import BytesIO

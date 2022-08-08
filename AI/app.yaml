@@ -6,7 +6,7 @@ runtime_config:
   python_version: 3
 
 env_variables:
-  CLOUD_STORAGE_BUCKET: <your-cloud-storage-bucket>
+  CLOUD_STORAGE_BUCKET: tsh-labels
 
 manual_scaling:
   instances: 1
