@@ -57,7 +57,7 @@ function AnimatedPie({
                     hasSpaceForLabel &&
                     <animated.g style={{ opacity: props.opacity }}>
                         <text
-                            fill="white"
+                            fill="black"
                             x={centroidX}
                             y={centroidY}
                             dy=".33em"

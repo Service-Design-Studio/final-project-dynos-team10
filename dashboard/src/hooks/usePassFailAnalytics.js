@@ -21,7 +21,7 @@ export default function usePassFailAnalytics(numDays=1) {
     useEffect(() => {
         (async() => {
             const result = await getPreviousDaysWorkorders(numDays);
-            console.log(result.data);
+            // console.log(result.data);
             setBinaryCategorisedWorkorders(result.data);
         })()
     }, [])
