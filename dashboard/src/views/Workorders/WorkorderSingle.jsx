@@ -40,7 +40,6 @@ export default function WorkorderSsingle() {
         <SimpleGrid style={{ maxWidth: window.innerWidth - (2*NAVBAR_WIDTH) }} cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
             <Grid gutter="md">
                 <Grid.Col>
-                    
                     <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" />
                 </Grid.Col>
                 <Grid.Col>
