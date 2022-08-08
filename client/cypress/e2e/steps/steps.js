@@ -386,7 +386,8 @@ When('I select {string} failing reasons', (number) => {
     })
 })
 When('I click on the close icon', () => {
-    cy.get('.mantine-Modal-close').click();
+    // cy.get('.mantine-Modal-close').click();
+    cy.get('.mantine-Modal-close').first().click();
 })
 Then('I should see some failing reasons', () => {
     cy.get('.reasons-list').children().should((list) => {
@@ -490,4 +491,87 @@ And('I choose {string} image files and {string} non-image files', (numImageFiles
         }
     }
     cy.get('#contained-button-file').attachFile(files);
+})
+
+// ---- label_inspection.feature -----
+When('I click on the select this photo button', () => {
+    cy.get('.select-ai-photo-btn').click();
+})
+Then('I should see the selection modal with an image', () => {
+    cy.get('.selection-modal').should('exist');
+    cy.get('.selection-modal__img').should('exist');
+})
+When('I click on the inspect button with a {string} label photo', (labelPhotoType) => {
+    const firstCheckFixture = labelPhotoType === 'non-label' ? 'ai/first-check-fail.txt' : 'ai/first-check-pass.txt';
+    const secondCheckFixture = labelPhotoType === 'passing' ? 'ai/second-check-pass.txt' : labelPhotoType === 'failing' ? 'ai/second-check-fail.txt' : null;
+
+    cy.intercept('POST', 'first_check', req => {
+        req.reply({ fixture: firstCheckFixture })
+    }).as('firstCheck');
+    cy.intercept('POST', 'second_check', req => {
+        req.reply({ fixture: secondCheckFixture })
+    }).as('secondCheck');
+    
+
+    cy.get('.selection-modal-proceed-btn').click();
+
+    cy.wait('@firstCheck');
+    if (labelPhotoType === 'passing' || labelPhotoType === 'failing') {
+        cy.wait('@secondCheck');
+    }
+})
+When('I click on the inspect button with a {string} label photo that is going to be misidentified', (labelPhotoType) => {
+    cy.intercept('POST', 'first_check', req => {
+        req.reply({ fixture: 'ai/first-check-fail.txt' })
+    }).as('firstCheck');
+    cy.get('.selection-modal-proceed-btn').click();
+    cy.wait('@firstCheck');
+})
+// Given('I chose a {string} label photo', (labelPhotoType) => {
+//     const firstCheckFixture = labelPhotoType === 'non-label' ? 'False' : 'True';
+//     const secondCheckFixture = labelPhotoType === 'passing' ? 'CORRECT' : labelPhotoType === 'failing' ? 'TORN' : null;
+
+//     cy.intercept('POST', 'first_check', req => {
+//         req.reply({ fixture: firstCheckFixture })
+//     }).as('firstCheck');
+//     cy.intercept('POST', 'second_check', req => {
+//         req.reply({ fixture: secondCheckFixture })
+//     }).as('secondCheck');
+    
+//     cy.wait('@firstCheck');
+//     if (labelPhotoType === 'passing' || labelPhotoType === 'failing') {
+//         cy.wait('@secondCheck');
+//     }
+// })
+// Given('I chose a {string} label photo that is misidentified', (labelPhotoType) => {
+//     const secondCheckFixture = labelPhotoType === 'passing' ? 'CORRECT' : labelPhotoType === 'failing' ? 'TORN' : null;
+//     cy.intercept('POST', 'first_check', req => {
+//         req.reply({ fixture: 'False' })
+//     }).as('firstCheck');
+//     cy.intercept('POST', 'second_check', req => {
+//         req.reply({ fixture: secondCheckFixture })
+//     }).as('secondCheck');
+    
+//     cy.wait('@firstCheck');
+//     cy.wait('@secondCheck');
+// })
+When('I click on the submit button', () => {
+    cy.get('.submit-inspection-btn').click();
+})
+When('I click on the submit as {string} button', (submitType) => {
+    cy.get(`.submit-inspection-btn--${submitType}`).click();
+})
+When('I click on the dispute button', () => {
+    cy.get('.dispute-btn').click();
+})
+When('I click on the confirm dispute button, expecting a {string}', (status) => {
+    const secondCheckFixture = status === 'pass' ? 'ai/second-check-pass.txt' : 'ai/second-check-fail.txt';
+    cy.intercept('POST', 'second_check', req => {
+        req.reply({ fixture: secondCheckFixture })
+    }).as('secondCheck');
+    cy.get('.confirm-dispute-btn').click();
+    cy.wait('@secondCheck');
+})
+Then('I should see the dispute modal', () => {
+    cy.get('.dispute-modal').should('exist');
 })

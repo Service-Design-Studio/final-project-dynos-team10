@@ -270,6 +270,7 @@ export default function LabelResult() {
                 onClose={() => setDisputeModalOpened(false)}
                 title="Dispute Result"
                 centered
+                className="dispute-modal"
             >
                 <Text weight={500}>Why are you seeing this?</Text>
                     <List my="md">
@@ -287,7 +288,7 @@ export default function LabelResult() {
                         </List.Item>
                     </List>
                     
-                    <Button color="red" onClick={proceedWithDispute}>Confirm Dispute</Button>
+                    <Button color="red" onClick={proceedWithDispute} className="confirm-dispute-btn">Confirm Dispute</Button>
 
             </Modal>
         )
@@ -349,10 +350,11 @@ export default function LabelResult() {
                             mt="sm"
                             color="red"
                             onClick={() => setDisputeModalOpened(true)}
+                            className="dispute-btn"
                         >
                             Dispute
                         </Button>
-                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit</Button>
+                        <Button className="submit-inspection-btn" loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit</Button>
                     </>
                 }
                 {   // label detected but with failed reasons
@@ -378,10 +380,19 @@ export default function LabelResult() {
                             color="green"
                             loading={isSubmitting}
                             onClick={() => updateComponentRecord(true)}
+                            className="submit-inspection-btn--passed"
                         >
                             Submit as Passed
                         </Button>
-                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit as Failed</Button>
+                        <Button
+                            loading={isSubmitting}
+                            onClick={() => updateComponentRecord()}
+                            mt="md"
+                            fullWidth
+                            className="submit-inspection-btn--failed"
+                        >
+                            Submit as Failed
+                        </Button>
                     </Grid>
                 }
                 {// passing
@@ -389,7 +400,7 @@ export default function LabelResult() {
                     <>
                         <Center><OutcomeIcon height={100} /></Center>
                         <ChooseAnotherPhotoButton/>
-                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit</Button>
+                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth className="submit-inspection-btn">Submit</Button>
                     </>
                 }
 

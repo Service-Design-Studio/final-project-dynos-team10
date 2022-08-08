@@ -231,7 +231,7 @@ function PhotoReview() {
                 <>
                     <Center><h4>Select 1 photo for AI inspection</h4></Center> 
                     <Center>
-                        <Button onClick={ () => setPhotoForAI(true)}>
+                        <Button onClick={ () => setPhotoForAI(true)} className="select-ai-photo-btn">
                             Select this Photo
                         </Button>
                     </Center>
@@ -242,11 +242,13 @@ function PhotoReview() {
             <Modal
                 opened={photoForAI}
                 onClose={ () => setPhotoForAI(false)}
+                className="selection-modal"
             >
 
                 <Center><h4 style={{marginTop: 0}}>Selected Photo for AI Inspection</h4></Center>
                 <Image
                     radius="md"
+                    className="selection-modal__img"
                     src={ (hasImages && currentComponent.images[activeStep].src) || null}
                 />
                 {/* <Center><h4>Send for AI Inspection?</h4></Center> */}
@@ -255,10 +257,11 @@ function PhotoReview() {
                         rightIcon={<MdOutlineClear size={16}/>} 
                         variant="outline"
                         onClick={() => setPhotoForAI(false)}
-                        >
+                        className="selection-modal-cancel-btn"
+                    >
                         Select another
                     </Button>
-                    <Button onClick={sendPhotoForInspection} rightIcon={<FaArrowRight size={14}/>}>Inspect</Button>
+                    <Button className="selection-modal-proceed-btn" onClick={sendPhotoForInspection} rightIcon={<FaArrowRight size={14}/>}>Inspect</Button>
                 </div>
 
             </Modal>

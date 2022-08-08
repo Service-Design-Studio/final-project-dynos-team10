@@ -61,6 +61,7 @@ jobs:
           install-command: npm install --legacy-peer-deps
           start: npm run start:test
           wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
           working-directory: client
           command: npm run cypress:run-record
           record: true

@@ -10,7 +10,8 @@ const descriptionToRouteMap = {
     'login': 'login',
     'drafts': 'qc-list',
     'camera': 'camera',
-    'status report': 'status-report'
+    'status report': 'status-report',
+    'label result': 'label-result'
 }
 
 /**

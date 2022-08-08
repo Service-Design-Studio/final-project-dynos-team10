@@ -8,7 +8,7 @@
 
 machine_types = [{type_name:"m1"},{type_name:"m2"},{type_name:"m3"},{type_name:"m4"}]
 
-component_types = [{type_name:"xxxx"},{type_name:"yyyy"}]
+component_types = [{type_name:"xxxx"},{type_name:"yyyy"}] # id 3 and 4. 1 and 2 taken by label and wire created on machine type creation
 
 workorders =[{:workorder_number => "WO1", :machine_type_id => 1},
              {:workorder_number => "WO2", :machine_type_id => 1},
@@ -35,7 +35,7 @@ images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dy
           {:component_id => 6, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/470a4cd7-5e3c-495b-a08f-1e098c9b9ea8.png"}]
 
 # failing_reasons_types = [{:reason => "crumpled",:component_type_id => 1},{:reason => "scribbles",:component_type_id => 1},{:reason => "missing color",:component_type_id => 2}]
-failing_reasons_types = [{:reason => "crumpled"},{:reason => "scribbles"},{:reason => "missing color"}]
+failing_reasons_types = [{:reason => "crumpled"},{:reason => "scribbles"},{:reason => "missing color"}, {:reason => "torn"}, {:reason => "handwritten"}, {:reason => "missing field"}, {:reason => "wrong position"}]
 
 machine_types.each do |machine_type|
   # puts "i am creating this type"
@@ -72,7 +72,7 @@ ComponentType.update_machine_types(2,[1,2])
 ComponentType.update_machine_types(3,[2])
 ComponentType.update_machine_types(4,[2])
 
-ComponentType.update_failing_reasons_types(1,[1,2])
+ComponentType.update_failing_reasons_types(1,[1,4,5,6,7])
 ComponentType.update_failing_reasons_types(2,[3])
 ComponentType.update_failing_reasons_types(3,[2])
 ComponentType.update_failing_reasons_types(4,[2,3])
