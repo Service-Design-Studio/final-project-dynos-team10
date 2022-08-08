@@ -6,12 +6,12 @@ class WorkordersController < ApplicationController
         # /workorders?workorder_number=
         workorder_number = params[:workorder_number]
 
-        query_results = Workorder.find_all
+        query_results = Workorder.find_all.order(id: :desc)
         errors = []
         # render json: success_json(all_workorders)
         # ------- searching --------
         unless workorder_number.nil?
-            query_results = Workorder.search_by_workorder_number(workorder_number)
+            query_results = Workorder.search_by_workorder_number query_results, workorder_number
             puts query_results
             if query_results.empty?
                 begin
@@ -116,7 +116,7 @@ class WorkordersController < ApplicationController
         end
         get_completed = get_category.to_i == 1
         completion_records = get_category.nil? ? Workorder.all : Workorder.find_completed_incomplete(Workorder.all, get_completed)
-        searched_records = search_term.nil? ? Workorder.all : Workorder.search_by_workorder_number(search_term)
+        searched_records = search_term.nil? ? Workorder.all : Workorder.search_by_workorder_number(Workorder.all, search_term)
         records = completion_records.merge(searched_records)
         render json: success_json(records.count)
     end
@@ -124,10 +124,5 @@ class WorkordersController < ApplicationController
     def get_one_components
         components = Workorder.get_one_components params[:id]
         render json: success_json(components)
-    end
-
-    def search_by_workorder_number
-        workorders = Workorder.search_by_workorder_number params[:containing]
-        render json: success_json(workorders)
     end
 end

@@ -75,7 +75,7 @@ export default function ComponentCard({componentRecord}) {
                 <Carousel
                 withIndicators>
                 {images.map((el,i) => 
-                    <Carousel.Slide>
+                    <Carousel.Slide key={i}>
                         <Image src={el.public_url} alt="Image" />
                     </Carousel.Slide>
                 )}

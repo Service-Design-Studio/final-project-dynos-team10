@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_03_101234) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_07_085511) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "component_types", force: :cascade do |t|
@@ -69,7 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_03_101234) do
   create_table "workorders", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "workorder_number"
+    t.citext "workorder_number"
     t.bigint "user_id"
     t.bigint "machine_type_id"
     t.boolean "completed", default: false

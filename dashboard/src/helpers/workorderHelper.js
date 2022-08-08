@@ -1,15 +1,16 @@
 import { $axios } from "./axiosHelper";
 
 export const getCompletedWorkorders = async (pageNum=1) => {
-    let response = await $axios.get(`workorders/page/${pageNum}?completed=1`);
+    let response = await $axios.get(`workorders/page/${pageNum}?res_per_page=10&completed=1`);
     console.log(response.data.result);
+    return (response.data.result);
 }
 
 export const getWorkorder = async (workorderId) => {
     let response = await $axios.get(`workorders/${workorderId}`);
     console.log(response);
-    const { id, completed, workorder_number: workorderNumber, user_id: userId, machine_type_id } = response.data.result;
-    return { id, completed, workorderNumber, userId, machine_type_id };
+    const { id, completed, workorder_number: workorderNumber, user_id: userId, machine_type_id, passed } = response.data.result;
+    return { id, completed, workorderNumber, userId, machine_type_id, passed};
 }
 
 /**
@@ -46,7 +47,12 @@ export const getComponentImages = async (componentId) => {
     return response.data.result;
 }
 
-export const getComponentFailReasons = async (component_type_id) => {
+export const getComponentFailReasons = async (componentId) => {
+    let response = await $axios.get(`components/${componentId}`);
+    return response.data.result.failing_reasons_types;
+}
+
+export const getComponentFailReasonsTypes = async (component_type_id) => {
     let response = await $axios.get(`component_types/${component_type_id}`);
     console.log(response);
     return response.data.result.failing_reasons_types;
@@ -58,7 +64,7 @@ export const getComponentFailReasons = async (component_type_id) => {
  * @returns {Promise<object>} a promise that resolves to an object of a workorder
  */
 export const getFullWorkorder = async (workorderId) => {
-    const { id, completed, workorderNumber, userId, machine_type_id } = await getWorkorder(workorderId);
+    const { id, completed, workorderNumber, userId, machine_type_id, passed } = await getWorkorder(workorderId);
     
     const machineType = await getMachineType(machine_type_id);
     const componentsRaw = await getWorkorderComponents(id);
@@ -66,7 +72,7 @@ export const getFullWorkorder = async (workorderId) => {
     const components = await Promise.all(componentsRaw.map(async(el) => ({
         id: el.id,
         status: el.status,
-        failingReasons: await getComponentFailReasons(el.component_type_id),
+        failingReasons: await getComponentFailReasons(el.id),
         componentType: await getComponentType(el.component_type_id),
         images: await getComponentImages(el.id)
     })))
@@ -77,7 +83,8 @@ export const getFullWorkorder = async (workorderId) => {
         workorderNumber,
         userId,
         machineType,
-        components
+        components, 
+        passed
     }
     return workorder;
 }

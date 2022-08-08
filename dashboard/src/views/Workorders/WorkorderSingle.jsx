@@ -74,7 +74,7 @@ export default function WorkorderSsingle() {
                         sx={{width: 400}}s
                         >
                             {workorder?.components.map((el, i) => 
-                                <Carousel.Slide> 
+                                <Carousel.Slide key={i}> 
                                     <Center>   
                                         <ComponentCard componentRecord={el} key={i} />
                                     </Center>

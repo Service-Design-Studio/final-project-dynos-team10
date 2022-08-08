@@ -52,8 +52,8 @@ class Workorder < ApplicationRecord
         workorder_components.length > 0 ? workorder_components.all? { |component_rec| component_rec.status } : false
     end
 
-    def self.search_by_workorder_number(containing)
-        Workorder.where("workorder_number like ?","%#{containing}%")
+    def self.search_by_workorder_number(records, containing)
+        records.where("workorder_number like ?","%#{containing}%")
     end
 
     # TODO: test whether this works

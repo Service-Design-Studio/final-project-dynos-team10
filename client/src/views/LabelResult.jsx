@@ -47,7 +47,7 @@ export default function LabelResult() {
         const chosenIndex = searchParams.get('chosenLabelPhotoIndex');
         if (chosenIndex !== null) {
             setHasChosenPhoto(true);
-            return workorderComponents.label.images[chosenIndex].src || null;
+            return workorderComponents.Label.images[chosenIndex].src || null;
         }
         setHasChosenPhoto(false);
         return null;

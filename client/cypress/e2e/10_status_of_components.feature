@@ -16,7 +16,7 @@ Feature: Components
         And I click on the new entry button
         Then I should be on the "qc entry" page
         Then I fill in the input field for "MACHINE S/N" with unique input
-        And I select "m2" for machine type
+        And I select "M2" for machine type
         When I click on the next button, expecting success
         # And I click on the drafts button
         # Then I should be on the "drafts" page
