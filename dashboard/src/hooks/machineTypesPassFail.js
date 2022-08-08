@@ -25,8 +25,8 @@ export default function machineTypePassFail() {
 
     const colourScale = scaleOrdinal({
         domain: keys,
-        range: [theme.colors.red[6],
-                theme.colors.cyan[6]]
+        range: [theme.colors.cyan[6],
+                theme.colors.red[6]]
     })
 
     const valueAccessorFunction = d => d.machine_type_name;
