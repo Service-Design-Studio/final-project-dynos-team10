@@ -14,9 +14,6 @@ export default function AnalyticsMachineTypes() {
         tempScale
     } = useMachineTypeAnalytics(1);
 
-    // THE PROBLEM: THIS READS CORRECTLY, HERE IF YOU READ machineTypeScale.bandwidth it is ok, but reading it in BarGroupChart has problems?
-    console.log({machineTypeScale});
-
     return (
         <div style={{width: 500, height: 500}}>
             <ParentSize>

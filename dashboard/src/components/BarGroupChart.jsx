@@ -1,7 +1,8 @@
 import { Group } from '@visx/group';
 import { BarGroup } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { scaleBand } from '@visx/scale';
 
 const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
 
@@ -23,12 +24,10 @@ export default function BarGroupChart({
 
     // THE PROBLEM: X0 SCALE IS NOT READ PROPERLY
     useEffect(() => {
-        console.log({x0Scale})
         x0Scale.rangeRound([0, xMax]);
-        if (x0Scale.bandwith) {
-            // PROBLEM: THIS IF BLOCK IS NEVER SATISFIED, EVEN IF YOU CHANGE THE IF BLOCK TO CHECK FOR x0Scale instead of x0Scale.bandwidth
+        if (x0Scale.bandwidth) {
             console.log('ran')
-            x1Scale.rangeRound([0, x0Scale.bandwith()]);
+            x1Scale.rangeRound([0, x0Scale.bandwidth()]);
         }
     }, [x0Scale])
     useEffect(() => {
