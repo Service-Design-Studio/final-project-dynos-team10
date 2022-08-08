@@ -1,38 +1,43 @@
 import { Group } from '@visx/group';
 import { BarGroup } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
-import { useEffect, useMemo } from 'react';
-import { scaleBand } from '@visx/scale';
+import { scaleBand, scaleLinear } from '@visx/scale';
 
 const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
+export const black = '#000000';
 
 export default function BarGroupChart({
+    width,
+    height,
     data,
     keys,
     colorScale,
-    getx0,
-    x0Scale,
-    x1Scale,
-    tempScale,
-    width,
-    height,
+    accessor,
     margin = defaultMargin
 }) {
     // bounds
     const xMax = width - margin.left - margin.right;
     const yMax = height - margin.top - margin.bottom;
 
-    // THE PROBLEM: X0 SCALE IS NOT READ PROPERLY
-    useEffect(() => {
-        x0Scale.rangeRound([0, xMax]);
-        if (x0Scale.bandwidth) {
-            console.log('ran')
-            x1Scale.rangeRound([0, x0Scale.bandwidth()]);
-        }
-    }, [x0Scale])
-    useEffect(() => {
-        if (tempScale) tempScale.range([yMax, 0]);
-    }, [tempScale])
+    const x0Scale = scaleBand({
+        domain: data.map(accessor),
+        padding: 0.2
+    })
+    const x1Scale = scaleBand({
+        domain: keys,
+        padding: 0.1
+    })
+
+    const yScale = scaleLinear({
+        domain: [0, Math.max(...data.map((d) => Math.max(...keys.map((key) => Number(d[key])))))],
+    })
+
+
+
+    x0Scale.rangeRound([0, xMax]);
+    x1Scale.rangeRound([0, x0Scale.bandwidth()]);
+    yScale.range([yMax, 0]);
+
 
     return width < 10 ? null : (
         <svg width={width} height={height}>
@@ -40,11 +45,11 @@ export default function BarGroupChart({
                 <BarGroup
                     data={data}
                     keys={keys}
-                    height={yMax}
-                    x0={getx0}
+                    height={yMax} 
+                    x0={accessor}
                     x0Scale={x0Scale}
                     x1Scale={x1Scale}
-                    yScale={tempScale}
+                    yScale={yScale}
                     color={colorScale}
                 >
                     {
@@ -69,21 +74,21 @@ export default function BarGroupChart({
                     }
                 </BarGroup>
             </Group>
-            {/* <AxisBottom
+            <AxisBottom
                 top={yMax + margin.top}
-                tickFormat={formatDate}
                 scale={x0Scale}
-                stroke={green}
-                tickStroke={green}
+                stroke={black}
+                tickStroke={black}
                 hideAxisLine
                 tickLabelProps={() => ({
-                    fill: green,
-                    fontSize: 11,
+                    fill: black,
+                    fontSize: 18,
                     textAnchor: 'middle',
                 })}
             >
 
-            </AxisBottom> */}
+            </AxisBottom>
         </svg>
     )
 }
+
