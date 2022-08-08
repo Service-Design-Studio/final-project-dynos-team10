@@ -1,20 +1,18 @@
 import { Group } from '@visx/group';
 import { BarGroup } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
-import { useEffect, useMemo } from 'react';
-import { scaleBand,scaleOrdinal, scaleLinear } from '@visx/scale';
-// import { useMantineTheme } from '@mantine/core';
+import { scaleBand, scaleLinear } from '@visx/scale';
 
 const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
-// const theme = useMantineTheme();
-export const green = '#e5fd3d';
-const blue = '#aeeef8';
+export const black = '#000000';
 
 export default function BarGroupChart({
     width,
     height,
-    // // data,
-    // // keys,
+    data,
+    keys,
+    colorScale,
+    accessor,
     // // getName,
     // colorScale,
     margin = defaultMargin
@@ -23,28 +21,11 @@ export default function BarGroupChart({
     const xMax = width - margin.left - margin.right;
     const yMax = height - margin.top - margin.bottom;
 
-    // THE PROBLEM: X0 SCALE IS NOT READ PROPERLY
-
-    const data = [{"machine_type_id":1,"machine_type_name":"MTC-SLIM","passed_count":2,"failed_count":6},
-    {"machine_type_id":2,"machine_type_name":"MTC-FAT","passed_count":4,"failed_count":1}]
-    const keys = ['passed_count', 'failed_count']
-
     //accessors
-    const valueAccessorFunction = d => d.machine_type_name;
-
-    // useEffect(() => {
-    //     x0Scale.rangeRound([0, xMax]);
-    //     if (x0Scale.bandwidth) {
-    //         console.log('ran')
-    //         x1Scale.rangeRound([0, x0Scale.bandwidth()]);
-    //     }
-    // }, [x0Scale])
-    // useEffect(() => {
-    //     if (tempScale) tempScale.range([yMax, 0]);
-    // }, [tempScale])
+    // const valueAccessorFunction = d => d.machine_type_name;
 
     const x0Scale = scaleBand({
-        domain: data.map(valueAccessorFunction),
+        domain: data.map(accessor),
         padding: 0.2
     })
     const x1Scale = scaleBand({
@@ -56,20 +37,7 @@ export default function BarGroupChart({
         domain: [0, Math.max(...data.map((d) => Math.max(...keys.map((key) => Number(d[key])))))],
     })
 
-    // const colorScale = scaleOrdinal({
-    //     domain: keys,
-    //     // range: [theme.colors.red[6],
-    //     // theme.colors.cyan[6]]
-    // })
 
-    const colorScale = scaleOrdinal({
-        domain: keys,
-        range: [blue, green]
-    })
-
-    
-    console.log(x0Scale)
-    console.log(x1Scale)
 
     x0Scale.rangeRound([0, xMax]);
     x1Scale.rangeRound([0, x0Scale.bandwidth()]);
@@ -80,10 +48,10 @@ export default function BarGroupChart({
         <svg width={width} height={height}>
             <Group top={margin.top} left={margin.left}>
                 <BarGroup
-                    data={data} //array of data [{label: , value: }]
-                    keys={keys}//['string']
+                    data={data}
+                    keys={keys}
                     height={yMax} 
-                    x0={valueAccessorFunction}
+                    x0={accessor}
                     x0Scale={x0Scale}
                     x1Scale={x1Scale}
                     yScale={yScale}
@@ -113,14 +81,13 @@ export default function BarGroupChart({
             </Group>
             <AxisBottom
                 top={yMax + margin.top}
-                // tickFormat={formatDate}
                 scale={x0Scale}
-                stroke={green}
-                tickStroke={green}
+                stroke={black}
+                tickStroke={black}
                 hideAxisLine
                 tickLabelProps={() => ({
-                    fill: green,
-                    fontSize: 11,
+                    fill: black,
+                    fontSize: 18,
                     textAnchor: 'middle',
                 })}
             >
