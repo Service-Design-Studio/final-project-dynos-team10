@@ -1,9 +1,9 @@
 import PieChart from "../../components/PieChart";
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import usePassFailAnalytics from "../../hooks/usePassFailAnalytics";
-import { Group, Button, Text } from "@mantine/core";
+import { Group, Button, Text, Slider, RangeSlider, Box } from "@mantine/core";
 import { ContentGroup } from "../../components/CollapsableContentItem";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 const WORKORDER_DETAILS_BTN_CLASS = 'view-workorder-btn';
@@ -43,37 +43,63 @@ function WorkorderItemBuilder(item, i, theme) {
                 View Details
             </Button>
         </Group>
+
     )
 }
 
 export default function AnalyticsPassFail() {
     const navigate = useNavigate();
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics(3);
+    
+    // window.addEventListener('touchstart', function(e) {
+    //     if (e.type === 'touchstart' && e.cancelable) {
+    //         e.preventDefault();
+    //         }
+    //     });
+
+    const [value, setValue] = useState(0); // value of slider
+
+      // Configure marks to match step
+    const MARKS = [
+        { value: 0, label: '1' },
+        { value: 1, label: '2' },
+        { value: 2, label: '3' },
+        { value: 3, label: '4' },
+        { value: 4, label: '5' },
+        { value: 5, label: '6' },
+        { value: 6, label: '7' },
+    ];
+
+    useEffect(() => {
+        console.log(value + 1);
+    }, [value]);
+
+    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics(value + 1);
     const chartSize = .3 * window.innerWidth;
 
     const workordersFormatted = useMemo(() => {
         const formatted = [];
 
-        const passedWorkorders = viewingWorkorders.filter(el => el.passed);
-        const failedWorkorders = viewingWorkorders.filter(el => !el.passed);
+        if (binaryCategorisedWorkorders.length === 0) {
+            return formatted;
+        }
 
         formatted.push({
             label: 'Passed Work Orders',
-            items: passedWorkorders.map(el => ({
+            items: binaryCategorisedWorkorders.find(el => el.label === 'Passed').workorders.map(el => ({
                 label: el.workorder_number,
                 workorder_id: el.workorder_id
             }))
         })
         formatted.push({
             label: 'Failed Work Orders',
-            items: failedWorkorders.map(el => ({
+            items: binaryCategorisedWorkorders.find(el => el.label === 'Failed').workorders.map(el => ({
                 label: el.workorder_number,
                 workorder_id: el.workorder_id
             }))
         })
 
         return formatted;
-    }, [viewingWorkorders])
+    }, [binaryCategorisedWorkorders])
 
     const handleClick = e => {
         const el = e.target.closest(`.${WORKORDER_DETAILS_BTN_CLASS}`);
@@ -85,7 +111,7 @@ export default function AnalyticsPassFail() {
     } 
 
     return (
-        <Group position="center" align="flex-start" style={{height: .9 * window.innerHeight}}>
+        <Group position="center" align="flex-start" style={{height: .9 * window.innerHeight, marginTop: "1rem"}}>
             <div style={{width: chartSize, height: chartSize}}>
                 <ParentSize>
                     {({ width, height }) => (
@@ -99,15 +125,37 @@ export default function AnalyticsPassFail() {
                     )}
                 </ParentSize>
             </div>
-            <div style={{ flexGrow: 1}} onClick={handleClick}>
-                {workordersFormatted.map((item, i) => (
-                    <ContentGroup
-                        key={i}
-                        {...item}
-                        customItemElBuilder={WorkorderItemBuilder}
+
+            <div>
+                
+                <Box style={{margin: "2rem 0 2rem"}}>
+                    <h3 style={{margin: 0}}>Select number of days</h3>
+                    <p style={{margin: 0}}> Examples: <br></br> 1: past 24 hours <br></br> 2: past 48 hours</p>
+                    <Slider
+                        label={(val) => MARKS.find((mark) => mark.value === val).label}
+                        defaultValue={0}
+                        step={1}
+                        marks={MARKS}
+                        max={6}
+                        onChange={setValue}
+                        style={{marginTop: "1rem"}}
                     />
-                ))}
+                </Box>
+
+                <div style={{ flexGrow: 1, width: chartSize}} onClick={handleClick}>
+                    {workordersFormatted.map((item, i) => (
+                        <ContentGroup
+                            key={i}
+                            {...item}
+                            customItemElBuilder={WorkorderItemBuilder}
+                        />
+                    ))}
+                </div>
+            
             </div>
+
         </Group>
+        
+
     )
 }

@@ -58,6 +58,7 @@ function PhotoReview() {
     const currentComponent = useSelector(selectCurrentComponent);
     const [optionsModal, setOptionsModal] = useState(false);
     const [ photoForAI, setPhotoForAI ] = useState(false);
+    const aiEnabled = useMemo(() => currentComponentName.toLowerCase() === 'label', [currentComponentName])
 
 
     const hasImages = useMemo(() => {
@@ -176,7 +177,7 @@ function PhotoReview() {
 
             </Container>
             {
-                hasImages && currentComponentName !== 'label' &&
+                hasImages && !aiEnabled &&
                 <div style={{textAlign: 'center'}}>
                     <h3 style={{ marginTop: "0.5rem"}} >Indicate Status to Proceed</h3>
 
@@ -226,7 +227,7 @@ function PhotoReview() {
 
             {/* =========================== will be displayed for label component ======================*/}
             {
-                hasImages && currentComponentName === 'label' &&
+                hasImages && aiEnabled &&
                 <>
                     <Center><h4>Select 1 photo for AI inspection</h4></Center> 
                     <Center>

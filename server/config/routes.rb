@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     get 'page/:page', action: :index, on: :collection
     get 'total', to: 'workorders#get_count', on: :collection
     get 'components', to: "workorders#get_one_components", on: :member
-    get 'search', to: "workorders#search_by_workorder_number", on: :collection
   end
 
   resources :components do

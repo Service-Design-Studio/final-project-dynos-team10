@@ -6,8 +6,12 @@ class ComponentType < ApplicationRecord
   validates :type_name, presence: true
   validates :type_name, uniqueness: true
 
+  after_initialize do
+    self.type_name = type_name.downcase.titleize
+  end
+
   before_save do
-    self.type_name = type_name.titleize
+    self.type_name = type_name.downcase.titleize
   end
 
   # def self.get_all_workorders(component_type_id)
@@ -38,10 +42,14 @@ class ComponentType < ApplicationRecord
 
   def self.update_machine_types(component_type_id,machine_type_ids)
     @comp_type = ComponentType.find_by(id: component_type_id)
-    @comp_type.machine_types.clear
-    machine_type_ids.each do |machine_type_id|
-      ComponentType.add_machine_type(machine_type_id,component_type_id)
+    unless @comp_type.type_name == "Label" or @comp_type.type_name == "Wire"
+      @comp_type.machine_types.clear
+      machine_type_ids.each do |machine_type_id|
+        ComponentType.add_machine_type(machine_type_id,component_type_id)
+      end
+
     end
+
   end
 
 
@@ -51,16 +59,16 @@ class ComponentType < ApplicationRecord
   end
 
   def self.get_all_machine_types_from_type(component_type_name)
-    @comp_type = ComponentType.find_by(type_name: component_type_name.titleize)
+    @comp_type = ComponentType.find_by(type_name: component_type_name.downcase.titleize)
     @comp_type.machine_types
   end
   
   def self.find_one_by_type_name(component_type_name)
-    ComponentType.find_by(type_name: component_type_name.titleize)
+    ComponentType.find_by(type_name: component_type_name.downcase.titleize)
   end
 
   def self.create_record(component_type_name)
-    ComponentType.create(type_name: component_type_name.titleize)
+    ComponentType.create(type_name: component_type_name.downcase.titleize)
   end
 
   def self.get_count
@@ -69,6 +77,7 @@ class ComponentType < ApplicationRecord
   def self.get_one_components(component_type_id)
     ComponentType.find_by(id: component_type_id).components
   end
+
 
   def self.find_all
     ComponentType.all
