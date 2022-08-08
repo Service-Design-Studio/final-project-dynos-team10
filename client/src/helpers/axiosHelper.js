@@ -14,5 +14,5 @@ export const $authAxios = axios.create({
 })
 
 export const $aiAxios = axios.create({
-    baseURL: 'https://dynostic-ai-oakg5bt7gq-as.a.run.app'
+    baseURL: 'https://dynostic-ai-m6urqdhhpa-as.a.run.app'
 })

@@ -19,7 +19,7 @@ import {
 } from "@mantine/core"
 
 
-function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight, componentTypeId}) {
+function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight, componentTypeId, suppliedInspectionReason}) {
     const theme = useMantineTheme();
     const [value, setValue] = useState('');
 
@@ -33,9 +33,6 @@ function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight
             })))
         })()
     }, [componentTypeId])
-    useEffect(() => {
-        console.log({allReasons});
-    }, [allReasons])
 
     // useMemo - derived state that depends on other states (something liddat)
     const notSelectedReasons = useMemo(() => {
@@ -43,15 +40,33 @@ function ReportFailReasons({editReport, reasons, setReasons, style, scrollHeight
         return allReasons.filter(x => !reasons.find(chosenReason => chosenReason.failingReasonTypeId === x.failingReasonTypeId));
     }, [allReasons, reasons])
 
-  // add one or more items to the end of the list
+    // add one or more items to the end of the list
     const selectReason = (value) => {
         // value is ID only
-        console.log({value, reasons});
+        console.log({value, reasons, allReasons});
         setValue(value);
         if (!reasons.find(chosenReason => chosenReason.failingReasonTypeId === value) && value !==null) {
             setReasons.append(allReasons.find(reason => reason.failingReasonTypeId === value)); // setReasons is in StatusReport.jsx 
         }
     }
+
+    const findInspectionReason = rawInspectionReason => {
+        // rawInspectionReason will be ALL CAPS AND DASH(-) DELIMITED
+        const formatted = rawInspectionReason.toLowerCase().split('-').join(' '); // MISSING-FIELD -> missing field
+        if (allReasons.length > 0) {
+            findAndSelectReason(formatted);
+        }
+    }
+    const findAndSelectReason = reasonLowerCase => {
+        const reasonObj = allReasons.find(reason => reason.failingReasonName.toLowerCase() === reasonLowerCase);
+        if (!reasonObj) return;
+        selectReason(reasonObj.failingReasonTypeId);
+    }
+    useEffect(() => {
+        if (allReasons.length > 0 && suppliedInspectionReason) {
+            findInspectionReason(suppliedInspectionReason);
+        }
+    }, [allReasons, suppliedInspectionReason])
 
     // remove items at given positions
     const remove = (index) => setReasons.remove(index);

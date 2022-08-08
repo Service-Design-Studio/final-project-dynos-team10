@@ -5,8 +5,7 @@ import {
     selectWorkorderComponents, 
     updateCurrentComponentName, 
     selectWorkorderNumber, 
-    selectCurrentComponent, 
-    selectCurrentComponentName 
+    selectCurrentComponent,
 } from "../store/workorder/workorderSlice";
 import { 
     Button,
@@ -41,7 +40,6 @@ export default function LabelResult() {
     const workorderComponents = useSelector(selectWorkorderComponents);
     const currentWorkorderNumber = useSelector(selectWorkorderNumber);
     const currentComponent = useSelector(selectCurrentComponent);
-    const currentComponentName = useSelector(selectCurrentComponentName);
     const [hasChosenPhoto, setHasChosenPhoto] = useState(false);
     const chosenLabelPhoto = useMemo(() => {
         const chosenIndex = searchParams.get('chosenLabelPhotoIndex');
@@ -54,10 +52,14 @@ export default function LabelResult() {
     }, [searchParams])
 
     const [gettingResults, setGettingResults] = useState(true);
-    const [noLabel, setNoLabel] = useState(true); // if noLabel == true => label status is fail / red 
+    const [noLabel, setNoLabel] = useState(true); // if noLabel == true => label status is fail / red
+    const [inspectionResult, setInspectionResult] = useState('');
+    const hasFailedInspection = useMemo(() => inspectionResult !== 'CORRECT', [inspectionResult]);
+    const overallFailed = useMemo(() => noLabel || hasFailedInspection, [noLabel, hasFailedInspection]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitModal, setSubmitModal] = useState(false);
     const OutcomeIcon = ({height}) => {
-        return noLabel ? 
+        return overallFailed ? 
             <HighlightOff style={{fontSize: height, color: theme.colors.red[6]}} /> :
             <CheckCircleOutline style={{fontSize: height, color: theme.colors.teal[6]}} />
     }
@@ -69,24 +71,41 @@ export default function LabelResult() {
         (async() => {
             if (chosenLabelPhoto !== null) {
                 setGettingResults(true);
-                // call API here
-                setTimeout(() => {
-                    setGettingResults(false);
-                    setNoLabel(true);
-                }, 1500)
     
-                let response;
-                try {
-                    response = await $aiAxios.post('prediction', {
-                        image: chosenLabelPhoto
-                    })
-                    console.log({response});
-                } catch (e) {
-                    console.error(e);
+                const firstCheckSuccessful = await firstCheck(chosenLabelPhoto);
+                console.log({firstCheckSuccessful})
+                if (!firstCheckSuccessful) {
+                    setNoLabel(true);
+                } else {
+                    setNoLabel(false);
+                    const secondCheckResult = await secondCheck(chosenLabelPhoto);
+                    setInspectionResult(secondCheckResult);
                 }
+
+                setGettingResults(false);
             }
         })()
     }, [chosenLabelPhoto])
+
+    const firstCheck = async(image) => {
+        try {
+            let response = await $aiAxios.post('first_check', {image});
+            console.log({response});
+            return response.data === 'True';
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    const secondCheck = async(image) => {
+        let response;
+        try {
+            response = await $aiAxios.post('second_check', {image});
+            console.log({response});
+            return response.data;
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     const findWorkorderRecord = async() => {
         try {
@@ -100,12 +119,12 @@ export default function LabelResult() {
         }
     }
 
-    const createNewComponent = async(workorderId) => {
+    const createNewComponent = async(workorderId, forcePass) => {
         const payload = {
             workorder_id: workorderId,
             component_type_id: currentComponent.componentTypeId,
         }
-        if (!noLabel) {
+        if (!overallFailed || forcePass) {
             payload.status = true;
         } else {
             payload.failing_reasons_type_ids = reasons.map(el => el.failingReasonTypeId);
@@ -124,7 +143,7 @@ export default function LabelResult() {
                 images: currentComponent.images.map(el => el.src)
             })
             console.log({response});
-            submitLabelResult(response);
+            setSubmitModal(true);
         } catch (e) {
             console.error(e);
         }
@@ -154,7 +173,8 @@ export default function LabelResult() {
         await $axios.delete(`images/batch?${deleteQueryParams.toString()}`);
     }
 
-    const updateComponentRecord = async() => {
+    const updateComponentRecord = async(forcePass) => {
+        setIsSubmitting(true);
         // get workorder id
         const workorderId = await findWorkorderRecord();
         if (!workorderId) {
@@ -164,7 +184,8 @@ export default function LabelResult() {
         // POST request, new component
         if (currentComponent.id === null) {
             console.log('We are working with a new component');
-            createNewComponent(workorderId);
+            createNewComponent(workorderId, forcePass);
+            setIsSubmitting(false);
             return;
         }
 
@@ -179,8 +200,8 @@ export default function LabelResult() {
         // to solve these 2 issues, we do a deep clone of the currentComponent object, and set the status to the current state.chosenStatus (from routing)
         const currentComponentChanges = cloneDeep(currentComponent);
         console.log(currentComponentChanges.status)
-        if (noLabel) { currentComponentChanges.status = 'red'; }
-        if (!noLabel) { currentComponentChanges.status = 'green'; }
+        if (overallFailed) { currentComponentChanges.status = 'red'; }
+        if (!overallFailed || forcePass) { currentComponentChanges.status = 'green'; }
         console.log(currentComponentChanges.status)
 
         // Issue 3 (OVERLOOKED): figure out why "differences" is weird when we delete images, check the images array
@@ -221,33 +242,26 @@ export default function LabelResult() {
         const finalUpdateResponse = await $axios.patch(`components/${currentComponentChanges.id}`, payload);
         console.log({finalUpdateResponse});
 
-        submitLabelResult();
+        setIsSubmitting(false);
+        setSubmitModal(true);
     }
 
-    const submitLabelResult = () => {
-        setSubmitModal(true);
-        // proceedWithDispute();
-        // send to status to database
-        updateComponentRecord();
+    const exitPage = () => {
+        setSubmitModal(false);
         navigate('/component-status');
-
     }
     
 
     // ---- dispute modal ----
-    const [ disputeSent, setDisputeSent ] = useState(false);
     const DisputeModal = () => {
-        const proceedWithDispute = () => {
+        const proceedWithDispute = async () => {
             setDisputeModalOpened(false);
-            setDisputeSent(true);
             setNoLabel(false);
-            console.log('Disputing...');
             setGettingResults(true);
             // call API here
-            setTimeout(() => {
-                setGettingResults(false);
-                // setSubmitModal(true);
-            }, 1500)
+            const secondCheckResult = await secondCheck(chosenLabelPhoto);
+            setInspectionResult(secondCheckResult);
+            setGettingResults(false);
         }
         
         return (
@@ -279,10 +293,30 @@ export default function LabelResult() {
         )
     }
     
-
+    const ChooseAnotherPhotoButton = () => {
+        return (
+            <Button
+                fullWidth
+                mt="sm"
+                variant="outline"
+                styles={{
+                    root: {
+                        height: 'auto',
+                        padding: '6px'
+                    },
+                    label: {
+                        whiteSpace: 'normal'
+                    }
+                }}
+                onClick={goBackLabelPhotoReview}
+            >
+                Choose Another Photo
+            </Button>
+        )
+    }
 
     const goBackLabelPhotoReview = () => {
-        dispatch(updateCurrentComponentName('label'));
+        dispatch(updateCurrentComponentName('Label'));
         navigate('/photo-review');
     }
 
@@ -295,44 +329,38 @@ export default function LabelResult() {
         <>
             <Paper shadow="sm" p="md" m="sm" style={{minHeight: .7*window.innerHeight}}>
                 <Image radius="sm" src={chosenLabelPhoto} mb="md" />
-                {
+                {// loading
                     gettingResults &&
                     <Center style={{ height: 200, flexDirection: 'column' }}>
                         <Loader size="lg"/>
                         <Text weight={500} mt="xs">Analysing</Text>
                     </Center>
                 }
-                {
-                    !gettingResults && hasChosenPhoto && !disputeSent &&
+                {// no label detected
+                    !gettingResults && hasChosenPhoto && noLabel &&
+                    <>
+                        <Center style={{flexDirection: 'column'}}>
+                            <OutcomeIcon height={100} />
+                            <Text weight={500}>No Label Found</Text>
+                        </Center>
+                        <ChooseAnotherPhotoButton/>
+                        <Button
+                            fullWidth
+                            mt="sm"
+                            color="red"
+                            onClick={() => setDisputeModalOpened(true)}
+                        >
+                            Dispute
+                        </Button>
+                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit</Button>
+                    </>
+                }
+                {   // label detected but with failed reasons
+                    !gettingResults && hasChosenPhoto && hasFailedInspection && !noLabel &&
                     <Grid>
                         <Grid.Col span={4} style={{ minHeight: 200 }}>
                             <OutcomeIcon height={100} />
-                            {/* Dispute should only be shown when the failing reason is because it is absent, and not just for all fail cases */}
-                            <Button
-                                fullWidth
-                                mt="sm"
-                                color="red"
-                                onClick={() => setDisputeModalOpened(true)}
-                            >
-                                Dispute
-                            </Button>
-                            <Button
-                                fullWidth
-                                mt="sm"
-                                variant="outline"
-                                styles={{
-                                    root: {
-                                        height: 'auto',
-                                        padding: '6px'
-                                    },
-                                    label: {
-                                        whiteSpace: 'normal'
-                                    }
-                                }}
-                                onClick={goBackLabelPhotoReview}
-                            >
-                                Choose Another Photo
-                            </Button>  
+                            <ChooseAnotherPhotoButton/>
                         </Grid.Col>
                         <Grid.Col span={8} style={{ minHeight: 200 }}>
                             <ReportFailReasons
@@ -341,35 +369,28 @@ export default function LabelResult() {
                                 setReasons={reasonsHandler}
                                 scrollHeight={150}
                                 componentTypeId={currentComponent.componentTypeId}
+                                suppliedInspectionReason={inspectionResult}
                             />
                         </Grid.Col>
-                        <Button onClick={submitLabelResult} mt="md" fullWidth>Submit</Button>
+                        <Button
+                            fullWidth
+                            mt="sm"
+                            color="green"
+                            loading={isSubmitting}
+                            onClick={() => updateComponentRecord(true)}
+                        >
+                            Submit as Passed
+                        </Button>
+                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit as Failed</Button>
                     </Grid>
                 }
-                {
-                    disputeSent && !noLabel && !gettingResults &&
+                {// passing
+                    !gettingResults && !overallFailed &&
                     <>
-                    <Center><OutcomeIcon height={100} /></Center>
-                    <Button
-                                fullWidth
-                                mt="sm"
-                                variant="outline"
-                                styles={{
-                                    root: {
-                                        height: 'auto',
-                                        padding: '6px'
-                                    },
-                                    label: {
-                                        whiteSpace: 'normal'
-                                    }
-                                }}
-                                onClick={goBackLabelPhotoReview}
-                            >
-                                Choose Another Photo
-                            </Button>
-                            <Button onClick={submitLabelResult} mt="md" fullWidth>Submit</Button>
+                        <Center><OutcomeIcon height={100} /></Center>
+                        <ChooseAnotherPhotoButton/>
+                        <Button loading={isSubmitting} onClick={() => updateComponentRecord()} mt="md" fullWidth>Submit</Button>
                     </>
-                    
                 }
 
             </Paper>
@@ -378,7 +399,7 @@ export default function LabelResult() {
 
             <Modal
                 opened={submitModal}
-                onClose={() => setSubmitModal(false)}
+                onClose={() => exitPage()}
                 title="Upload Successful"
                 centered
             />
