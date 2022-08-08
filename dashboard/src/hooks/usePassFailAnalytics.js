@@ -20,11 +20,12 @@ export default function usePassFailAnalytics(numDays=1) {
 
     useEffect(() => {
         (async() => {
+            console.log({numDays});
             const result = await getPreviousDaysWorkorders(numDays);
             // console.log(result.data);
             setBinaryCategorisedWorkorders(result.data);
         })()
-    }, [])
+    }, [numDays])
 
     const getCategoryColor = scaleOrdinal({
         domain: ['Passed', 'Failed'],
@@ -36,6 +37,5 @@ export default function usePassFailAnalytics(numDays=1) {
 
     const valueAccessorFunction = d => d.occurences;
 
-    // return { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders };
     return { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction };
 }

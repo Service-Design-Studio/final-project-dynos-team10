@@ -417,7 +417,7 @@ exports.getFailingReasonsOneMachineType = async (req, res) => {
                     // failing reason category does not exist in "categorised" yet
                     categorised.push({
                         id: +failingReason.id,
-                        name: failingReason.name,
+                        label: failingReason.name,
                         occurences,
                         workorders: [workorderObj]
                     })

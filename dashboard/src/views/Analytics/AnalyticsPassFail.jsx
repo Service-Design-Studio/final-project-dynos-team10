@@ -5,6 +5,7 @@ import { Group, Button, Text, Slider, RangeSlider, Box } from "@mantine/core";
 import { ContentGroup } from "../../components/CollapsableContentItem";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 
 const WORKORDER_DETAILS_BTN_CLASS = 'view-workorder-btn';
 
@@ -57,8 +58,11 @@ export default function AnalyticsPassFail() {
     //     });
 
     const [value, setValue] = useState(0); // value of slider
+    const debouncedSetValue = debounce(val => {
+        setValue(val)
+    }, 500)
 
-      // Configure marks to match step
+    // Configure marks to match step
     const MARKS = [
         { value: 0, label: '1' },
         { value: 1, label: '2' },
@@ -69,11 +73,7 @@ export default function AnalyticsPassFail() {
         { value: 6, label: '7' },
     ];
 
-    useEffect(() => {
-        console.log(value + 1);
-    }, [value]);
-
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction, viewingWorkorders } = usePassFailAnalytics(value + 1);
+    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction } = usePassFailAnalytics(value + 1);
     const chartSize = .3 * window.innerWidth;
 
     const workordersFormatted = useMemo(() => {
@@ -137,7 +137,7 @@ export default function AnalyticsPassFail() {
                         step={1}
                         marks={MARKS}
                         max={6}
-                        onChange={setValue}
+                        onChange={debouncedSetValue}
                         style={{marginTop: "1rem"}}
                     />
                 </Box>

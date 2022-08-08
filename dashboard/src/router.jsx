@@ -9,6 +9,7 @@ import Account from './views/Account';
 import Home from './views/Home';
 import Workorders, { WorkorderSingle } from "./views/Workorders";
 import Login from './views/Login';
+import AnalyticsMachineTypes from "./views/Analytics/AnalyticsMachineTypes";
 
 const TOKEN_IDENTIFIER = 'accessToken';
 
@@ -84,6 +85,7 @@ function Router() {
                     <Route path="/controls" element={<Controls />} />
                     <Route path="/analytics" element={<Analytics />} />
                     <Route path="/analytics/pass-fail" element={<AnalyticsPassFail />} />
+                    <Route path="/analytics/machine-types" element={<AnalyticsMachineTypes/>} />
                     <Route path="/workorders">
                         <Route path="" element={<Workorders/>}/>
                         <Route path=":workorderId" element={<WorkorderSingle/>} />
