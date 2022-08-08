@@ -50,7 +50,7 @@ function Router() {
                 "Authorization": `Bearer ${accessToken}`
             }
         });
-        console.log({result});
+        // console.log({result});
         if (result.data.token_valid) {
             setIsAuthenticated(true);
         } else {

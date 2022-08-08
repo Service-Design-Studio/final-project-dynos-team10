@@ -4,7 +4,8 @@ import machineTypePassFail from "../../hooks/machineTypesPassFail";
 
 
 export default function AnalyticsMachineTypes() {
-  const {data, keys, colourScale, valueAccessorFunction} = machineTypePassFail()
+  const {data, keys, colourScale, valueAccessorFunction} = machineTypePassFail();
+  console.log(data);
 
     return (
         <div style={{width: 500, height: 500}}>
