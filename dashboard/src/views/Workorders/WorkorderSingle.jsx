@@ -5,8 +5,10 @@ import ComponentCard from '../../components/ComponentCard';
 import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text, Center } from '@mantine/core';
 import { NAVBAR_WIDTH } from '../../Layout';
 import { Carousel } from '@mantine/carousel';
+import PieChart from "../../components/PieChart";
 
-export default function WorkorderSingle() {
+
+export default function WorkorderSsingle() {
     const workorderId = parseInt(useParams().workorderId, 10);
     const [workorder, setWorkorder] = useState(null);
 
@@ -38,6 +40,7 @@ export default function WorkorderSingle() {
         <SimpleGrid style={{ maxWidth: window.innerWidth - (2*NAVBAR_WIDTH) }} cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
             <Grid gutter="md">
                 <Grid.Col>
+                    
                     <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" />
                 </Grid.Col>
                 <Grid.Col>
@@ -68,12 +71,12 @@ export default function WorkorderSingle() {
                     <Center>
                         <Carousel
                         align="center"
-                        sx={{width: 400}}
+                        sx={{width: 400}}s
                         >
                             {workorder?.components.map((el, i) => 
                                 <Carousel.Slide> 
                                     <Center>   
-                                    <ComponentCard componentRecord={el} key={i} />
+                                        <ComponentCard componentRecord={el} key={i} />
                                     </Center>
                                 </Carousel.Slide>    )}
                         </Carousel>
