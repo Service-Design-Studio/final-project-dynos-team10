@@ -13,16 +13,11 @@ export default function BarGroupChart({
     keys,
     colorScale,
     accessor,
-    // // getName,
-    // colorScale,
     margin = defaultMargin
 }) {
     // bounds
     const xMax = width - margin.left - margin.right;
     const yMax = height - margin.top - margin.bottom;
-
-    //accessors
-    // const valueAccessorFunction = d => d.machine_type_name;
 
     const x0Scale = scaleBand({
         domain: data.map(accessor),

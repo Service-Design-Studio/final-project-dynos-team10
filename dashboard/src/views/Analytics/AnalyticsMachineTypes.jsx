@@ -15,13 +15,8 @@ export default function AnalyticsMachineTypes() {
                         height={height}
                         data={data}
                         keys={keys}
-                        // data={machineTypeCategories}
                         colorScale={colourScale}
                         accessor={valueAccessorFunction}
-                        // x1Scale={passFailScale}
-                        // x0Scale={machineTypeScale}
-                        // getx0={getMachineTypeCategory}
-                        // tempScale={tempScale}
                     />
                 )}
             </ParentSize>
