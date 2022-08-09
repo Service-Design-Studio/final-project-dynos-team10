@@ -97,10 +97,12 @@ def prediction():
     if prediction[0][0] > 0.5:
       print("Label presence verified, please wait while we check the image for more details.")
       print("================================================")
-      return redirect(url_for('second_check'), code=307)
+      # return redirect(url_for('second_check'), code=307)
+      return "True" , 200
     else:
       print("Non-conformance: Label not present")
-      return redirect('/')
+      # return "Non-conformance: Label not present"
+      return "False" , 200
 
     # image = './incorrect 5 (crumpled).jpeg'
     # image = Image.open(image)
@@ -108,7 +110,7 @@ def prediction():
     # image = Image.open(BytesIO(base64.b64decode(tapered_base64_string))).convert('RGB')
     # image = image.resize((224,224))
     # data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-    # image_array = np.asarray(image)
+    # image_array = np.asarray(image) 
     # # Normalize the image
     # normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
     # # Load the image into the array
@@ -164,15 +166,22 @@ def second_check():
   # print(response_automl) # <class 'bytes'>
   # print(type(response_automl).__name__) # PredictResponse
   # print("================================================")
-  
-  print("Prediction results:")
-  for result in response_automl.payload:
-    print("Predicted reason: {}".format(result.display_name))
-    print("Predicted accuracy: {}".format(result.classification.score))
+  # print(response_automl.payload[0])
+  if len(response_automl.payload) == 0:
+    return "Not able to obtain result, please check manually"
+  else: 
+    print("Prediction results:")
+    print("Predicted class name: {}".format(response_automl.payload[0].display_name))
+    print("Predicted class score: {}".format(response_automl.payload[0].classification.score))
+    
+    print("================================")
+    # for pred in response_automl.payload:
+    #   print("Predicted reason: {}".format(pred.display_name))
+    #   print("Predicted accuracy: {}".format(pred.classification.score))
 
-  print("Finished second check!")
-  
-  return '{}'.format(result.display_name), 200
+    print("Finished second check!")
+    
+    return '{}'.format(response_automl.payload[0].display_name), 200
   # return f'From second check: {tapered_base64_string}', 200
     
 if __name__ == "__main__":

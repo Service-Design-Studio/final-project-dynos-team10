@@ -22,4 +22,4 @@ steps:
       ]
 images:
   - gcr.io/tsh-labels/dynostic-ai-img
-timeout: 900s
+timeout: 2700s
