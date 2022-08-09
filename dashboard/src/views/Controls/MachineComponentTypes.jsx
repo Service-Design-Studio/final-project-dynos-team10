@@ -340,11 +340,11 @@ export default function MachineComponentTypes() {
         },
         validate: {
             newMachineType: value => {
-                const existingMachineTypes = machineTypes.map(el => el.label);
+                const existingMachineTypes = machineTypes.map(el => el.label.toLowerCase());
                 if (value.length <= 0) {
                     return 'Machine Type is required';
                 }
-                if (existingMachineTypes.includes(value)) {
+                if (existingMachineTypes.includes(value.toLowerCase())) {
                     return 'This machine type already exists';
                 }
                 return null;
@@ -358,11 +358,11 @@ export default function MachineComponentTypes() {
         },
         validate: {
             newComponentType: value => {
-                const existingComponentTypes = componentTypes.map(el => el.label);
+                const existingComponentTypes = componentTypes.map(el => el.label.toLowerCase());
                 if (value.length <= 0) {
                     return 'Component Type is required';
                 }
-                if (existingComponentTypes.includes(value)) {
+                if (existingComponentTypes.includes(value.toLowerCase())) {
                     return 'This component type already exists';
                 }
                 return null;
@@ -375,11 +375,11 @@ export default function MachineComponentTypes() {
         },
         validate: {
             newFailingReasonType: value => {
-                const existingFailingReasonTypes = failingReasonTypes.map(el => el.label);
+                const existingFailingReasonTypes = failingReasonTypes.map(el => el.label.toLowerCase());
                 if (value.length <= 0) {
                     return 'Failing reason is required';
                 }
-                if (existingFailingReasonTypes.includes(value)) {
+                if (existingFailingReasonTypes.includes(value.toLowerCase())) {
                     return 'This reason already exists';
                 }
                 return null;

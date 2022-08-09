@@ -156,6 +156,18 @@ Then('I should see {string} as a failing reason for {string}', (item, text) => {
     cy.get(`[id=${text}]`).children().contains(item);
 })
 
-When('I delete {string} component type', (text) => {
+When('I delete {string} for component type', (text, type) => {
     cy.get(`[id=${text}-delete]`).click();
+})
+
+When('I delete "Machine1" for machine type', () => {
+    cy.get(`[id=MACHINE1-delete]`).click();
+})
+
+When('I delete {string} for failing reason', (text, type) => {
+    cy.get(`[id=${text}-delete]`).click();
+})
+
+Then('I should not see {string} in the {string} list', (text, list) => {
+    cy.get(`button[id="${text}"]`).should('not.exist');
 })

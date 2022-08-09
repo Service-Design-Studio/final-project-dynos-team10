@@ -41,25 +41,24 @@ Feature: Custom Machine and Component Types
         When I click on "Label" button in list
         Then I should see "Slanted" as a failing reason for "Label" 
 
-        # Scenario: Deleting component type
-        # When I delete "Component1" component type
-        # Then I should see "0" component types
+    Scenario: SAD PATH: creating non-unique machine type and component types
+        When I fill in the input field for "Component Type Name" with "Component1"
+        And I click the "add component" button
+        Then I should see "This component type already exists"
+        And I fill in the input field for "Machine Type Name" with "Machine1"
+        And I click the "add machine" button
+        And I should see "This machine type already exists"
+        When I fill in the input field for "Enter Fail Reasons" with "Slanted"
+        And I click the "add failing reason" button
+        And I should see "This reason already exists"
 
-    # Scenario: Deleting machine type
-        # When I delete "Machine1" machine type
-    #     Then I should see "0" machine types
-
-    # Scenario: Delete failing reason
-    #     When I delete "Slanted" failing reason
-    #     Then I should see "0" failing reasons
-
-    # Scenario: SAD PATH: creating non-unique machine type and component types
-    #     When I fill in the input field for "Component Type Name" with "Component Type"
-    #     And I fill in the input field for "Machine Type Name" with "Machine Type 1"
-    #     And I press the "add machine" button
-    #     And I press the "add component" button
-    #     Then I should see "This component type already exists"
-    #     And I should see "This machine type already exists"
+    Scenario: Deleting machine type, component type, and failing reason
+        When I delete "Component1" for component type
+        Then I should not see "Component1" in the "Component Types" list
+        When I delete "Machine1" for machine type
+        Then I should not see "Machine" in the "Machine Types" list
+        When I delete "Slanted" for failing reason
+        Then I should not see "Slanted" in the "Failing Reasons" list 
 
     # Scenario: Controlling component types of a machine
     #     When I click add components for machine type "Machine Type 1"

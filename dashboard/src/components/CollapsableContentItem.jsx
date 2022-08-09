@@ -62,8 +62,8 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty, custom
             <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control} id={label} >
                 <Group position="apart" spacing={0}>
                     <Box>{label}</Box>
-                    <Group postion="right" id={label+"-delete"}>
-                        {deleteElement}
+                    <Group postion="right">
+                        <div id={label+"-delete"}>{deleteElement}</div>
                         {
                             hasItems ?
                             <ChevronIcon 
