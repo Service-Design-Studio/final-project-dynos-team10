@@ -1,5 +1,5 @@
 import { Carousel } from '@mantine/carousel';
-import { Card, Image, Text, Group, Badge, Button, createStyles, Paper, ScrollArea, Modal } from '@mantine/core';
+import { Card, Image, Text, Group, Badge, Button, createStyles, Paper, ScrollArea, Modal, Center } from '@mantine/core';
 import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
@@ -40,7 +40,12 @@ export default function ComponentCard({componentRecord}) {
         <div>
             <Card withBorder radius="md" p="sm" className={classes.card}>
                 <Card.Section>
-                    <Image src={images[0].public_url} alt="Image" />
+                    <Center>
+                    <Image src={images[0].public_url} alt="Image" 
+                    width={300}
+                    height={200}
+                    />
+                    </Center>
                 </Card.Section>
                 <Card.Section className={classes.section} p="sm">
                     <Group position="apart">
@@ -76,7 +81,12 @@ export default function ComponentCard({componentRecord}) {
                 withIndicators>
                 {images.map((el,i) => 
                     <Carousel.Slide key={i}>
-                        <Image src={el.public_url} alt="Image" />
+                        <Center>
+                            <Image src={el.public_url} alt="Image"
+                            width={300}
+                            height={300}
+                            />
+                        </Center>
                     </Carousel.Slide>
                 )}
                 </Carousel>
