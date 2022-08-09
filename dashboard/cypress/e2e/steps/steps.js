@@ -74,26 +74,6 @@ Then('I should see {string} components in the component list', (number) => {
     cy.get('component-list').children().should('have.length', +number);
 })
 
-
-
-
-// workorders page
-
-Then('I should see {string} workorders', (number) => {
-    cy.get('.workorders-list').should('have.length', +number);
-})
-
-And('I click the "more details" button for {string}', (workorderNumber) => {
-    cy.get(`.${workorderNumber}`).click();
-})
-
-Then('I go to {string} page for "test"', (page) => {
-    cy.visit(buildRoute(page));
-})
-
-
-
-//LAST SCENARIO THE PROBLEM ONE
 When('I click add components for machine type {string}', () => {
     cy.get('.errors').click();
 })
@@ -102,22 +82,21 @@ Then('I should see a side panel to edit {string}', (text) => {
     cy.get('.errors').contains(text);
 })
 
-When('I choose {string} ', ()=>{
+// When('I choose {string} ', ()=>{
 
-})
+// })
 
-And('I close the side panel', () => {
+// And('I close the side panel', () => {
 
-})
+// })
 
-When('I expand {string}', () => {
+// When('I expand {string}', () => {
 
-})
+// })
 
-Then('I should see the component types {string}', () => {
+// Then('I should see the component types {string}', () => {
 
-})
-
+// })
 
 //the one below is done
 And('I click on "Edit Components" button for {string}', (text) => {
@@ -170,4 +149,17 @@ When('I delete {string} for failing reason', (text, type) => {
 
 Then('I should not see {string} in the {string} list', (text, list) => {
     cy.get(`button[id="${text}"]`).should('not.exist');
+})
+
+// workorders page /////////////////////////////////////////////////////////////////
+Then('I should see {string} workorders', (number) => {
+    cy.get('.workorders-list').should('have.length', +number);
+})
+
+And('I click the "more details" button for {string}', (workorderNumber) => {
+    cy.get(`.${workorderNumber}`).click();
+})
+
+Then('I go to {string} page for "test"', (page) => {
+    cy.visit(buildRoute(page));
 })

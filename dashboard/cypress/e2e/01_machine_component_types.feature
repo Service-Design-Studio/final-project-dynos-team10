@@ -41,7 +41,7 @@ Feature: Custom Machine and Component Types
         When I click on "Label" button in list
         Then I should see "Slanted" as a failing reason for "Label" 
 
-    Scenario: SAD PATH: creating non-unique machine type and component types
+    Scenario: SAD PATH: creating non-unique machine type, component types, and failing reason
         When I fill in the input field for "Component Type Name" with "Component1"
         And I click the "add component" button
         Then I should see "This component type already exists"
