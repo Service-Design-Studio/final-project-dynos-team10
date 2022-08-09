@@ -10,9 +10,9 @@ machine_types = [{type_name:"m1"},{type_name:"m2"},{type_name:"m3"},{type_name:"
 
 component_types = [{type_name:"xxxx"},{type_name:"yyyy"}] # id 3 and 4. 1 and 2 taken by label and wire created on machine type creation
 
-workorders =[{:workorder_number => "WO1", :machine_type_id => 1},
-             {:workorder_number => "WO2", :machine_type_id => 1},
-             {:workorder_number => "test", :machine_type_id => 2}]
+workorders =[{:workorder_number => "WO1", :machine_type_id => 1, :completed => true},
+             {:workorder_number => "WO2", :machine_type_id => 1, :completed => true},
+             {:workorder_number => "test", :machine_type_id => 2, :completed => true}]
 
 components = [{:workorder_id => 1, :status => false, :component_type_id => 1},
               {:workorder_id => 1, :status => false, :component_type_id => 2},

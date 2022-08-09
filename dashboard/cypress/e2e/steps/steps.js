@@ -15,22 +15,25 @@ And('I should be on the {string} page', (pageDescription) => {
     cy.url().should('eq', buildRoute(pageDescription));
 });
 
-And('I click the {string} button in the navbar', (buttonName) => {
-    cy.get(".system-control-btn ").click();
+And('I click the {string} button in the navbar', () => {
+    cy.get(".controls").click();
 });
 
-When('I fill in the input field for {string}', (inputContent, newContent) => {
+When('I fill in the input field for {string}', (inputContent) => {
     const randomString = uuidv4();
     cy.get(`input[placeholder="${inputContent}"]`).type(randomString);
 })
 
-
-And('I press the "add machine" button', () => {
+And('I click the "add machine" button', () => {
     cy.get('.add-machine-btn').click();
 })
 
-And('I press the "add component" button', () => {
+And('I click the "add component" button', () => {
     cy.get('.add-component-btn').click();
+})
+
+And('I click the "add failing reason" button', () => {
+    cy.get('.add-failing-btn').click();
 })
 
 Then('I should see {string} in the "Component Types" list', (text) => {
@@ -45,8 +48,33 @@ And('I fill in the input field for {string} with {string}', (inputContent, newCo
     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
 })
 
+// Then('I should see {string}', (text) => {
+//     cy.get('.errors').contains(text);
+// })
+
 Then('I should see {string}', (text) => {
-    cy.get('.errors').contains(text);
+    cy.get('body').contains(text);
+})
+
+// couldn't get this to work
+Then('I should see {string} in the {string}', (text, list) => {
+    cy.get(list).contains(text);
+})
+
+When('I click on "Machine Type 1" button', () => {
+    cy.get('.Machine Type 1').contains("Machine Type 1")
+})
+
+Then('I should see {string} workorders', (number) => {
+    cy.get('.workorders-list').should('have.length', +number);
+})
+
+And('I click the "more details" button for {string}', (workorderNumber) => {
+    cy.get(`.${workorderNumber}`).click();
+})
+
+Then('I go to {string} page for "test"', (page) => {
+    cy.visit(buildRoute(page));
 })
 
 //LAST SCENARIO THE PROBLEM ONE

@@ -137,7 +137,7 @@ export default function Workorders() {
                 <td>{workorderNumber}</td>
                 <td>{pass ? "Passed" : "Failed"}</td>
                 <td>{
-                    <Button variant="filled" onClick={() => navigate(`/workorders/${ID}`)}>
+                    <Button  className={workorderNumber} variant="filled" onClick={() => navigate(`/workorders/${ID}`)}>
                         Details
                     </Button>
                 }</td>
@@ -179,7 +179,7 @@ export default function Workorders() {
                                 <th>More Details</th>
                             </tr>
                         </thead>
-                        <tbody>{
+                        <tbody className="workorders-list">{
                             fullWorkorders.map(el => {
                                 return (
                                     <WorkorderRow

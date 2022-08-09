@@ -430,9 +430,9 @@ export default function MachineComponentTypes() {
         setEditComponentDrawerOpened(true);
     }
 
-    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} {...item} />)
-    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup key={i} {...item} />)
+    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
+    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
+    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
     
     const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
@@ -557,7 +557,7 @@ export default function MachineComponentTypes() {
                         {...newFailingReasonForm.getInputProps('newFailingReasonType')}
                         onKeyUp={(e) => {if (e.key === 'Enter') submitNewFailingReasonType()}}
                         rightSection={
-                            <ActionIcon className='add-component-btn' onClick={submitNewFailingReasonType}><Plus/></ActionIcon>
+                            <ActionIcon className='add-failing-btn' onClick={submitNewFailingReasonType}><Plus/></ActionIcon>
                         }
                         mb="md"
                     />
