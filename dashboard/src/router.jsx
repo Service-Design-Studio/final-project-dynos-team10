@@ -4,12 +4,9 @@ import { $axios } from "./helpers/axiosHelper";
 import { createContext, useEffect, useMemo, useState } from "react";
 import Layout from "./Layout";
 import Controls from "./views/Controls";
-import Analytics, { AnalyticsPassFail } from './views/Analytics';
-import Account from './views/Account';
-import Home from './views/Home';
+import Analytics from './views/Analytics';
 import Workorders, { WorkorderSingle } from "./views/Workorders";
 import Login from './views/Login';
-import AnalyticsMachineTypes from "./views/Analytics/AnalyticsMachineTypes";
 
 const TOKEN_IDENTIFIER = 'accessToken';
 
@@ -81,16 +78,12 @@ function Router() {
                         </Auth>
                     }
                 >
-                    <Route path="/" element={<Home/>} />
+                    <Route path="/" element={<Analytics />} />
                     <Route path="/controls" element={<Controls />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/analytics/pass-fail" element={<AnalyticsPassFail />} />
-                    <Route path="/analytics/machine-types" element={<AnalyticsMachineTypes/>} />
                     <Route path="/workorders">
                         <Route path="" element={<Workorders/>}/>
                         <Route path=":workorderId" element={<WorkorderSingle/>} />
                     </Route>
-                    <Route path="/account" element={<Account />} />
                 </Route>
             </Routes>
         </AuthContext.Provider>

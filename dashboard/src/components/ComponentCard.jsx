@@ -41,10 +41,12 @@ export default function ComponentCard({componentRecord}) {
             <Card withBorder radius="md" p="sm" className={classes.card}>
                 <Card.Section>
                     <Center>
-                    <Image src={images[0].public_url} alt="Image" 
-                    width={300}
-                    height={200}
-                    />
+                        <Image
+                            src={images[0]?.public_url}
+                            alt="Image" 
+                            width={300}
+                            height={200}
+                        />
                     </Center>
                 </Card.Section>
                 <Card.Section className={classes.section} p="sm">

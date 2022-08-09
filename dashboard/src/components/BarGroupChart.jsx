@@ -65,7 +65,7 @@ export default function BarGroupChart({
                                             height={bar.height}
                                             fill={bar.color}
                                             rx={4}
-                                            onClick={() => console.log('hello there')}
+                                            // onClick={() => console.log('hello there')}
                                         />
                                     ))
                                 }

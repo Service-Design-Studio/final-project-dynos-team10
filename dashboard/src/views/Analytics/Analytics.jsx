@@ -1,52 +1,37 @@
-import PieChart from "../../components/PieChart";
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import usePassFailAnalytics from "../../hooks/usePassFailAnalytics";
-import machineTypeReasons from "../../hooks/machineTypeReasons";
-import { useNavigate } from 'react-router-dom';
-import { Group, Button, Text, Slider, Box, Center } from "@mantine/core";
-import { useEffect, useState, useMemo } from "react"
-
+import { Center, Tabs } from "@mantine/core";
+import AnalyticsMachineTypes from "./AnalyticsMachineTypes";
+import AnalyticsPassFail from './AnalyticsPassFail';
+import AnalyticsMachineFailingReasons from "./AnalyticsMachineFailingReasons";
 
 export default function Analytics() {
-    const { binaryCategorisedWorkorders, getCategoryColor, valueAccessorFunction } = usePassFailAnalytics(2);
-    const { binaryCategorisedReasons, categoryColor, valueAccessorFunction1 } = machineTypeReasons(1)
-    const navigate = useNavigate();
-    console.log(binaryCategorisedWorkorders)
-    // console.log(valueAccessorFunction)
-    
-
     return (
         <div>
-            <Center><h2 style={{marginBottom: 0}}>Performance Analytics</h2></Center>
-                    
-            <div style={{width: '400px', height: '400px'}}>
-                <ParentSize>
-                    {({ width, height }) => (
-                        <PieChart
-                            width={width}
-                            height={height}
-                            data={binaryCategorisedWorkorders}
-                            valueAccessorFunction={valueAccessorFunction}
-                            getCategoryColor={getCategoryColor}
-                            onClick={() => navigate('/analytics/pass-fail')}
-                        />
-                    )}
-                </ParentSize>
-            </div>
+            <Center><h2 style={{marginBottom: '16px'}}>Performance Analytics</h2></Center>
+            <Tabs defaultValue="0">
+                <Tabs.List grow>
+                    <Tabs.Tab value="0">
+                        Pass/Fail by Workorders
+                    </Tabs.Tab>
+                    <Tabs.Tab value="1">
+                        Pass/Fail by Machine Types
+                    </Tabs.Tab>
+                    <Tabs.Tab value="2">
+                        Failing Reasons by Machine Types
+                    </Tabs.Tab>
+                </Tabs.List>
 
-            <div style={{width: '400px', height: '400px'}}>
-                <ParentSize>
-                    {({ width, height }) => (
-                        <PieChart
-                            width={width}
-                            height={height}
-                            data={binaryCategorisedReasons}
-                            valueAccessorFunction={valueAccessorFunction1}
-                            getCategoryColor={categoryColor}
-                        />
-                    )}
-                </ParentSize>
-            </div>
+                <Tabs.Panel value="0">
+                    <AnalyticsPassFail/>
+                </Tabs.Panel>
+
+                <Tabs.Panel value="1">
+                    <AnalyticsMachineTypes/>
+                </Tabs.Panel>
+
+                <Tabs.Panel value="2">
+                    <AnalyticsMachineFailingReasons/>
+                </Tabs.Panel>
+            </Tabs>
         </div>
     )
 }

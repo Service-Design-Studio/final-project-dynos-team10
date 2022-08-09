@@ -66,10 +66,8 @@ const useNavbarStyles = createStyles((theme) => ({
 
 const routeMapStatic = {
     '/': { icon: Home2, label: 'Home' },
-    '/analytics': { icon: DeviceDesktopAnalytics, label: 'Analytics' },
     '/workorders': { icon: ListSearch, label: 'View Work Orders' },
     '/controls': { icon: Adjustments, label: 'System Controls' },
-    '/account': { icon: User, label: 'Account' },
 }
 
 function Layout() {

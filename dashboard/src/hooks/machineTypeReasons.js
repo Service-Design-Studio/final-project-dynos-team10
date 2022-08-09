@@ -4,27 +4,30 @@ import { subDays, formatISO9075 } from 'date-fns';
 import { $functionsAxios } from '../helpers/axiosHelper';
 import { useMantineTheme } from '@mantine/core';
 
-export default function machineTypeReasons(machineTypeID) {
+export default function machineTypeReasons(machineTypeID, numDays=1) {
     const theme = useMantineTheme();
     const [binaryCategorisedReasons, setBinaryCategorisedReasons] = useState([]);
 
-
-    const dataForMachineType = async(machinetypeID) => {
-        const id = 1
-        // const id = machineTypeID
-        const result = await $functionsAxios.get(`machine-type-failing-reasons?machineTypeId=${id}`)
-        // console.log(result);
+    const dataForMachineType = async(id, days) => {
+        const now = new Date();
+        const then = subDays(now, days);
+        const params = new URLSearchParams({
+            start: formatISO9075(then),
+            end: formatISO9075(now),
+            machineTypeId: id
+        })
+        const result = await $functionsAxios.get(`machine-type-failing-reasons?${params.toString()}`)
         return result
     }
 
     useEffect(() => {
         (async() => {
-            const result = await dataForMachineType(machineTypeID);
-            // console.log(result.data);
+            const result = await dataForMachineType(machineTypeID, numDays);
+            console.log(result.data);
             console.log(result.data.length)
             setBinaryCategorisedReasons(result.data);
         })()
-    }, [])
+    }, [machineTypeID, numDays])
 
     const colours = (num) => {
         
@@ -45,11 +48,15 @@ export default function machineTypeReasons(machineTypeID) {
     const categoryColor = scaleOrdinal({
         domain: ['Passed', 'Failed', 'hi', 'low'],
         range: [
-            theme.colors.cyan[6],
             theme.colors.red[6],
-            theme.colors.grape[6],
+            theme.colors.green[6],
             theme.colors.violet[6],
-            
+            theme.colors.blue[6],
+            theme.colors.indigo[6],
+            theme.colors.cyan[6],
+            theme.colors.grape[6],
+            theme.colors.teal[6],
+            theme.colors.pink[6],
         ]
     })
     console.log(colours(3))

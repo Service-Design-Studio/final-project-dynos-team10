@@ -61,9 +61,10 @@ function AnimatedPie({
                             x={centroidX}
                             y={centroidY}
                             dy=".33em"
-                            fontSize={18}
+                            fontSize={14}
                             textAnchor="middle"
                             pointerEvents="none"
+                            style={{overflow: 'visible'}}
                         >
                             {getKey(arc)}
                         </text>

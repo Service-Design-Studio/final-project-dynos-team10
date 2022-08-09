@@ -1,25 +1,32 @@
 import { scaleOrdinal } from '@visx/scale';
 import { useMantineTheme } from '@mantine/core';
 import { $functionsAxios } from '../helpers/axiosHelper';
+import { subDays, formatISO9075 } from 'date-fns';
 import { useState, useEffect } from 'react';
 
-export default function machineTypePassFail() {
+export default function machineTypePassFail(numDays=1) {
     const theme = useMantineTheme();
     const [data, getData] = useState([]);
     
-    const dataForMachineType = async() => {
-        const result = await $functionsAxios.get('machine-types');
+    const dataForMachineType = async(days) => {
+        const now = new Date();
+        const then = subDays(now, days);
+        const params = new URLSearchParams({
+            start: formatISO9075(then),
+            end: formatISO9075(now)
+        })
+        const result = await $functionsAxios.get(`machine-types?${params.toString()}`);
         console.log(result);
         return result;
     }
 
     useEffect(() => {
         (async() => {
-            const result = await dataForMachineType()
+            const result = await dataForMachineType(numDays)
             console.log(result.data)
             getData(result.data)
         })()
-    },[])
+    },[numDays])
 
     const keys = ['passed_count', 'failed_count']
 

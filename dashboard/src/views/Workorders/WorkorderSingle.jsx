@@ -41,8 +41,8 @@ export default function WorkorderSsingle() {
         if (workorder!==null){
         return (
             <div>
-            <Paper shadow='xs' withBorder p="lg">
-            <Text size="lg" weight={700} style={{marginBottom: 10}}>Key Information</Text>
+                <Paper shadow='xs' withBorder p="lg">
+                    <Text size="lg" weight={700} style={{marginBottom: 10}}>Key Information</Text>
                     <Table mb="md">
                         <tbody>
                             <tr>
@@ -59,8 +59,8 @@ export default function WorkorderSsingle() {
                             </tr>
                         </tbody>
                     </Table>
-                    </Paper>
-                    </div>
+                </Paper>
+            </div>
         )}
     }
     
@@ -72,34 +72,35 @@ export default function WorkorderSsingle() {
             </Grid.Col>
             </Grid> */}
 
+            
             <Group style={{maxWidth: window.innerWidth - (2*NAVBAR_WIDTH), maxHeight: window.innerHeight}} position="center" spacing="xl" grow>
-            {/* <Container style={{width: (window.innerWidth- (2*NAVBAR_WIDTH))/2}}> */}
-            <InfoTable style={{width: ((window.innerWidth - (2*NAVBAR_WIDTH))/2)}}/>
-            {/* </Container> */}
+                {/* <Container style={{width: (window.innerWidth- (2*NAVBAR_WIDTH))/2}}> */}
+                <InfoTable style={{width: ((window.innerWidth - (2*NAVBAR_WIDTH))/2)}}/>
+                {/* </Container> */}
 
-            {
-                workorder ?
-                <div style={{ maxHeight: PRIMARY_COL_HEIGHT}}>
-                    <Center>
-                        <Text size="lg" weight={700}>Components & Images</Text>
-                    </Center>
-                    <Center>
-                        <Carousel
-                        align="center"
-                        sx={{width: 400}}s
-                        >
-                            {workorder?.components.map((el, i) => 
-                                <Carousel.Slide key={i}> 
-                                    <Center>   
-                                        <ComponentCard componentRecord={el} key={i} />
-                                    </Center>
-                                </Carousel.Slide>    )}
-                        </Carousel>
-                    </Center>
-                </div> :
-                <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" />
-            }
-                        </Group>
+                {
+                    workorder ?
+                    <div style={{ maxHeight: PRIMARY_COL_HEIGHT}}>
+                        <Center>
+                            <Text size="lg" weight={700}>Components & Images</Text>
+                        </Center>
+                        <Center>
+                            <Carousel
+                            align="center"
+                            sx={{width: 400}}s
+                            >
+                                {workorder?.components.map((el, i) => 
+                                    <Carousel.Slide key={i}> 
+                                        <Center>   
+                                            <ComponentCard componentRecord={el} key={i} />
+                                        </Center>
+                                    </Carousel.Slide>    )}
+                            </Carousel>
+                        </Center>
+                    </div> :
+                    <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" />
+                }
+            </Group>
 
         {/* </SimpleGrid> */}
         </div>

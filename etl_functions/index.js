@@ -224,7 +224,6 @@ exports.queryAllByDateRange = async (req, res) => {
 }
 
 // 2) Dataset: machine types, Grouping: P/F. Bar graph where each block is a machine type. Each block split into 2 cols for pass/fail
-// TODO: if want to, append workorders (minimally ids) to account pass/fail count
 exports.queryAcrossMachineTypes = async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     if (req.method === 'OPTIONS') {
@@ -267,13 +266,17 @@ exports.queryAcrossMachineTypes = async (req, res) => {
                     machine_type_id: +machine_type_id,
                     machine_type_name,
                     passed_count: 0,
-                    failed_count: 0
+                    failed_count: 0,
+                    passed_workorders: [],
+                    failed_workorders: []
                 })
             }
             if (passed) {
                 categorised.find(el => el.machine_type_id === +machine_type_id).passed_count += 1;
+                categorised.find(el => el.machine_type_id === + machine_type_id).passed_workorders.push(workorder);
             } else {
                 categorised.find(el => el.machine_type_id === +machine_type_id).failed_count += 1;
+                categorised.find(el => el.machine_type_id === + machine_type_id).failed_workorders.push(workorder);
             }
         }
 
