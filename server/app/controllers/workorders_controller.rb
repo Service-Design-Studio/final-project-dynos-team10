@@ -91,7 +91,8 @@ class WorkordersController < ApplicationController
             # here means that update was successful, check if completed status was present and true
             if !params[:completed].nil? && marking_as_completed
                 message_hash = {:id => @workorder.id, :workorder_number => @workorder.workorder_number, :passed => @workorder.passed}
-                PUBSUB.publish_to_topic("workorders", message_hash.to_json)
+                topic = ENV["PUBSUB_TOPIC"]
+                PUBSUB.publish_to_topic(topic, message_hash.to_json)
                 ActionCable.server.broadcast("main", { title: "new-workorder", body: message_hash.to_json })
             end
             render json: success_json(@workorder)

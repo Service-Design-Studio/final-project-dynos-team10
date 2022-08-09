@@ -134,12 +134,12 @@ export default function Login() {
                     Login
                 </Title>
 
-                {/* <Text color="dimmed" size="sm" align="center" mt={5}>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
                     Do not have an account yet?{' '}
                     <Anchor href="#" size="sm" onClick={() => navigate('/register')}>
                         Register here
                     </Anchor>
-                </Text> */}
+                </Text>
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                     <TextInput 

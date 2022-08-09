@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy-etl:dev": "gcloud functions deploy workorders-etl --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
-    "deploy-etl:prod": "gcloud functions deploy workorders-etl-prod --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-etl:prod": "gcloud functions deploy prod-workorders-etl --region asia-southeast1 --entry-point workordersEtl --runtime nodejs16 --trigger-topic workorders-prod --service-account 23349650797-compute@developer.gserviceaccount.com",
     "deploy-date-query:dev": "gcloud functions deploy date-range-query --region asia-southeast1 --entry-point queryAllByDateRange --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
-    "deploy-date-query:prod": "gcloud functions deploy date-range-query-prod --region asia-southeast1 --entry-point queryAllByDateRange --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-date-query:prod": "gcloud functions deploy prod-date-range-query --region asia-southeast1 --entry-point queryAllByDateRange --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
     "deploy-machine-failing-reasons:dev": "gcloud functions deploy machine-type-failing-reasons --region asia-southeast1 --entry-point getFailingReasonsOneMachineType --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-machine-failing-reasons:prod": "gcloud functions deploy prod-machine-type-failing-reasons --region asia-southeast1 --entry-point getFailingReasonsOneMachineType --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
     "deploy-machine-types:dev": "gcloud functions deploy machine-types --region asia-southeast1 --entry-point queryAcrossMachineTypes --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
+    "deploy-machine-types:prod": "gcloud functions deploy prod-machine-types --region asia-southeast1 --entry-point queryAcrossMachineTypes --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com",
     "deploy-component-types:dev": "gcloud functions deploy component-types --region asia-southeast1 --entry-point queryComponentTypesOneMachineType --runtime nodejs16 --trigger-http --service-account 23349650797-compute@developer.gserviceaccount.com"
   },
   "author": "",

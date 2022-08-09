@@ -7,6 +7,7 @@ import Controls from "./views/Controls";
 import Analytics from './views/Analytics';
 import Workorders, { WorkorderSingle } from "./views/Workorders";
 import Login from './views/Login';
+import Register from "./views/Register";
 
 const TOKEN_IDENTIFIER = 'accessToken';
 
@@ -19,7 +20,7 @@ const AuthContext = createContext({
 
 function Router() {
     const location = useLocation();
-    const publicRoutes = ['/register'];
+    const publicRoutes = ['/register', '/login'];
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [accessToken, setAccessToken] = useState(localStorage.getItem(TOKEN_IDENTIFIER));
@@ -69,6 +70,7 @@ function Router() {
             <Routes>
             
                 <Route path="/login" element={<Login/>} />
+                <Route path="/register" element={<Register/>} />
 
                 <Route
                     path="/"
