@@ -16,7 +16,7 @@ export default function AnalyticsMachineFailingReasons() {
     const [machineTypeId, setMachineTypeId] = useState(0);
 
     const { binaryCategorisedReasons, categoryColor, valueAccessorFunction1 } = machineTypeReasons(machineTypeId, value+1);
-    const chartSize = 500;
+    const chartSize = .3*window.innerWidth;
 
     const [existingMachineTypes, setExistingMachineTypes] = useState([]);
     useEffect(() => {

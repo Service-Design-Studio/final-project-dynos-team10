@@ -16,7 +16,8 @@ export default function machineTypeReasons(machineTypeID, numDays=1) {
             end: formatISO9075(now),
             machineTypeId: id
         })
-        const result = await $functionsAxios.get(`machine-type-failing-reasons?${params.toString()}`)
+        const url = import.meta.env.MODE === "production" ? 'prod-machine-type-failing-reasons' : 'machine-type-failing-reasons';
+        const result = await $functionsAxios.get(`${url}?${params.toString()}`)
         return result
     }
 

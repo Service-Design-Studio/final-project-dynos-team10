@@ -15,7 +15,8 @@ export default function machineTypePassFail(numDays=1) {
             start: formatISO9075(then),
             end: formatISO9075(now)
         })
-        const result = await $functionsAxios.get(`machine-types?${params.toString()}`);
+        const url = import.meta.env.MODE === "production" ? 'prod-machine-types' : 'machine-types';
+        const result = await $functionsAxios.get(`${url}?${params.toString()}`);
         console.log(result);
         return result;
     }

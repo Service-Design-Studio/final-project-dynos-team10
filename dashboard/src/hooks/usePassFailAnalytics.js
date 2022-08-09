@@ -15,7 +15,8 @@ export default function usePassFailAnalytics(numDays=1) {
             start: formatISO9075(then),
             end: formatISO9075(now)
         })
-        return await $functionsAxios.get(`date-range-query?${params.toString()}`);
+        const url = import.meta.env.MODE === "production" ? 'prod-date-range-query' : 'date-range-query';
+        return await $functionsAxios.get(`${url}?${params.toString()}`);
     }
 
     useEffect(() => {

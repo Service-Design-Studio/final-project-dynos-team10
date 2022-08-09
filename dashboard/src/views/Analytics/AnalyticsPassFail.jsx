@@ -52,7 +52,7 @@ export default function AnalyticsPassFail() {
 
     return (
         <Group position="center" align="flex-start" style={{marginTop: "1rem"}}>
-            <div style={{width: chartSize, height: chartSize}}>
+            <div style={{width: chartSize, height: chartSize, marginRight: '5rem'}}>
                 <ParentSize>
                     {({ width, height }) => (
                         <PieChart

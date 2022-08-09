@@ -218,9 +218,9 @@ export default function Login() {
                         <Button onClick={() => signIn(false)} className="login-btn" loading={loginLoading} sx={{flexGrow: 1}}>
                             Sign In
                         </Button>
-                        <Button className="login-btn--credentials" onClick={() => signIn(true)} variant="outline">
+                        {/* <Button className="login-btn--credentials" onClick={() => signIn(true)} variant="outline">
                             <FaceId/>
-                        </Button>
+                        </Button> */}
                     </Group>
                 </Paper>
 

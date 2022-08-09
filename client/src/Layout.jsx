@@ -211,7 +211,7 @@ export default function Layout() {
     }
 
     const commitSelectedWorkorder = (selectedWorkorderNumber) => {
-        if (selectedWorkorderNumber === currentWorkorderNumber) {
+        if (selectedWorkorderNumber === currentWorkorderNumber && location.pathname === '/component-status') {
             return;
         }
 
