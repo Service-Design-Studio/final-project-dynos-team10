@@ -59,10 +59,10 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty, custom
 
     return (
         <>
-            <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control}>
+            <UnstyledButton onClick={() => setOpened((o) => !o)} className={classes.control} id={label} >
                 <Group position="apart" spacing={0}>
                     <Box>{label}</Box>
-                    <Group postion="right">
+                    <Group postion="right" id={label+"-delete"}>
                         {deleteElement}
                         {
                             hasItems ?
@@ -81,10 +81,10 @@ export function ContentGroup({ label, items, footer, rightElementIfEmpty, custom
             {
                 hasItems ?
                 <Collapse in={opened}>
-                    <>
+                    <div id={label}>
                         {itemsEl}
                         {footer}
-                    </>
+                    </div>
                 </Collapse> :
                 null
             }

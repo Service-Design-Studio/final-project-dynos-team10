@@ -44,6 +44,10 @@ Then('I should see {string} in the "Machine Types" list', (text) => {
     cy.get('.machine-list').contains(text);
 })
 
+Then('I should see {string} in the "Failing Reasons" list', (text) => {
+    cy.get('.failing-reasons-list').contains(text);
+})
+
 And('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
     cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
 })
@@ -53,6 +57,7 @@ And('I fill in the input field for {string} with {string}', (inputContent, newCo
 // })
 
 Then('I should see {string}', (text) => {
+    cy.wait(500);
     cy.get('body').contains(text);
 })
 
@@ -61,9 +66,18 @@ Then('I should see {string} in the {string}', (text, list) => {
     cy.get(list).contains(text);
 })
 
-When('I click on "Machine Type 1" button', () => {
-    cy.get('.Machine Type 1').contains("Machine Type 1")
+When('I click on {string} button in list', (text) => {
+    cy.get(`button[id="${text}"]`).click();
 })
+
+Then('I should see {string} components in the component list', (number) => {
+    cy.get('component-list').children().should('have.length', +number);
+})
+
+
+
+
+// workorders page
 
 Then('I should see {string} workorders', (number) => {
     cy.get('.workorders-list').should('have.length', +number);
@@ -76,6 +90,8 @@ And('I click the "more details" button for {string}', (workorderNumber) => {
 Then('I go to {string} page for "test"', (page) => {
     cy.visit(buildRoute(page));
 })
+
+
 
 //LAST SCENARIO THE PROBLEM ONE
 When('I click add components for machine type {string}', () => {
@@ -104,6 +120,42 @@ Then('I should see the component types {string}', () => {
 
 
 //the one below is done
-And('I should see a "Edit Components" button', () => {
-    cy.get('.edit').click()
+And('I click on "Edit Components" button for {string}', (text) => {
+    cy.get(`.${text}`).click()
+})
+
+And('I click on "Edit Failing Reasons" button for {string}', (text) => {
+    cy.get(`.${text}`).click()
+})
+
+Then('I should see {string} in the side drawer with components list', (text) => {
+    cy.get('.side-drawer-components').contains(text)
+})
+
+Then('I should see {string} in the side drawer with failing reasons list', (text) => {
+    cy.get('.side-drawer-reasons').contains(text)
+})
+
+And('I select {string}', (text) => {
+    cy.get(`input[id="${text}"]`).click();
+})
+
+And('I click on the close icon', () => {
+    cy.get('.mantine-Drawer-closeButton').click();
+})
+
+Then('I should see {string} as a component for {string}', (item, text) => {
+    cy.get(`[id=${text}]`).children().contains(item);
+})
+
+When('I close the {string} dropdown button', (text) => {
+    cy.get(`button[id="${text}"]`).click();
+})
+
+Then('I should see {string} as a failing reason for {string}', (item, text) => {
+    cy.get(`[id=${text}]`).children().contains(item);
+})
+
+When('I delete {string} component type', (text) => {
+    cy.get(`[id=${text}-delete]`).click();
 })

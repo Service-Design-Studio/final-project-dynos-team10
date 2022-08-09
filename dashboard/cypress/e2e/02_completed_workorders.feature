@@ -8,10 +8,17 @@ Feature: Access list of completed workorders
         Then I should see "Workorder Number"
         Then I should see "Status"
 
-    Scenario: Search workorder
+    Scenario: Search workorder "test"
         When I fill in the input field for "Search" with "test"
         Then I should see "1" workorders
         And I click the "more details" button for "test"
         # Then I go to "View Single Workorder" page for "test"
         Then I should see "Key Information"
+
+    # Scenario: Search workorder "w"
+    #     When I fill in the input field for "Search" with "w"
+    #     Then I should see "2" workorders
+    #     And I click the "more details" button for "test"
+    #     # Then I go to "View Single Workorder" page for "test"
+    #     Then I should see "Key Information"
         

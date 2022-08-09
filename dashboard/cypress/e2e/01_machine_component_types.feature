@@ -8,49 +8,49 @@ Feature: Custom Machine and Component Types
         And I should see "Failing Reasons"
 
     Scenario: Creating a new component type
-        When I fill in the input field for "Component Type Name" with "Component Type 1"
+        When I fill in the input field for "Component Type Name" with "Component1"
         And I click the "add component" button
-        Then I should see "Component Type 1" 
-        # in the "component-list"
+        Then I should see "Component1" in the "Component Types" list
     
     Scenario: Creating a new machine type
-        When I fill in the input field for "Machine Type Name" with "Machine Type 1"
+        When I fill in the input field for "Machine Type Name" with "Machine1"
         And I click the "add machine" button
-        Then I should see "MACHINE TYPE 1" 
-        # in the "machine-list"
+        Then I should see "MACHINE1" in the "Machine Types" list
 
     Scenario: Creating a new failing reason
         When I fill in the input field for "Enter Fail Reasons" with "Slanted"
         And I click the "add failing reason" button
-        Then I should see "Slanted" 
-        # in the "failing-reasons-list"
+        Then I should see "Slanted" in the "Failing Reasons" list 
 
     Scenario: Edit components in machine type
-        When I click on "Machine Type 1" button 
-        And I click on "Edit Components" button
-        Then I should see "Component Type 1" in the side drawer
-        And I select "Component Type 1"
+        When I click on "MACHINE1" button in list
+        And I click on "Edit Components" button for "MACHINE1"
+        Then I should see "MACHINE1" in the side drawer with components list
+        Then I should see "Component1" in the side drawer with components list
+        And I select "Component1"
         And I click on the close icon
-        Then I should see "Component Type 1" in component list
+        Then I should see "Component1" as a component for "MACHINE1"
 
-    # Scenario: Edit failing reasons
-    #     When I click on "Component Type 1" button
-    #     And I click on "Edit Failing Reasons" button
-    #     Then I should see "Slanted" in the side drawer
-    #     And I select "Slanted"
-    #     And I click on the close icon
-    #     And I should see "Slanted" in failing reasons list 
+    Scenario: Edit failing reasons
+        When I click on "Label" button in list
+        And I click on "Edit Failing Reasons" button for "Label"
+        Then I should see "Slanted" in the side drawer with failing reasons list
+        And I select "Slanted"
+        And I click on the close icon
+        And I close the "Label" dropdown button
+        When I click on "Label" button in list
+        Then I should see "Slanted" as a failing reason for "Label" 
 
         # Scenario: Deleting component type
-    #     And I delete "Component Type 1" component types
-    #     Then I should see "0" component types
+        # When I delete "Component1" component type
+        # Then I should see "0" component types
 
     # Scenario: Deleting machine type
-    #     And I delete "Machine Type 1" machine types
+        # When I delete "Machine1" machine type
     #     Then I should see "0" machine types
 
     # Scenario: Delete failing reason
-    #     And I delete "Slanted" failing reasons
+    #     When I delete "Slanted" failing reason
     #     Then I should see "0" failing reasons
 
     # Scenario: SAD PATH: creating non-unique machine type and component types

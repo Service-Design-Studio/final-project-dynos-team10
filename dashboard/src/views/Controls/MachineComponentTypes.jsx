@@ -283,7 +283,7 @@ export default function MachineComponentTypes() {
             listToChange.push({
                 label: el.type_name,
                 rightElementIfEmpty: <AddButton componentType={el.type_name}/>,
-                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editComponentType(el.type_name)}>Edit Failing Reasons</Button>,
+                footer: <Button className={el.type_name} fullWidth mt="sm" onClick={() => editComponentType(el.type_name)}>Edit Failing Reasons</Button>,
                 deleteElement: <DeleteComponent componentType={el.type_name}/>,
                 items: itemList
             })
@@ -309,7 +309,7 @@ export default function MachineComponentTypes() {
             listToChange.push({
                 label: el.type_name,
                 rightElementIfEmpty: <AddButton machineType={el.type_name}/>,
-                footer: <Button className="edit" fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
+                footer: <Button className={el.type_name} fullWidth mt="sm" onClick={() => editMachineType(el.type_name)}>Edit Components</Button>,
                 items: itemList,
                 deleteElement: <DeleteMachine machineType={el.type_name}/>
             })
@@ -430,9 +430,9 @@ export default function MachineComponentTypes() {
         setEditComponentDrawerOpened(true);
     }
 
-    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
-    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
-    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup key={i} className={item} {...item} />)
+    const machineTypesItems = machineTypes.map((item, i) => <ContentGroup className={item.label} key={i} {...item} />)
+    const componentTypesItems = componentTypes.map((item, i) => <ContentGroup className={item.label} key={i} {...item} />)
+    const failingReasonsItems = failingReasonTypes.map((item, i) => <ContentGroup className={item.label} key={i} {...item} />)
     
     const toggleComponentType = async(event, machineType, componentType) => {
         const checked = event.currentTarget.checked;
@@ -577,6 +577,7 @@ export default function MachineComponentTypes() {
                 closeOnEscape={false}
                 closeOnClickOutside={false}
                 padding="lg"
+                className="side-drawer-components"
             >
                 <Text weight={500} mb="md">Choose component types</Text>
                 <ScrollArea offsetScrollbars type="hover" style={{height: .5*window.innerHeight}}>
@@ -585,6 +586,7 @@ export default function MachineComponentTypes() {
                             checked={
                                 !!machineTypes.find(machine => machine.label === editingMachineType)?.items?.find(component => component.label === el.label)
                             }
+                            id={el.label}
                             label={el.label}
                             key={i}
                             mb="sm"
@@ -603,6 +605,7 @@ export default function MachineComponentTypes() {
                 closeOnEscape={false}
                 closeOnClickOutside={false}
                 padding="lg"
+                className="side-drawer-reasons"
             >
                 <Text weight={500} mb="md">Choose failing reasons</Text>
                 <ScrollArea offsetScrollbars type="hover" style={{height: .5*window.innerHeight}}>
@@ -611,6 +614,7 @@ export default function MachineComponentTypes() {
                             checked={
                                 !!componentTypes.find(component => component.label === editingComponentType)?.items?.find(reason => reason.label === el.label)
                             }
+                            id={el.label}
                             label={el.label}
                             key={i}
                             mb="sm"
