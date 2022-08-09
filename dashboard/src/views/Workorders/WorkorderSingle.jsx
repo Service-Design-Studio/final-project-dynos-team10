@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFullWorkorder } from '../../helpers/workorderHelper';
 import ComponentCard from '../../components/ComponentCard';
-import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text, Center } from '@mantine/core';
+import { Group, Grid, SimpleGrid, Skeleton, useMantineTheme, Table, Text, Center, Paper } from '@mantine/core';
 import { NAVBAR_WIDTH } from '../../Layout';
 import { Carousel } from '@mantine/carousel';
 import PieChart from "../../components/PieChart";
+import { Container } from 'tabler-icons-react';
 
 
 export default function WorkorderSsingle() {
@@ -25,7 +26,7 @@ export default function WorkorderSsingle() {
 
     const PRIMARY_COL_HEIGHT = .85*window.innerHeight;
     const theme = useMantineTheme();
-    const SECONDARY_COL_HEIGHT = PRIMARY_COL_HEIGHT / 2 - theme.spacing.md / 2;
+    // const SECONDARY_COL_HEIGHT = PRIMARY_COL_HEIGHT / 2 - theme.spacing.md / 2;
 
     const Status = () => {
         if (workorder.completed === true) {
@@ -35,21 +36,13 @@ export default function WorkorderSsingle() {
     }
 
     // Graphs to include: 1) number of pass/fail COMPONENTS, 2) failing reasons categories
-    
-    return (
-        <SimpleGrid style={{ maxWidth: window.innerWidth - (2*NAVBAR_WIDTH) }} cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
-            <Grid gutter="md">
-                <Grid.Col>
-                    <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" />
-                </Grid.Col>
-                <Grid.Col>
-                    <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" />
-                </Grid.Col>
-            </Grid>
-            {
-                workorder ?
-                <div style={{ maxHeight: PRIMARY_COL_HEIGHT, overflowY: 'scroll' }}>
-                    <Text size="lg" weight={700}>Key Information</Text>
+
+    const InfoTable = () => {
+        if (workorder!==null){
+        return (
+            <div>
+            <Paper shadow='xs' withBorder p="lg">
+            <Text size="lg" weight={700} style={{marginBottom: 10}}>Key Information</Text>
                     <Table mb="md">
                         <tbody>
                             <tr>
@@ -66,7 +59,30 @@ export default function WorkorderSsingle() {
                             </tr>
                         </tbody>
                     </Table>
-                    <Text size="lg" weight={700}>Components & Images</Text>
+                    </Paper>
+                    </div>
+        )}
+    }
+    
+    return (
+        <div>
+        {/* <SimpleGrid style={{  }} cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+            <Grid>
+            <Grid.Col>
+            </Grid.Col>
+            </Grid> */}
+
+            <Group style={{maxWidth: window.innerWidth - (2*NAVBAR_WIDTH), maxHeight: window.innerHeight}} position="center" spacing="xl" grow>
+            {/* <Container style={{width: (window.innerWidth- (2*NAVBAR_WIDTH))/2}}> */}
+            <InfoTable style={{width: ((window.innerWidth - (2*NAVBAR_WIDTH))/2)}}/>
+            {/* </Container> */}
+
+            {
+                workorder ?
+                <div style={{ maxHeight: PRIMARY_COL_HEIGHT}}>
+                    <Center>
+                        <Text size="lg" weight={700}>Components & Images</Text>
+                    </Center>
                     <Center>
                         <Carousel
                         align="center"
@@ -83,6 +99,9 @@ export default function WorkorderSsingle() {
                 </div> :
                 <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" />
             }
-        </SimpleGrid>
+                        </Group>
+
+        {/* </SimpleGrid> */}
+        </div>
     )
 }
