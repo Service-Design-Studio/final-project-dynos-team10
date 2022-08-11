@@ -8,18 +8,27 @@
 
 machine_types = [{type_name:"m1"},{type_name:"m2"},{type_name:"m3"},{type_name:"m4"}]
 
-component_types = [{type_name:"xxxx"},{type_name:"yyyy"}] # id 3 and 4. 1 and 2 taken by label and wire created on machine type creation
+component_types = [{type_name:"box"},{type_name:"panel"}] # id 3 and 4. 1 and 2 taken by label and wire created on machine type creation
 
-workorders =[{:workorder_number => "WO1", :machine_type_id => 1, :completed => true},
-             {:workorder_number => "WO2", :machine_type_id => 1, :completed => true},
-             {:workorder_number => "test", :machine_type_id => 2, :completed => true}]
+workorders =[{:workorder_number => "WO1", :machine_type_id => 1,},
+             {:workorder_number => "WO2", :machine_type_id => 1,},
+             {:workorder_number => "test", :machine_type_id => 2,},
+             {:workorder_number => "sample", :machine_type_id => 2, :completed => true},
+             {:workorder_number => "workorder3", :machine_type_id => 1, :completed => true},
+             {:workorder_number => "workorder4", :machine_type_id => 2, :completed => true},]
 
 components = [{:workorder_id => 1, :status => false, :component_type_id => 1},
               {:workorder_id => 1, :status => false, :component_type_id => 2},
               {:workorder_id => 2, :status => true, :component_type_id => 1},
               {:workorder_id => 2, :status => true, :component_type_id => 2},
               {:workorder_id => 3, :status => false, :component_type_id => 1},
-              {:workorder_id => 3, :status => true, :component_type_id => 2}]
+              {:workorder_id => 3, :status => true, :component_type_id => 2},
+              {:workorder_id => 4, :status => true, :component_type_id => 1},
+              {:workorder_id => 4, :status => true, :component_type_id => 2},
+              {:workorder_id => 5, :status => true, :component_type_id => 1},
+              {:workorder_id => 5, :status => true, :component_type_id => 2},
+              {:workorder_id => 6, :status => true, :component_type_id => 1},
+              {:workorder_id => 6, :status => false, :component_type_id => 2},]
 
 images = [{:component_id => 1, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/032e11e6-d779-4882-bc01-aee951b65ac3.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/032e11e6-d779-4882-bc01-aee951b65ac3.png"},
           {:component_id => 1, :public_url => "https://storage.googleapis.com/dynostic-test-bucket/08306026-b08d-4016-b4fa-0a31afeac9f1.png", :auth_url => "https://storage.cloud.google.com/dynostic-test-bucket/08306026-b08d-4016-b4fa-0a31afeac9f1.png"},
