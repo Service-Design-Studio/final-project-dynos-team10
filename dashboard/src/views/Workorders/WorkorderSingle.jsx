@@ -88,13 +88,15 @@ export default function WorkorderSsingle() {
                             <Carousel
                             align="center"
                             sx={{width: 400}}s
+                            id="carousel-parent"
                             >
-                                {workorder?.components.map((el, i) => 
+                                    {workorder?.components.map((el, i) => 
                                     <Carousel.Slide key={i}> 
                                         <Center>   
-                                            <ComponentCard componentRecord={el} key={i} />
+                                        <span><ComponentCard componentRecord={el} key={i} /></span>
                                         </Center>
-                                    </Carousel.Slide>    )}
+                                    </Carousel.Slide>)}
+                                
                             </Carousel>
                         </Center>
                     </div> :

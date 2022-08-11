@@ -3,22 +3,29 @@ Feature: Access list of completed workorders
 
     Background: Opening the view workorders
         Given I am on the "View Work Orders" page
-        # When I click the "View Work Orders" button in the navbar
         Then I should see "Machine Type"
         Then I should see "Workorder Number"
         Then I should see "Status"
 
-    Scenario: Search workorder "test"
-        When I fill in the input field for "Search" with "test"
+    Scenario: Search workorders
+        When I fill in the input field for "Search" with "sample"
         Then I should see "1" workorders
-        And I click the "more details" button for "test"
-        # Then I go to "View Single Workorder" page for "test"
+        Given I am on the "View Work Orders" page
+        When I fill in the input field for "Search" with "workorder"
+        Then I should see "2" workorders
+        And I click the "more details" button for "workorder3"
         Then I should see "Key Information"
 
-    # Scenario: Search workorder "w"
-    #     When I fill in the input field for "Search" with "w"
-    #     Then I should see "2" workorders
-    #     And I click the "more details" button for "test"
-    #     # Then I go to "View Single Workorder" page for "test"
-    #     Then I should see "Key Information"
-        
+    Scenario: Open single workorder
+        When I fill in the input field for "Search" with "sample"
+        And I click the "more details" button for "sample"
+        Then I should see "Key Information"
+        Then I should see "Work Order Number"
+        Then I should see "sample"
+    
+    Scenario: View single workorder
+        When I fill in the input field for "Search" with "sample"
+        And I click the "more details" button for "sample"
+        Then I should see "Key Information"
+        And I should see "2" components in the carousel 
+        And I click on "View Images" button for "Label"

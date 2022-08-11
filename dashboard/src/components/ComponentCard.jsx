@@ -69,7 +69,7 @@ export default function ComponentCard({componentRecord}) {
                         </ScrollArea>
                     </Card.Section>
                 }
-                <Button radius="sm" mt="xs" fullWidth onClick={()=>setOpened(true)}>
+                <Button className={"single-workorder-" + componentType} radius="sm" mt="xs" fullWidth onClick={()=>setOpened(true)}>
                     View Images
                 </Button>
             </Card>

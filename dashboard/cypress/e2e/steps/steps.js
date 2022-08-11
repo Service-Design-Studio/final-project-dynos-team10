@@ -3,7 +3,6 @@ import { Given, Then, When, And } from "cypress-cucumber-preprocessor/steps";
 import { buildRoute } from './steps_helper';
 import { v4 as uuidv4 } from 'uuid';
 
-
 // ROUTING
 Given('I am on the {string} page', (pageDescription) => {
     cy.visit(buildRoute(pageDescription));
@@ -153,8 +152,12 @@ Then('I should not see {string} in the {string} list', (text, list) => {
 
 // workorders page /////////////////////////////////////////////////////////////////
 Then('I should see {string} workorders', (number) => {
-    cy.get('.workorders-list').should('have.length', +number);
-})
+    cy.wait(1000);
+    // cy.get('.workorders-list').find('tr').should('have.length', number);
+    cy.get('tr').should(($tr) => {
+        // should have found 3 elements
+        expect($tr).to.have.length(+number+1)
+})})
 
 And('I click the "more details" button for {string}', (workorderNumber) => {
     cy.get(`.${workorderNumber}`).click();
@@ -162,4 +165,12 @@ And('I click the "more details" button for {string}', (workorderNumber) => {
 
 Then('I go to {string} page for "test"', (page) => {
     cy.visit(buildRoute(page));
+})
+
+And('I should see {string} components in the carousel', (number) => {
+    cy.get('#carousel-parent').find('span');
+})
+
+And('I click on "View Images" button for {string}', (component) => {
+    cy.get(`.single-workorder-${component}`).click();
 })
