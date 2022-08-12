@@ -1,24 +1,47 @@
-# README
+# Main App Server
+This server is the microservice that manages the main business logic for our application
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Project setup
+### Ruby version
+This server uses Ruby version 3.1.2, it is recommended that you use [RVM](https://rvm.io/) to manage your ruby versions
 
-Things you may want to cover:
+### System dependencies
+1. PostgreSQL (recommended v14)
+2. Ruby (3.1.2) and Rails (7.0.3)
+3. Project Secrets
+    - `.env` file
+    - `master.key` file to decrypt project secrets
+    - Google service account credentials JSON file
+    > If you require these files, please open a GitHub Issue
 
-* Ruby version
+### Setting up the database
+```ruby
+# to drop database tables if they already exist, if they don't exist yet (i.e. your first time), do NOT run this
+rake db:drop
+# to create the tables
+rake db:create
+# to migrate and setup schema
+rake db:migrate
+# to seed the database
+rake db:seed
 
-* System dependencies
+# to RESET and SEED
+rake db:drop && rake db:create && rake db:migrate && rake db:seed
+```
 
-* Configuration
+### Running the server locally
+```ruby
+bin/rails server
+```
+The server will be running at `http://localhost:5000`.
+## Testing
+We have a unit test suite which can be run by:
+```ruby
+bundle exec rspec
 
-* Database creation
+# for a more verbose logging in the terminal
+bundle exec rspec --format documentation
+```
+It is recommended that you reset and seed the database before running the test suite.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Database diagram and schema

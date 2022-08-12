@@ -82,7 +82,7 @@ export default function BarGroupChart({
                 hideAxisLine
                 tickLabelProps={() => ({
                     fill: black,
-                    fontSize: 18,
+                    fontSize: 12,
                     textAnchor: 'middle',
                 })}
             >
