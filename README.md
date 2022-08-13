@@ -11,7 +11,7 @@
 ## Useful Links
 [Design Workbook](https://docs.google.com/document/d/1-uKXlpOP6CLVI-5EansNwRvN6a_DlLZMg08y4F2JBaM/edit?usp=sharing)
 
-[Google Site](https://sites.google.com/vjc.sg/group-10-dynostic/home?authuser=1)
+[Google Site](https://sites.google.com/view/group10dynostic/home)
 
 ## App Architecture
 
