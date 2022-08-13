@@ -31,6 +31,6 @@
 /config/master.key
 
 # secrets
-.env*
+.env
 /config/secrets*
 /config/*credentials.json
