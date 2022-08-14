@@ -6,11 +6,11 @@ export default function Auth({ children }) {
     const { isAuthenticated } = useContext(AuthContext);
     const location = useLocation();
 
-    // if (!isAuthenticated && import.meta.env.MODE !== "development") {
-    //     return <Navigate to="/login" state={{ from: location }} replace />
-    // }
-    if (!isAuthenticated) {
+    if (!isAuthenticated && import.meta.env.MODE !== "test") {
         return <Navigate to="/login" state={{ from: location }} replace />
     }
+    // if (!isAuthenticated) {
+    //     return <Navigate to="/login" state={{ from: location }} replace />
+    // }
     return children;
 }

@@ -2,7 +2,9 @@ const DEV_SERVER_URL = "http://localhost:5173/";
 
 const descriptionToRouteMap = {
     'home': '',
-    "System Controls": 'controls'
+    "System Controls": 'controls',
+    "View Work Orders": 'workorders',
+    "View Single Workorder": 'workorders/3'
     // "take photo": 'camera',
     // 'photo review': 'photo-review',
     // 'qc entry': 'qc-entry',
