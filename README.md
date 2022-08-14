@@ -7,6 +7,8 @@
 - [Tan Kay Wee](https://github.com/kayweeee)
 - [Tan Li Hui](https://github.com/t-lihui)
 - [Umang Gupta](https://github.com/Usgupta)
+- [Chua Po Siang Bridget](https://github.com/bridget5615)
+- [Tan Kang Min](https://github.com/hamster-with-human-hands)
 
 ## Useful Links
 [Design Workbook](https://docs.google.com/document/d/1-uKXlpOP6CLVI-5EansNwRvN6a_DlLZMg08y4F2JBaM/edit?usp=sharing)
