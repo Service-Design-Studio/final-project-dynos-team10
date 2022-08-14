@@ -28,4 +28,6 @@ Feature: Access list of completed workorders
         And I click the "more details" button for "sample"
         Then I should see "Key Information"
         And I should see "2" components in the carousel 
+        And I should see "Passed" for "Label"
         And I click on "View Images" button for "Label"
+        # Then I should see "" images in the carousel for "Label"

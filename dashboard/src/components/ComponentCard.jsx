@@ -53,7 +53,7 @@ export default function ComponentCard({componentRecord}) {
                     <Group position="apart">
                         <Text size="lg" weight={500}>{componentType.charAt(0).toUpperCase() + componentType.slice(1)}</Text>
                         <Badge size="sm" color={isCompleted ? "teal" : "red"}>
-                            {isCompleted ? "Passed" : "Failed"}
+                            <span id={"status-" + componentType} >{isCompleted ? "Passed" : "Failed"}</span>
                         </Badge>
                     </Group>
                 </Card.Section>
@@ -84,10 +84,12 @@ export default function ComponentCard({componentRecord}) {
                 {images.map((el,i) => 
                     <Carousel.Slide key={i}>
                         <Center>
-                            <Image src={el.public_url} alt="Image"
-                            width={300}
-                            height={300}
-                            />
+                            <Span id={componentType + "-images"}>
+                                <Image src={el.public_url} alt="Image"
+                                width={300}
+                                height={300}
+                                />
+                            </Span>
                         </Center>
                     </Carousel.Slide>
                 )}

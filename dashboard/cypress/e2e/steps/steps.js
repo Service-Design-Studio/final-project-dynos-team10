@@ -174,3 +174,11 @@ And('I should see {string} components in the carousel', (number) => {
 And('I click on "View Images" button for {string}', (component) => {
     cy.get(`.single-workorder-${component}`).click();
 })
+
+And('I should see {string} for {string}', (status, component) => {
+    cy.get(`#status-${component}`).contains(status);
+})
+
+Then('I should see {string} images in the carousel for {string}', (number, component) => {
+    cy.get(`#${component}-images`).find('Images').should('have.length', +number)
+})
