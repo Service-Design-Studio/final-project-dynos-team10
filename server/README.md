@@ -45,3 +45,4 @@ bundle exec rspec --format documentation
 It is recommended that you reset and seed the database before running the test suite.
 
 ## Database diagram and schema
+<img src="schema.png" alt="schema">

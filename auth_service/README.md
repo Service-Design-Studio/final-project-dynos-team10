@@ -35,3 +35,4 @@ bin/rails server
 The server will be running at `http://localhost:8000`.
 
 ## Database diagram and schema
+<img src="schema.png" alt="schema">
