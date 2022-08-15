@@ -133,7 +133,7 @@ Then('I should not see {string} in the {string} list', (text, list) => {
     cy.get(`button[id="${text}"]`).should('not.exist');
 })
 
-// workorders page /////////////////////////////////////////////////////////////////
+// ----------------- workorders page -------------
 Then('I should see {string} workorders search results', (number) => {
     cy.intercept('GET', 'workorders/page/1?**').as('searchWorkorders');
     cy.wait('@searchWorkorders');

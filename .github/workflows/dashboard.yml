@@ -12,9 +12,46 @@ env:
 jobs:
   cypress-run:
     runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+      RAILS_MASTER_KEY: ${{ secrets.SERVER_MASTER_KEY }}
+      STORAGE_BUCKET_NAME: dynostic-test-bucket
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.110.0
+        with:
+          bundler-cache: true
+          working-directory: server
+      - name: Create config/service-account-credentials.json for GCS
+        run: |-
+          cd server/config
+          touch service-account-credentials.json
+          cat service-account-credentials.json | base64
+          echo $GCP_CREDENTIALS > service-account-credentials.json
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Set up test database and seed
+        run: |
+          cd server
+          bundle exec bin/rails db:prepare
+          bundle exec bin/rails db:schema:load
+          bundle exec bin/rails db:seed --trace
+      - name: Start up Rails App Server
+        run: |
+          cd server
+          bundle exec puma > /dev/null &
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
@@ -30,27 +67,27 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  # build-and-deploy:
-  #   needs: cypress-run
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #   # Add "id-token" with the intended permissions.
-  #   permissions:
-  #     contents: 'read'
-  #     id-token: 'write'
+  build-and-deploy:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     # Alternative option - authentication via credentials json
-  #     - id: 'auth'
-  #       uses: google-github-actions/auth@v0.7.3
-  #       with:
-  #         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-  #     - name: Set up Cloud SDK
-  #       uses: google-github-actions/setup-gcloud@v0.6.0
-  #     # Build and push image to Google Container Registry
-  #     - name: Build
-  #       run: |-
-  #         cd dashboard &&
-  #         gcloud builds submit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Alternative option - authentication via credentials json
+      - id: 'auth'
+        uses: google-github-actions/auth@v0.7.3
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.6.0
+      # Build and push image to Google Container Registry
+      - name: Build
+        run: |-
+          cd dashboard &&
+          gcloud builds submit
