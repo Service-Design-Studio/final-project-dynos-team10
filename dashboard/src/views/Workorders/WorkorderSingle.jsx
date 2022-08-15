@@ -9,7 +9,7 @@ import PieChart from "../../components/PieChart";
 import { Container } from 'tabler-icons-react';
 
 
-export default function WorkorderSsingle() {
+export default function WorkorderSingle() {
     const workorderId = parseInt(useParams().workorderId, 10);
     const [workorder, setWorkorder] = useState(null);
 
@@ -87,7 +87,7 @@ export default function WorkorderSsingle() {
                         <Center>
                             <Carousel
                             align="center"
-                            sx={{width: 400}}s
+                            sx={{width: 400}}
                             id="carousel-parent"
                             >
                                     {workorder?.components.map((el, i) => 

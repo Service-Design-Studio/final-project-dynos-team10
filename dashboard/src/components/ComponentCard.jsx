@@ -80,19 +80,21 @@ export default function ComponentCard({componentRecord}) {
             title={componentType.charAt(0).toUpperCase() + componentType.slice(1) + " Images"}
             >
                 <Carousel
-                withIndicators>
-                {images.map((el,i) => 
-                    <Carousel.Slide key={i}>
-                        <Center>
-                            <Span id={componentType + "-images"}>
-                                <Image src={el.public_url} alt="Image"
-                                width={300}
-                                height={300}
+                    withIndicators
+                    id={`${componentType}-images`}
+                >
+                    {images.map((el,i) => 
+                        <Carousel.Slide key={i}>
+                            <Center>
+                                <Image
+                                    src={el.public_url}
+                                    alt="Image"
+                                    width={300}
+                                    height={300}
                                 />
-                            </Span>
-                        </Center>
-                    </Carousel.Slide>
-                )}
+                            </Center>
+                        </Carousel.Slide>
+                    )}
                 </Carousel>
             </Modal>
         </div>

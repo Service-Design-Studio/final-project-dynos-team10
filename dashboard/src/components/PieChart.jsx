@@ -2,6 +2,8 @@
 import Pie from '@visx/shape/lib/shapes/Pie';
 import { Group } from '@visx/group';
 import { animated, useTransition, to } from '@react-spring/web';
+import { useMemo } from 'react';
+import { Text } from '@mantine/core';
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
 
@@ -94,7 +96,12 @@ export default function PieChart({
     const centerX = innerWidth / 2;
     const donutThickness = 60;
 
+    const hasData = useMemo(() => {
+        return data.reduce((oldVal, item) => oldVal + item.occurences, 0) > 0;
+    }, [data]);
+
     return (
+        hasData ?
         <svg width={width} height={height} onClick={onClick}>
             <Group top={centerY + margin.top} left={centerX + margin.left}>
                 <Pie
@@ -119,6 +126,7 @@ export default function PieChart({
                     )}
                 </Pie>
             </Group>
-        </svg>
+        </svg> :
+        <Text>No data found</Text>
     )
 }

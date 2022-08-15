@@ -39,7 +39,7 @@ We utilise the following tools for testing:
 The cucumber tests depend on two things for it to run properly:
 1. The rails development server started with a cleared, seeded database
 ```ruby
-# assuming you are currently in the "client" directory
+# assuming you are currently in the "dashboard" directory
 cd ..
 cd server
 rake db:drop

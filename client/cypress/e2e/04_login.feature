@@ -10,6 +10,7 @@ Feature: Logging In
         Then I click on the log in button, expecting "success"
         And I should be on the "home" page
     
+    @pending
     Scenario: Valid log in with device credentials
         Given I am on the "login" page
         Then I fill in the input field for "Username" with "test"

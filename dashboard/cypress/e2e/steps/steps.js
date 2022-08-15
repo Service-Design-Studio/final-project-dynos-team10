@@ -11,7 +11,8 @@ Then('I go to the {string} page', (pageDescription) => {
     cy.visit(buildRoute(pageDescription));
 });
 And('I should be on the {string} page', (pageDescription) => {
-    cy.url().should('eq', buildRoute(pageDescription));
+    const startingMatcher = new RegExp('^' + buildRoute(pageDescription));
+    cy.url().should('match', startingMatcher);
 });
 
 And('I click the {string} button in the navbar', () => {
@@ -48,19 +49,18 @@ Then('I should see {string} in the "Failing Reasons" list', (text) => {
 })
 
 And('I fill in the input field for {string} with {string}', (inputContent, newContent) => {
-    cy.get(`input[placeholder="${inputContent}"]`).type(newContent);
+    cy.get(`input[placeholder="${inputContent}"]`).clear().type(newContent);
 })
-
-// Then('I should see {string}', (text) => {
-//     cy.get('.errors').contains(text);
-// })
 
 Then('I should see {string}', (text) => {
     cy.wait(500);
     cy.get('body').contains(text);
 })
+Then('I should not see {string}', (text) => {
+    cy.wait(500);
+    cy.get('body').contains(text).should('not.exist');
+})
 
-// couldn't get this to work
 Then('I should see {string} in the {string}', (text, list) => {
     cy.get(list).contains(text);
 })
@@ -81,23 +81,6 @@ Then('I should see a side panel to edit {string}', (text) => {
     cy.get('.errors').contains(text);
 })
 
-// When('I choose {string} ', ()=>{
-
-// })
-
-// And('I close the side panel', () => {
-
-// })
-
-// When('I expand {string}', () => {
-
-// })
-
-// Then('I should see the component types {string}', () => {
-
-// })
-
-//the one below is done
 And('I click on "Edit Components" button for {string}', (text) => {
     cy.get(`.${text}`).click()
 })
@@ -151,7 +134,9 @@ Then('I should not see {string} in the {string} list', (text, list) => {
 })
 
 // workorders page /////////////////////////////////////////////////////////////////
-Then('I should see {string} workorders', (number) => {
+Then('I should see {string} workorders search results', (number) => {
+    cy.intercept('GET', 'workorders/page/1?**').as('searchWorkorders');
+    cy.wait('@searchWorkorders');
     cy.wait(1000);
     // cy.get('.workorders-list').find('tr').should('have.length', number);
     cy.get('tr').should(($tr) => {
@@ -168,7 +153,7 @@ Then('I go to {string} page for "test"', (page) => {
 })
 
 And('I should see {string} components in the carousel', (number) => {
-    cy.get('#carousel-parent').find('span');
+    cy.get('#carousel-parent .mantine-Carousel-slide').should('have.length', +number);
 })
 
 And('I click on "View Images" button for {string}', (component) => {
@@ -180,5 +165,74 @@ And('I should see {string} for {string}', (status, component) => {
 })
 
 Then('I should see {string} images in the carousel for {string}', (number, component) => {
-    cy.get(`#${component}-images`).find('Images').should('have.length', +number)
+    cy.get(`#${component}-images .mantine-Carousel-slide`).should('have.length', +number)
+})
+
+// -------------- analytics feature -----------------
+When('I select the {string} analytics tab', tabName => {
+    // intercept all requests for analytics
+    const statusCode = 200;
+    cy.intercept('GET', 'date-range-query?start=**', req => {
+        req.reply({
+            statusCode,
+            fixture: 'analytics/workorders/empty.json'
+        })
+    }).as('analyticsWorkorders');
+    cy.intercept('GET', 'machine-types**', req => {
+        req.reply({
+            statusCode,
+            fixture: 'analytics/machine-types/empty.json'
+        })
+    }).as('analyticsMachineTypes');
+    cy.intercept('GET', 'machine-type-failing-reasons**', req => {
+        req.reply({
+            statusCode,
+            fixture: 'analytics/failing-reasons/empty.json'
+        })
+    }).as('analyticsFailingReasons');
+    cy.wait('@analyticsWorkorders');
+    cy.wait('@analyticsMachineTypes');
+    cy.wait('@analyticsFailingReasons');
+
+    cy.get(`.analytics-tab-btn[data-tabname="${tabName}"]`).click();
+})
+
+And('I drag the slider to some day, expecting {string} for {string}', (withResults, category) => {
+    cy.visit(buildRoute('home'));
+    const statusCode = 200;
+    const fixturePathSuffix = withResults !== 'results' ? 'empty.json' : 'success.json';
+    let fixturePath;
+    switch (category) {
+        case 'Pass/Fail by Workorders':
+            fixturePath = 'analytics/workorders/' + fixturePathSuffix;
+            cy.intercept('GET', 'date-range-query?start=**', req => {
+                req.reply({
+                    statusCode,
+                    fixture: fixturePath
+                })
+            }).as('analyticsWorkorders');
+            cy.wait('@analyticsWorkorders');
+            break;
+        case 'Pass/Fail by Machine Types':
+            fixturePath = 'analytics/machine-types/' + fixturePathSuffix;
+            cy.intercept('GET', 'machine-types**', req => {
+                req.reply({
+                    statusCode,
+                    fixture: fixturePath
+                })
+            }).as('analyticsMachineTypes');
+            cy.wait('@analyticsMachineTypes');
+            break;
+        case 'Failing Reasons by Machine Types':
+            fixturePath = 'analytics/failing-reasons/' + fixturePathSuffix;
+            cy.intercept('GET', 'machine-type-failing-reasons**', req => {
+                req.reply({
+                    statusCode,
+                    fixture: fixturePath
+                })
+            }).as('analyticsFailingReasons');
+            cy.wait('@analyticsFailingReasons');
+            break;
+    }
+    cy.get(`.analytics-tab-btn[data-tabname="${category}"]`).click();
 })

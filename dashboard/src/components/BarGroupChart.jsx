@@ -2,6 +2,8 @@ import { Group } from '@visx/group';
 import { BarGroup } from '@visx/shape';
 import { AxisBottom } from '@visx/axis';
 import { scaleBand, scaleLinear } from '@visx/scale';
+import { useMemo } from 'react';
+import { Text } from '@mantine/core';
 
 const defaultMargin = { top: 40, right: 0, bottom: 40, left: 0 };
 export const black = '#000000';
@@ -32,14 +34,19 @@ export default function BarGroupChart({
         domain: [0, Math.max(...data.map((d) => Math.max(...keys.map((key) => Number(d[key])))))],
     })
 
-
-
     x0Scale.rangeRound([0, xMax]);
     x1Scale.rangeRound([0, x0Scale.bandwidth()]);
     yScale.range([yMax, 0]);
 
+    const hasData = useMemo(() => {
+        return data.reduce((oldVal, item) => oldVal + item.failed_count + item.passed_count, 0);
+    }, [data])
 
-    return width < 10 ? null : (
+
+    return width < 10 ?
+        null : 
+        !hasData ? 
+        <Text>No data found</Text> :
         <svg width={width} height={height}>
             <Group top={margin.top} left={margin.left}>
                 <BarGroup
@@ -89,6 +96,5 @@ export default function BarGroupChart({
 
             </AxisBottom>
         </svg>
-    )
 }
 

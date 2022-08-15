@@ -4,13 +4,7 @@ const descriptionToRouteMap = {
     'home': '',
     "System Controls": 'controls',
     "View Work Orders": 'workorders',
-    "View Single Workorder": 'workorders/3'
-    // "take photo": 'camera',
-    // 'photo review': 'photo-review',
-    // 'qc entry': 'qc-entry',
-    // 'register': 'register',
-    // 'login': 'login',
-    // 'drafts': 'qc-list'
+    "View Single Workorder": 'workorders\/[0-9]+$'
 }
 
 /**

@@ -4,20 +4,14 @@ import AnalyticsPassFail from './AnalyticsPassFail';
 import AnalyticsMachineFailingReasons from "./AnalyticsMachineFailingReasons";
 
 export default function Analytics() {
+    const tabs = ["Pass/Fail by Workorders", "Pass/Fail by Machine Types", "Failing Reasons by Machine Types"]
+
     return (
         <div>
             <Center><h2 style={{marginBottom: '16px'}}>Performance Analytics</h2></Center>
             <Tabs defaultValue="0">
                 <Tabs.List grow>
-                    <Tabs.Tab value="0">
-                        Pass/Fail by Workorders
-                    </Tabs.Tab>
-                    <Tabs.Tab value="1">
-                        Pass/Fail by Machine Types
-                    </Tabs.Tab>
-                    <Tabs.Tab value="2">
-                        Failing Reasons by Machine Types
-                    </Tabs.Tab>
+                    {tabs.map((el, i) => <Tabs.Tab className="analytics-tab-btn" value={`${i}`} key={i} data-tabname={el}>{el}</Tabs.Tab>)}
                 </Tabs.List>
 
                 <Tabs.Panel value="0">

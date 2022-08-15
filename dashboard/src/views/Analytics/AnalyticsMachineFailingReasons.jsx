@@ -59,7 +59,7 @@ export default function AnalyticsMachineFailingReasons() {
                 <Select
                     placeholder="Select Machine Type"
                     searchable
-                    clearable 
+                    clearable
                     nothingFound="No options"
                     value={machineTypeId}
                     onChange={val => setMachineTypeId(val)}

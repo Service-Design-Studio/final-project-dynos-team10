@@ -58,14 +58,4 @@ Feature: Custom Machine and Component Types
         When I delete "Machine1" for machine type
         Then I should not see "Machine" in the "Machine Types" list
         When I delete "Slanted" for failing reason
-        Then I should not see "Slanted" in the "Failing Reasons" list 
-
-    # Scenario: Controlling component types of a machine
-    #     When I click add components for machine type "Machine Type 1"
-    #     Then I should see a side panel to edit "Machine Type 1"
-    #     When I choose "Component Type 1, Component Type 2, Component Type 3"
-    #     And I close the side panel
-    #     Then I should see the machine type "Machine Type 1" expandable
-    #     When I expand "Machine Type 1"
-    #     Then I should see the component types "Component Type 1, Component Type 2, Component Type 3"
-    #     And I should see a "Edit Components" button
+        Then I should not see "Slanted" in the "Failing Reasons" list
