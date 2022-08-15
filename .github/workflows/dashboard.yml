@@ -57,7 +57,7 @@ jobs:
         with:
           browser: chrome
           install-command: npm install --legacy-peer-deps
-          start: npm run dev
+          start: npm run dev:test
           wait-on: 'http://localhost:5173'
           working-directory: dashboard
           command: npm run cypress:run-record

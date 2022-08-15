@@ -1,5 +1,4 @@
 # stub responses to build graphs
-
 Feature: Workorder Analytics
     As a manager, I want to be able to view various analytics for the submitted workorders from the dashboard
 
