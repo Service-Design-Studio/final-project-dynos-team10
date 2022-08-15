@@ -16,6 +16,7 @@
 [Google Site](https://sites.google.com/view/group10dynostic/home)
 
 ## App Architecture
+<img src="architecture.png" alt="architecture">
 
 ## Client/Frontend Applications
 There are two client applications for this project:
